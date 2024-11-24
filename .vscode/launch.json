@@ -1,0 +1,14 @@
+{
+    // Requires https://marketplace.visualstudio.com/items?itemName=discretegames.f5anything
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "F5 Anything: Custom Command",
+            "type": "f5anything",
+            "request": "launch",
+            "command": "& \"C:\\Program Files\\PICO-8\\pico8.exe\" -windowed 1 -root_path \"${workspaceRoot}\" cart.p8",
+            "terminalName": "pico8",
+            "showTerminal": true
+        }
+    ]
+}
