@@ -13,6 +13,7 @@ end
 
 function game.draw()
 	cls(1)
+	map(0,0)
 	color(7)
 	print('game screen', 20, 20)
 	color(8)
