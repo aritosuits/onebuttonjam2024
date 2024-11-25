@@ -4,20 +4,25 @@ game = state.create('game')
 game.fade = true
 
 function game.enter()
-	hero = entity.create()
-	hero.health = 3
+	hero = assemblage.player()
 end
 
 function game.update(dt)
+	system.update(dt)
 end
 
 function game.draw()
-	cls(1)
+	cls()
 	map(0,0)
-	color(7)
-	print('game screen', 20, 20)
-	color(8)
-	print('test test test', 20, 30)
+	system.draw(dt)
+	-- health display
+	for i = 1, 3 do
+		spr(hero.health >= i and 223 or 207, (i-1) * 9 + 2, 3)
+	end
+	-- gun level display
+	for i = 1, 4 do
+		spr(hero.weapon.level >= i and 255 or 239, (i-1) * 8 + 2, 13)
+	end
 end
 
 function game.press() end

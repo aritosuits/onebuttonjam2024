@@ -49,7 +49,7 @@ function title.draw()
 	print('instantly hire every', x, y, 2) y += 6
 	print('applicant, and we have', x, y, 2) y += 6
 	print('the safest facilities!', x, y, 2) y += 10
-	print('      press ❎ to sign', x, y, 2) y += 7
+	print('      press 🅾️ to sign', x, y, 2) y += 7
 	for x = 34, 128, 2 do pset(x, y, 2) end -- dotted line
 	line(40, 105, 45, 110, 2) -- x
 	line(40, 106, 45, 111, 2) -- x

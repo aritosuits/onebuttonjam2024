@@ -1,7 +1,7 @@
 -- state system
 
 state = {}
-state._states = {}
+state.list = {}
 state._frozen = false
 state._button_held = false
 state._button_held_at = 0
@@ -18,8 +18,8 @@ function state.create(name, fade)
 	obj.hold = function(secs) end
 	obj.release = function(secs) end
 	obj.leave = function() end
-	state._states[name] = obj
-	return state._states[name]
+	state.list[name] = obj
+	return state.list[name]
 end
 
 function state.switch(name)
@@ -44,7 +44,7 @@ function state._finish_switch(name)
 	if state.active and state.active.name != 'default' then
 		printh('state leave ' ..  state.active.name)
 	end
-	state.active = state._states[name]
+	state.active = state.list[name]
 	printh('state enter ' .. state.active.name)
 	state._next = ''
 	state.active.enter()
