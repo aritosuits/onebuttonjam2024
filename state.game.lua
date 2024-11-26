@@ -4,7 +4,17 @@ game = state.create('game')
 game.fade = true
 
 function game.enter()
+	printh("Entered game state enter")
 	hero = assemblage.player()
+	embers = entity.create(50, 50) 
+	embers:attach("sprite", 0)
+	printh("Drew embers?")
+	printh(embers:has({'sprite'})) --presently returns false
+	printh(hero:has({'health'})) --false
+	printh(hero:has({'weapon'})) --false
+	printh(embers:has({'health'})) --false
+	printh(embers:has({'weapon'})) --false
+	printh(world.entities)
 end
 
 function game.update(dt)
