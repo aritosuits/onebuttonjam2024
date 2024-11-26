@@ -23,15 +23,18 @@ function state.create(name, fade)
 end
 
 function state.switch(name)
-	state._frozen = true
+	printh('***** switching state to ' .. name)
 	if state.active and state.active.name == name then return end
+	state._frozen = true
 	if state.active then
 		if not state.active.fade then
 			state.active.leave()
+			printh('state leave ' ..  state.active.name)
 		else
 			state._next = name
 			fade.disappear(function()
 				state.active.leave()
+				printh('state leave ' ..  state.active.name)
 				state._finish_switch(state._next)
 			end)
 			return
@@ -41,12 +44,9 @@ function state.switch(name)
 end
 
 function state._finish_switch(name)
-	if state.active and state.active.name != 'default' then
-		printh('state leave ' ..  state.active.name)
-	end
 	state.active = state.list[name]
-	printh('state enter ' .. state.active.name)
 	state._next = ''
+	printh('state enter ' .. state.active.name)
 	state.active.enter()
 	if state.active.fade then
 		fade.appear(function()

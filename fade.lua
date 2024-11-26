@@ -33,16 +33,19 @@ function fade.update()
 	fade._frame += fade._dir
 	if fade._frame > 15 or fade._frame < 1 then
 		fade._dir = 0
-		if fade._callback then
+		if type(fade._callback) == 'function' then
 			fade._callback()
-			fade._callback = nil
+			--fade._callback = function() end
 		end
 	end
 end
 
 function fade._start(callback, dir, speed)
 	fade._accumulator = 0
-	fade._callback = callback or function() end
+	if type(callback) != 'function' then
+		callback = function() end
+	end
+	fade._callback = callback
 	fade._dir = dir
 	fade._speed = speed or 1
 	fade._frame = 1

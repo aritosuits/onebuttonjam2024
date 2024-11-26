@@ -24,15 +24,16 @@ end
 --|| a true class/object system! setmetatable does
 --|| this because it goes "if we don't have something,
 --|| look it up in this second table instead."
---|| local e = entity.create() -- create an entity
---|| e:attach('pos', x, y) -- attach pos component
---|| if e:has({'pos'}) then -- see if entity has pos
+--|| local e = entity.create('test', 5, 5) -- create entity
+--|| e:attach('sprite', 10) -- attach pos component
+--|| if e:has({'sprite'}) then -- see if entity has pos
 --|| e:destroy() -- mark entity for destruction
 --]]
 
 entity = {} -- entity class
-function entity.create(x, y)
+function entity.create(name, x, y)
 	local obj = {}
+	obj.name = name
 	obj.x = x or 0 -- all entities have x
 	obj.y = y or 0 -- all entities have y
 	setmetatable(obj, {__index = entity})
@@ -50,6 +51,7 @@ function entity:detach(comp)
 	self[comp] = nil
 end
 function entity:has(comps)
+	if type(comps) != 'table' then comps = {comps} end
 	for c in all(comps) do
 		if not self[c] then return false end
 	end
@@ -82,9 +84,8 @@ end
 --|| assemblage object. Here's an assemblage that
 --|| creates flowers:
 --|| assemblage.create('flower', function(color, x, y)
---||  local e = entity.create()
+--||  local e = entity.create(name, x, y)
 --||  e:attach('color', color)
---||  e:attach('pos', x, y)
 --||  return e
 --|| end)
 --|| And here's how to use it:
