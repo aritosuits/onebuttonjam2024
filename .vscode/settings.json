@@ -6,6 +6,13 @@
         "editor.autoIndent": "full",
         "editor.tabSize": 4
     },
+    "[pico-8]": {
+        "editor.insertSpaces": false,
+        "editor.useTabStops": true,
+        "editor.detectIndentation": false,
+        "editor.autoIndent": "full",
+        "editor.tabSize": 4
+    },
     "[lua]": {
         "editor.insertSpaces": false,
         "editor.useTabStops": true,

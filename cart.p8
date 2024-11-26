@@ -18,9 +18,9 @@ __lua__
 #include assemblages.lua
 
 function _init()
-    printh('') printh('game init') -- debug print
-    state.init()
-    state.switch('title')
+	printh('') printh('game init') -- debug print
+	state.init()
+	state.switch('title')
 end
 function _update() state.update() end
 function _draw() state.draw() end
