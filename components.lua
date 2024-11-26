@@ -22,8 +22,8 @@ component.create('controller', function()
 end)
 
 -- Items related to physics
-component.create('physics', function(vx, vy)
-	return { grounded = false, vx = vx or 0, vy = vy or 0 }
+component.create('physics', function(vx, vy, mass)
+	return { grounded = false, vx = vx or 0, vy = vy or 0, mass = mass or 1 }
 end)
 
 -- A timer to despawn the entity

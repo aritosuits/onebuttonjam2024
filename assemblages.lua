@@ -22,9 +22,9 @@ end)
 assemblage.create('player_bullet', function(x, y, speed)
 	e = entity.create('player_bullet', x, y)
 	e:attach('projectile', 1)
-	e:attach('sprite', 0)
-	e:attach('collider', 0, 0, 8, 8)
-	e:attach('physics', speed, 0)
+	e:attach('sprite', 1)
+	e:attach('collider', 2, 2, 4, 4)
+	e:attach('physics', speed or 10, 0, 0)
 	return e
 end)
 

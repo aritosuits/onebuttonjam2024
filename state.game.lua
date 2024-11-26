@@ -4,7 +4,7 @@ game = state.create('game')
 game.fade = true
 
 function game.enter()
-	hero = assemblage.player(20, 20)
+	hero = assemblage.player(20, 70)
 end
 
 function game.update(dt)
