@@ -3,6 +3,10 @@
 -- Hide the entity
 component.create('hidden')
 
+component.create('player')
+
+component.create('machine')
+
 -- Items related to the display of an entity
 component.create('sprite', function(num, w, h)
 	return { num = num, w = w or 1, h = h or 1 }
@@ -32,8 +36,8 @@ component.create('despawn', function(ttl)
 	return { ttl = ttl or 0 } -- in frames
 end)
 
--- Stuff related to flying damaging stuff
-component.create('projectile', function(damage)
+-- Stuff related to damaging stuff
+component.create('damage', function(damage)
 	return { damage = damage or 1 }
 end)
 
@@ -56,3 +60,13 @@ end)
 component.create('weapon', function(level)
 	return { level = level or 1 }
 end)
+
+component.create('ai_stationary')
+
+component.create('ai_vertical', function(speed, verticalDirection)
+	return {
+		speed = speed or 1,
+		verticalDirection = verticalDirection or 1
+	}
+end)
+component.create('ai_shooting')
