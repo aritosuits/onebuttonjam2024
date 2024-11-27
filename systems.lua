@@ -43,14 +43,14 @@ system.create('gravity', {'collider', 'physics'},
 			e.physics.vy += gravity * dt
 			e.physics.grounded = false
 			if e:has('frames') then
-				change_anim(hero, 'jump')
+				change_anim(e, 'jump')
 			end
 		elseif not e.physics.grounded then
 			e.physics.vy = 0
 			e.y = 96
 			e.physics.grounded = true
 			if e:has('frames') then
-				change_anim(hero, 'walk')
+				change_anim(e, 'walk')
 			end
 		end
 	end,

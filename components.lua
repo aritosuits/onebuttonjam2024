@@ -17,6 +17,7 @@ function add_anim(e, name, anim)
 end
 function change_anim(e, name)
 	if e.frames.anim == name then return end
+	if e.frames.anim[name] == nil then return end
 	e.frames.anim = name
 	e.frames.frame = 1
 end
