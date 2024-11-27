@@ -16,8 +16,8 @@ system.create('recttext_display', {'recttext'},
 	nil,
 	function(e)
 		if e.hidden then return end
-		rectfill(e.x, e.y, e.x + e.recttext.w, e.y + e.recttext.h, e.recttext.color)
-		print(e.recttext.char, e.x + 1, e.y + 1, 6)
+		rectfill(e.x, e.y, e.x + e.recttext.w, e.y + e.recttext.h, 8)
+		print(e.recttext.char, e.x + 1, e.y + 1, 7)
 	end
 )
 
@@ -45,6 +45,7 @@ system.create('character', {'controller', 'physics'},
 gravity = 8
 system.create('gravity', {'collider', 'physics'},
 	function(e, dt)
+		if e:has('floating') then return end 
 		if e.physics.mass <= 0 then return end
 		-- the hardcoded 96 should be removed
 		-- and a ground collider added if we want pits
@@ -93,6 +94,7 @@ system.create('bullet', {'damage', 'collider'},
 			if e == o then return end
 			if overlap(e, o) then
 				o.health -= e.damage.damage
+				
 				printh("dealt damage: " ..tostr(o.health))
 				if o.health <= 0 then
 					o.health = 0
@@ -124,6 +126,22 @@ system.create('despawner', {'health', 'despawn'},
 		if e.despawn.ttl <= 0 then
 			del(world.entities, e)
 		end
+	end,
+	nil
+)
+
+-- -1 on x and or y to not move in that direction?
+system.create('movement', {'physics', 'movement'},
+	function(e, dt)
+			e.physics.vx += 0.5
+			e.movement.max_y = e.movement.max_y or 5 * dt
+			if e.physics.vx >= e.movement.speed * dt then
+				e.physics.vx = e.movement.speed * dt
+			end
+			e.physics.vy += 0.5 * dt
+			if e.physics.vy >= e.movement.speed * dt then
+				e.physics.vy = e.movement.speed * dt
+			end
 	end,
 	nil
 )

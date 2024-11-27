@@ -7,6 +7,8 @@ component.create('player')
 
 component.create('machine')
 
+component.create('floating')
+
 -- Items related to the display of an entity
 component.create('sprite', function(num, w, h)
 	return { num = num, w = w or 1, h = h or 1 }
@@ -14,7 +16,7 @@ end)
 
 -- It's what you see when an enemy shoots code
 component.create('recttext', function(color, char, w, h)
-	return { color = color, char = char, w = w or 1, h = h or 1 }
+	return { color = color, char = char, w = w or 4, h = h or 4 }
 end)
 
 function add_anim(e, name, anim)
@@ -57,6 +59,10 @@ component.create('physics', function(vx, vy, mass)
 	return { grounded = false, vx = vx or 0, vy = vy or 0, mass = mass or 1 }
 end)
 
+component.create('movement', function(speed, max_x, max_y)
+	return {speed = speed or 1, max_x = max_x or 5, max_y = max_y or 5}
+end)
+
 -- A timer to despawn the entity
 -- Usually used while playing a death animation
 component.create('despawn', function(ttl)
@@ -69,7 +75,10 @@ component.create('damage', function(damage)
 end)
 
 -- Entity health
-component.create('health', function(num)
+component.create('health', function(num, isPlayer)
+	healthMax = 5
+	isPlayer = isPlayer or false;
+	if (num > healthMax) and isPlayer then return healthMax end
 	return num or 3
 end)
 
