@@ -16,7 +16,11 @@ system.create('character', {'controller', 'physics'},
 	function(e, dt)
 		if e.controller.press then
 			e.controller.press = false
-			assemblage.player_bullet(e.x + 2, e.y + 1, 6)
+			if e:has("player") then
+				assemblage.player_bullet(e.x + 2, e.y + 1, 6)
+			else 
+				assemblage.enemy_bullet(e.x + 2, e.y + 1, 6)
+			end
 		elseif e.controller.release then
 			e.controller.release = false
 		elseif e.controller.hold then
@@ -74,15 +78,16 @@ system.create('physics', {'physics'},
 function overlap(e, o)
 	return e.x + e.collider.ox < o.x + o.collider.ox + o.collider.w and o.x + o.collider.ox < e.x + e.collider.ox + e.collider.w and e.y + e.collider.oy < o.y + o.collider.oy + o.collider.h and o.y + o.collider.oy < e.y + e.collider.oy + e.collider.h
 end
-system.create('bullet', {'projectile', 'collider'},
+system.create('bullet', {'damage', 'collider'},
 	function(e, dt)
 		world.each({'collider', 'health'}, function(o)
 			if e == o then return end
 			if overlap(e, o) then
-				o.health -= e.projectile.damage
+				o.health -= e.damage.damage
+				printh("dealt damage: " ..tostr(o.health))
 				if o.health <= 0 then
 					o.health = 0
-					o:attach('destroy', 5)
+					o:attach('despawn', 1)
 				end
 				del(world.entities, e) -- remove bullet
 			end
