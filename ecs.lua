@@ -51,7 +51,7 @@ function entity:detach(comp)
 	self[comp] = nil
 end
 function entity:has(comps)
-	if type(comps) != 'table' then comps = {comps} end
+	if type(comps) != 'table' then return self[comps] != nil end
 	for c in all(comps) do
 		if not self[c] then return false end
 	end

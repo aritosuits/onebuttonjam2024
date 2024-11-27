@@ -8,6 +8,27 @@ component.create('sprite', function(num, w, h)
 	return { num = num, w = w or 1, h = h or 1 }
 end)
 
+function add_anim(e, name, anim)
+	e.frames[name] = anim
+end
+function change_anim(e, name)
+	if e.frames.anim == name then return end
+	e.frames.anim = name
+	e.frames.frame = 1
+end
+component.create('frames', function()
+	return {
+		animating = true,
+		anim = 'default',
+		tick = 0,
+		delay = 4,
+		frame = 1,
+		default = {
+			{ num = 0, delay = 4 }
+		}
+	}
+end)
+
 component.create('autorun', function(speed)
 	return { speed = speed or 1 }
 end)

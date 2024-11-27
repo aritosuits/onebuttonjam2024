@@ -4,7 +4,11 @@ system.create('display', {'sprite'},
 	nil,
 	function(e)
 		if e.hidden then return end
-		spr(e.sprite.num, e.x, e.y, e.sprite.w, e.sprite.h)
+		local s = e.sprite.num
+		if e:has('frames') and e.frames[e.frames.anim] then
+			s = e.frames[e.frames.anim][e.frames.frame].num
+		end
+		spr(s, e.x, e.y, e.sprite.w, e.sprite.h)
 	end
 )
 
@@ -34,10 +38,16 @@ system.create('gravity', {'collider', 'physics'},
 		if e.y < 96 then
 			e.physics.vy += gravity * dt
 			e.physics.grounded = false
+			if e:has('frames') then
+				change_anim(hero, 'jump')
+			end
 		elseif not e.physics.grounded then
 			e.physics.vy = 0
 			e.y = 96
 			e.physics.grounded = true
+			if e:has('frames') then
+				change_anim(hero, 'walk')
+			end
 		end
 	end,
 	nil
@@ -77,6 +87,19 @@ system.create('bullet', {'projectile', 'collider'},
 				del(world.entities, e) -- remove bullet
 			end
 		end)
+	end,
+	nil
+)
+
+system.create('animation', {'frames'},
+	function(e, dt)
+		if e.frames.animating then
+			local delay = (e.frames[e.frames.anim] and e.frames[e.frames.anim][e.frames.frame] and e.frames[e.frames.anim][e.frames.frame].delay) and e.frames[e.frames.anim][e.frames.frame].delay or e.frames.delay
+			e.frames.tick = (e.frames.tick + 1) % delay
+			if (e.frames.tick == 0) then
+				e.frames.frame = e.frames.frame % #e.frames[e.frames.anim] + 1
+			end
+		end
 	end,
 	nil
 )
