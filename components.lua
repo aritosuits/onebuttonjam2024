@@ -12,6 +12,11 @@ component.create('sprite', function(num, w, h)
 	return { num = num, w = w or 1, h = h or 1 }
 end)
 
+-- It's what you see when an enemy shoots code
+component.create('recttext', function(color, char, w, h)
+	return { color = color, char = char, w = w or 1, h = h or 1 }
+end)
+
 function add_anim(e, name, anim)
 	e.frames[name] = anim
 end

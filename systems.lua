@@ -12,6 +12,15 @@ system.create('display', {'sprite'},
 	end
 )
 
+system.create('recttext_display', {'recttext'},
+	nil,
+	function(e)
+		if e.hidden then return end
+		rectfill(e.x, e.y, e.x + e.recttext.w, e.y + e.recttext.h, e.recttext.color)
+		print(e.recttext.char, e.x + 1, e.y + 1, 6)
+	end
+)
+
 system.create('character', {'controller', 'physics'},
 	function(e, dt)
 		if e.controller.press then
