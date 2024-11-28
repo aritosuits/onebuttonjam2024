@@ -21,11 +21,30 @@ system.create('recttext_display', {'recttext'},
 	end
 )
 
-system.create('character', {'controller', 'physics'},
+system.create('controller', {'controller', 'physics'},
 	function(e, dt)
 		if e.controller.press then
 			e.controller.press = false
-			if e:has("player") then
+			if e.physics.grounded then
+				e.physics.vy = -6.5
+			else
+				e.physics.vy = 6
+				change_anim(e, 'kick')
+			end
+		elseif e.controller.release then
+			e.controller.release = false
+		elseif e.controller.hold then
+			e.controller.hold = false
+		end
+	end,
+	nil
+)
+
+system.create('machine', {'omg', 'controller', 'physics'},
+	function(e, dt)
+		if e.controller.press then
+			e.controller.press = false
+			if e:has('player') then
 				assemblage.player_bullet(e.x + 2, e.y + 1, 6)
 			else 
 				assemblage.enemy_bullet(e.x + 2, e.y + 1, 6)
@@ -35,7 +54,7 @@ system.create('character', {'controller', 'physics'},
 		elseif e.controller.hold then
 			e.controller.hold = false
 			if e.controller.secs >= 0.1 and e.physics.grounded then
-				e.physics.vy = -4
+				e.physics.vy = -3.5
 			end
 		end
 	end,
@@ -47,20 +66,24 @@ system.create('gravity', {'collider', 'physics'},
 	function(e, dt)
 		if e:has('floating') then return end 
 		if e.physics.mass <= 0 then return end
-		-- the hardcoded 96 should be removed
+		-- the hardcoded 80 should be removed
 		-- and a ground collider added if we want pits
-		if e.y < 96 then
+		if e.y < 80 then
 			e.physics.vy += gravity * dt
-			e.physics.grounded = false
-			if e:has('frames') then
-				change_anim(e, 'jump')
+			if e.physics.grounded then
+				e.physics.grounded = false
+				if e:has('frames') then
+					change_anim(e, 'jump')
+				end
 			end
-		elseif not e.physics.grounded then
-			e.physics.vy = 0
-			e.y = 96
-			e.physics.grounded = true
-			if e:has('frames') then
-				change_anim(e, 'walk')
+		else
+			e.physics.vy /= 1.5
+			e.y = 80
+		 	if not e.physics.grounded then
+				e.physics.grounded = true
+				if e:has('frames') then
+					change_anim(e, 'walk')
+				end
 			end
 		end
 	end,
@@ -133,15 +156,15 @@ system.create('despawner', {'health', 'despawn'},
 -- -1 on x and or y to not move in that direction?
 system.create('movement', {'physics', 'movement'},
 	function(e, dt)
-			e.physics.vx += 0.5
-			e.movement.max_y = e.movement.max_y or 5 * dt
-			if e.physics.vx >= e.movement.speed * dt then
-				e.physics.vx = e.movement.speed * dt
-			end
-			e.physics.vy += 0.5 * dt
-			if e.physics.vy >= e.movement.speed * dt then
-				e.physics.vy = e.movement.speed * dt
-			end
+		e.physics.vx += 0.5
+		e.movement.max_y = e.movement.max_y or 5 * dt
+		if e.physics.vx >= e.movement.speed * dt then
+			e.physics.vx = e.movement.speed * dt
+		end
+		e.physics.vy += 0.5 * dt
+		if e.physics.vy >= e.movement.speed * dt then
+			e.physics.vy = e.movement.speed * dt
+		end
 	end,
 	nil
 )
