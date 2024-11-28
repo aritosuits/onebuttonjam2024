@@ -61,17 +61,23 @@ assemblage.create('machine', function(type, x, y, health)
 	if type == 'copier' then 
 		e:attach('sprite', 0)
 		e.health = 2
-		e:attach('ai_stationary')
+		e:attach('ai')
 		e:attach('damage',1)
-	elseif type == 'fax' then 
-		e:attach('sprite', 0)
-		e.health = 17
-		e:attach('ai_shooting')
+	elseif type == 'computer' then 
+		e:attach('sprite', 252)
+		e.health = 1
+		e:attach('ai')
+		add_anim(e, 'default', {{ num = 0 }})
+		add_anim(e, 'idle', {{ num = 252 }, { num = 236 }})
+		add_behavior(e, 'shooter', {{30, 2}})
+		--add_anim(e, 'shoot', {{num = 220}})
+		
 	else 
 		e:attach('sprite', 0)
 		e:attach('health', 3)
 		e:attach('floating')
-		e:attach('ai_stationary')
+		e:attach('ai')
+		e:attach('ai_brain')
 		e:attach('damage',1)
 		e:attach('bullet',1)
 		e:attach('movement', 20, 15, 0, true)

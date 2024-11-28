@@ -168,3 +168,9 @@ system.create('movement', {'physics', 'movement'},
 	end,
 	nil
 )
+
+system.create('ai_brain', {'ai', 'movement', 'frames'}, 
+	function (e, dt)
+		
+	end
+)

@@ -97,12 +97,20 @@ component.create('weapon', function(level)
 	return { level = level or 1 }
 end)
 
-component.create('ai_stationary')
+-- "ai"
+function add_behavior(e, name, behavior)
+	e.ai[name] = behavior
+end
 
-component.create('ai_vertical', function(speed, verticalDirection)
+
+component.create('ai', function() 
 	return {
-		speed = speed or 1,
-		verticalDirection = verticalDirection or 1
+		behavior = 'default',
+		projectile_sprite_num = 50, 
+		
+		default = {
+			{max_sight_length = 10, beat = 2}
+		}
 	}
 end)
-component.create('ai_shooting')
+
