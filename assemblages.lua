@@ -58,6 +58,7 @@ assemblage.create('machine', function(type, x, y, health)
 	e = entity.create('machine', x, y)
 	e:attach('physics')
 	e:attach('collider', 0, 0, 8, 8)
+	e:attach('frames')
 	if type == 'copier' then 
 		e:attach('sprite', 0)
 		e.health = 2
@@ -71,7 +72,6 @@ assemblage.create('machine', function(type, x, y, health)
 		add_anim(e, 'idle', {{ num = 252 }, { num = 236 }})
 		add_behavior(e, 'shooter', {{30, 2}})
 		--add_anim(e, 'shoot', {{num = 220}})
-		
 	else 
 		e:attach('sprite', 0)
 		e:attach('health', 3)
