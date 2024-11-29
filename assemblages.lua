@@ -5,7 +5,7 @@
 --|| components that a player needs.
 --]]
 assemblage.create('player', function(x, y)
-	e = entity.create('player', x, y)
+	e = entity.create('player', x*8, y*8)
 	e:attach('controller')
 	e:attach('autorun', 30)
 	e:attach('health', 3, true)
@@ -28,7 +28,7 @@ end)
 --|| A helper function to make a player bullet.
 --]]
 assemblage.create('player_bullet', function(x, y, speed)
-	e = entity.create('player_bullet', x, y)
+	e = entity.create('player_bullet', x*8, y*8)
 	e:attach('damage', 1)
 	e:attach('recttext', 6, 'A')
 	e:attach('despawn', 60) -- 2 seconds
@@ -40,7 +40,7 @@ assemblage.create('player_bullet', function(x, y, speed)
 end)
 
 assemblage.create('enemy_bullet', function(x, y, speed)
-	e = entity.create('enemy_bullet', x, y)
+	e = entity.create('enemy_bullet', x*8, y*8)
 	e:attach('damage', 1)
 	e:attach('sprite', 1)
 	e:attach('collider', 2, 2, 4, 4)
@@ -55,7 +55,7 @@ end)
 --|| components that an enemy machine would need.
 --]]
 assemblage.create('machine', function(type, x, y, health)
-	e = entity.create('machine', x, y)
+	e = entity.create('machine', x*8, y*8)
 	e:attach('physics')
 	e:attach('collider', 0, 0, 8, 8)
 	e:attach('frames')
@@ -110,16 +110,3 @@ assemblage.create('machine', function(type, x, y, health)
 
 	return e
 end)
-
---assemblage.create('healthSprite', function(index, full)
---	e = entity.create('healthSprite', (index - 1) * 9, y or 3, full or true)
---	printh("full: " ..tostr(full))
---	if full then 
---		e:attach('sprite', 223)
---	else 
---		e:attach('sprite', 207)
---	end
---	e:attach('physics')
---	e:attach('autorun', 30)
---	return e
---end)
