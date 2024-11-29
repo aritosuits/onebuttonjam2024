@@ -10,13 +10,16 @@ end
 
 function game.update(dt)
 	system.update(dt)
+	particle.update(dt)
 end
 
 function game.draw()
+	-- camera(hero.x - 30, 0)
 	cls()
-	camera(hero.x - 30, 0)
 	-- background
 	map(0, 0)
+	-- particles
+	particle.draw()
 	-- entities
 	system.draw()
 	-- ui

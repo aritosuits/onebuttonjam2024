@@ -27,9 +27,12 @@ system.create('controller', {'controller', 'physics'},
 			e.controller.press = false
 			if e.physics.grounded then
 				e.physics.vy = -6.5
+				particle.create('smoke', e.x + 10, e.y + 21, 5)
 			else
 				e.physics.vy = 6
 				change_anim(e, 'kick')
+				e:attach('smash')
+				particle.create('trail', e.x + 8, e.y + 12, 8)
 			end
 		elseif e.controller.release then
 			e.controller.release = false
@@ -83,6 +86,13 @@ system.create('gravity', {'collider', 'physics'},
 				e.physics.grounded = true
 				if e:has('frames') then
 					change_anim(e, 'walk')
+				end
+				if e:has({'player', 'smash'}) then
+					particle.create('smash', e.x + 10, e.y + 21, 10)
+					e:detach('smash')
+					shake.screen(4, 3)
+				else
+					particle.create('smoke', e.x + 10, e.y + 21, 10)
 				end
 			end
 		end

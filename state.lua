@@ -77,6 +77,7 @@ function state.update()
 		state.active.hold(secs)
 	end
 	state.active.update(dt)
+	shake.update(dt)
 end
 
 function state.draw()

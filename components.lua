@@ -3,6 +3,8 @@
 -- Hide the entity
 component.create('hidden')
 
+component.create('smash')
+
 component.create('player')
 
 component.create('machine')

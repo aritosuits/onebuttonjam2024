@@ -51,3 +51,33 @@ function fade._start(callback, dir, speed)
 	fade._frame = 1
 	if dir < 0 then fade._frame = 15 end
 end
+
+-- shaking system
+
+shake = {}
+shake.active = false
+
+function shake.screen(amount, time)
+	shake.ttl = time
+	shake.amount = amount
+	shake.strength = 1
+	shake.active = true
+end
+
+function shake.update(dt)
+	if not shake.active then
+		camera(hero.x - 30, 0)
+		return
+	end
+	shake.ttl -= 1
+	if shake.ttl <= 0 then
+		shake.active = false
+	end
+	local s_x = rnd(shake.amount) - (shake.amount / 2)
+	local s_y = rnd(shake.amount) - (shake.amount / 2)
+	local camera_x = shake.strength * s_x
+	local camera_y = shake.strength * s_y
+	camera(hero.x - 30 + camera_x, 0 + camera_y)
+	shake.strength *= 0.9
+	if shake.strength < 0.025 then shake.strength = 0 end
+end

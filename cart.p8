@@ -16,6 +16,7 @@ __lua__
 #include components.lua
 #include systems.lua
 #include assemblages.lua
+#include particle.lua
 
 skipTitle = true -- set to false to get to the title screen, remove before shipping
 
