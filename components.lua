@@ -12,8 +12,8 @@ component.create('machine')
 component.create('floating')
 
 -- Items related to the display of an entity
-component.create('sprite', function(num, w, h, scale_x, scale_y)
-	return { num = num, w = w or 1, h = h or 1, scale_x = scale_x or 1, scale_y = scale_y or 1}
+component.create('sprite', function(num, w, h, scale)
+	return { num = num, w = w or 1, h = h or 1, scale = scale or 1}
 end)
 
 -- It's what you see when an enemy shoots code

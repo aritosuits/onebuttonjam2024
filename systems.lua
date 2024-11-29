@@ -1,5 +1,15 @@
 -- systems
 
+function zspr(n,w,h,dx,dy,dz)
+	sx = 8 * (n % 16)
+	sy = 8 * flr(n / 16)
+	sw = 8 * w
+	sh = 8 * h
+	dw = sw * dz
+	dh = sh * dz
+	sspr(sx,sy,sw,sh, dx,dy,dw,dh)
+  end
+
 system.create('display', {'sprite'},
 	nil,
 	function(e)
@@ -8,11 +18,8 @@ system.create('display', {'sprite'},
 		if e:has('frames') and e.frames[e.frames.anim] then
 			s = e.frames[e.frames.anim][e.frames.frame].num
 		end
-		if e.sprite.scale_x > 1 or e.sprite.scale_y > 1 then 
-			-- there's so broken math here that produces a bad offset and 
-			-- terrible scaling. I'm looking for uniform!
-			sx, sy = (s % 16) * 8, (s \ 16) * 8
-			sspr(sx, sy, 8, 8, e.x-8 , e.y-8, e.sprite.scale_x, e.sprite.scale_y )
+		if e.sprite.scale > 1 then 
+			zspr(s, e.sprite.w, e.sprite.h, e.x, e.y, e.sprite.scale)
 		else
 			spr(s, e.x, e.y, e.sprite.w, e.sprite.h)
 		end
@@ -141,6 +148,22 @@ system.create('bullet', {'damage', 'collider'},
 					o:attach('despawn', 1)
 				end
 				del(world.entities, e) -- remove bullet
+			end
+		end)
+	end,
+	nil
+)
+system.create('damage_on_touch', {'damage', 'collider'},
+	function(e, dt)
+		world.each({'collider', 'health'}, function(o)
+			if e == o then return end
+			if overlap(e, o) then
+				o.health -= e.damage.damage
+				printh("dealt damage: " ..tostr(o.health))
+				if o.health <= 0 then
+					o.health = 0
+					o:attach('despawn', 1)
+				end
 			end
 		end)
 	end,

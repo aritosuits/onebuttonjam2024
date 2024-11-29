@@ -77,16 +77,23 @@ assemblage.create('machine', function(type, x, y, health)
 		change_anim(e, 'idle')
 		--add_anim(e, 'shoot', {{num = 220}})
 	elseif type == 'cone' then
-		e:attach('sprite', 114, 1, 1, 12, 12)
+		e:attach('sprite', 114, 1, 1, 2)
 		e.health = 20
-		--e:attach('sprite', 114, 1, 1)
 		-- this damage is somehow never dealt.
-		e:attach('damage', 10)
+		e:attach('damage', 1)
+		e:attach('damage_on_touch')
 		e:attach('floating')
-		e:attach('bullet',1)
 		add_anim(e, 'default', {{ num = 114 }, {num = 115}})
 		e.frames.delay = 3
 		change_anim(e, 'default')
+	elseif type == 'wall' then
+		e:attach('sprite', 169, 1, 1)
+		e.health = 20
+		-- this damage is somehow never dealt.
+		e:attach('damage', 1)
+		e:attach('damage_on_touch')
+		e:attach('floating')
+		
 	else 
 		e:attach('sprite', 52)
 		e:attach('health', 3)

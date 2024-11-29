@@ -7,7 +7,8 @@ function game.enter()
 	hero = assemblage.player(20, 70)
 	enemy = assemblage.machine('computer', 0, 0, 1)
 	enemy2 = assemblage.machine('blah', 60, 70, 1)
-	assemblage.machine('cone', 80, 95, 1)
+	assemblage.machine('cone', 80, 90, 1)
+	assemblage.machine('wall', 28, 11, 1)
 end
 
 function game.update(dt)
