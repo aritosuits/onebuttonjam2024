@@ -5,7 +5,9 @@ game.fade = true
 
 function game.enter()
 	hero = assemblage.player(20, 70)
-	enemy = assemblage.machine('computer', 60, 90)
+	enemy = assemblage.machine('computer', 0, 0, 1)
+	enemy2 = assemblage.machine('blah', 60, 70, 1)
+	assemblage.machine('cone', 80, 95, 1)
 end
 
 function game.update(dt)

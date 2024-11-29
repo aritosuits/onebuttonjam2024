@@ -8,7 +8,14 @@ system.create('display', {'sprite'},
 		if e:has('frames') and e.frames[e.frames.anim] then
 			s = e.frames[e.frames.anim][e.frames.frame].num
 		end
-		spr(s, e.x, e.y, e.sprite.w, e.sprite.h)
+		if e.sprite.scale_x > 1 or e.sprite.scale_y > 1 then 
+			-- there's so broken math here that produces a bad offset and 
+			-- terrible scaling. I'm looking for uniform!
+			sx, sy = (s % 16) * 8, (s \ 16) * 8
+			sspr(sx, sy, 8, 8, e.x-8 , e.y-8, e.sprite.scale_x, e.sprite.scale_y )
+		else
+			spr(s, e.x, e.y, e.sprite.w, e.sprite.h)
+		end
 	end
 )
 

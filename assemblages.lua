@@ -60,29 +60,47 @@ assemblage.create('machine', function(type, x, y, health)
 	e:attach('collider', 0, 0, 8, 8)
 	e:attach('frames')
 	if type == 'copier' then 
-		e:attach('sprite', 0)
+		e:attach('sprite', 52)
 		e.health = 2
 		e:attach('ai')
 		e:attach('damage',1)
 	elseif type == 'computer' then 
-		e:attach('sprite', 252)
-		e.health = 1
+		e:attach('sprite', 52)
+		e.health = 10
 		e:attach('ai')
-		add_anim(e, 'default', {{ num = 0 }})
-		add_anim(e, 'idle', {{ num = 252 }, { num = 236 }})
-		add_behavior(e, 'shooter', {{30, 2}})
+		e:attach('ai_brain')
+		e:attach('bullet',1)
+		add_anim(e, 'default', {{ num = 52 }})
+		add_anim(e, 'idle', {{ num = 52 }, { num = 53 }})
+		add_behavior(e, 'shooter', {{54, 2}})
+		e.frames.delay = 3
+		change_anim(e, 'idle')
 		--add_anim(e, 'shoot', {{num = 220}})
+	elseif type == 'cone' then
+		e:attach('sprite', 114, 1, 1, 12, 12)
+		e.health = 20
+		--e:attach('sprite', 114, 1, 1)
+		-- this damage is somehow never dealt.
+		e:attach('damage', 10)
+		e:attach('floating')
+		e:attach('bullet',1)
+		add_anim(e, 'default', {{ num = 114 }, {num = 115}})
+		e.frames.delay = 3
+		change_anim(e, 'default')
 	else 
-		e:attach('sprite', 0)
+		e:attach('sprite', 52)
 		e:attach('health', 3)
 		e:attach('floating')
 		e:attach('ai')
 		e:attach('ai_brain')
-		e:attach('damage',1)
 		e:attach('bullet',1)
 		e:attach('movement', 20, 15, 0, true)
+		add_anim(e, 'default', {{ num = 52 }})
+		add_anim(e, 'idle', {{ num = 52 }, { num = 53 }})
+		change_anim(e, 'idle')
 	end
 	-- ...
+
 	return e
 end)
 
