@@ -50,6 +50,8 @@ assemblage.create('enemy_bullet', function(x, y, speed)
 	return e
 end)
 
+function create_multipart_sprite(x, y ) end
+
 --[[
 --|| A helper function that adds all general
 --|| components that an enemy machine would need.
@@ -65,7 +67,7 @@ assemblage.create('machine', function(type, x, y, health)
 		e:attach('ai')
 		e:attach('damage',1)
 	elseif type == 'computer' then 
-		e:attach('sprite', 52)
+		e:attach('sprite', 52, 1, 1, 2)
 		e.health = 10
 		e:attach('ai')
 		e:attach('ai_brain')

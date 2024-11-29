@@ -8,7 +8,7 @@ function game.enter()
 	enemy = assemblage.machine('computer', 0, 0, 1)
 	enemy2 = assemblage.machine('blah', 21, 12, 1)
 	assemblage.machine('cone', 25, 12, 1)
-	assemblage.machine('wall', 28, 11, 1)
+	assemblage.machine('computer', 28, 11, 1)
 end
 
 function game.update(dt)
