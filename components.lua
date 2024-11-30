@@ -11,6 +11,8 @@ component.create('machine')
 
 component.create('floating')
 
+component.create('bullet')
+
 component.create('ouch', function(ttl)
 	return { enabled = true, ttl = ttl or 20 }
 end)

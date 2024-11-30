@@ -33,6 +33,7 @@ end)
 --]]
 assemblage.create('player_bullet', function(x, y, speed)
 	e = entity.create('player_bullet', x, y)
+	e:attach('bullet')
 	e:attach('damage', 1)
 	e:attach('recttext', 6, 'A')
 	e:attach('despawn', 60) -- 2 seconds
@@ -46,6 +47,7 @@ end)
 
 assemblage.create('enemy_bullet', function(parent, x, y, speed)
 	e = entity.create('enemy_bullet', x, y )
+	e:attach('bullet')
 	e:attach('damage', 1)
 	e:attach('sprite', 48, 1, 1, 2)
 	e:attach('physics', (speed or -10), 0, 0)
@@ -117,6 +119,12 @@ assemblage.create('machine', function(type, x, y)
 		e.sprite.h = 3
 		add_anim(e, 'default', {{ num = e.sprite.num }, {num = 79}})
 		e:attach('offensive_collider', 2, 1, 4, 23)
+		e:attach('floating')
+	elseif type == 'fan' then
+		e:attach('sprite', 76, 2, 1)
+		e.sprite.scale = 2
+		add_anim(e, 'default', {{ num = e.sprite.num }, {num = 106 }, {num = 108}})
+		e:attach('offensive_collider', 10, 10, 14, 4)
 		e:attach('floating')
 	else 
 		e:attach('sprite', 1)
