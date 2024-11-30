@@ -228,15 +228,15 @@ system.create('ai_shoot_dumb', {'ai_shoot_dumb', 'frames'}, function(e, dt)
 
 system.create('ai_shoot_smrt', {'ai_shoot_smrt', 'frames'}, function(e, dt)
 	if e.ai_shoot_smrt.ttsa <= 0 then
-		e.ai_shoot_smrt.ttsa = 20
 		if e.y == hero.y then
 			if hero.x <= (e.x + e.ai_shoot_smrt.max_range) then
 				change_anim(e, 'shooting', true)
-	 			assemblage.enemy_bullet(e, e.x + 2, e.y + 1, -2)
+				assemblage.enemy_bullet(e, e.x + 2, e.y + 1, -2)
 			else 
 				--printh(e.ai_shoot_smrt.ttsa .. "range: " .. e.ai_shoot_smrt.max_range .. "hero dist: " .. (e.ai_shoot_smrt.max_range - hero.x))
 				change_anim(e, 'idle')
 			end
+			e.ai_shoot_smrt.ttsa = 20
 		end
 	else
 	 e.ai_shoot_smrt.ttsa -= 1

@@ -107,13 +107,13 @@ component.create('weapon', function(level)
 end)
 
 component.create('ai_shoot_dumb', function ()
-	return {ttsa = 20}	
+	return {ttsa = 30}	
 end)
 
 component.create('ai_shoot_smrt', function(max_range) 
 	return {
-		max_range = max_range or 10,
-		ttsa = 0 --time to shoot again
+		max_range = max_range or 5,
+		ttsa = 40 --time to shoot again
 	}
 end)
 
