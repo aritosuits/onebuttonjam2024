@@ -40,10 +40,11 @@ assemblage.create('player_bullet', function(x, y, speed)
 	return e
 end)
 
-assemblage.create('enemy_bullet', function(parent, x, y, speed)
+assemblage.create('enemy_bullet', function(parent, x, y, speed, sprite)
 	e = entity.create('enemy_bullet', x, y )
+	local s = sprite or 1
 	e:attach('damage', 1)
-	e:attach('sprite', 1)
+	e:attach('sprite', s)
 	e:attach('collider', 2, 2, 4, 4)
 	e:attach('physics', -1 * speed or -10, 0, 0)
 	e:attach('health', 1)
@@ -75,17 +76,23 @@ assemblage.create('machine', function(type, x, y, health)
 		add_anim(e, 'shooting', {{num = 54}})
 		e.frames.delay = 3
 		change_anim(e, 'idle')
+	elseif type == 'shredder' then
+		e:attach('sprite', 55, 1, 1, 2)
+		add_anim(e, 'idle', {{ num = 55 }, {num = 56}})
+		add_anim(e, 'shooting', {{num = 56}})
+		e.frames.delay = 3
+		change_anim(e, 'idle')
+		e:attach('ai_shoot_dumb')
 	elseif type == 'cone' then
 		e:attach('sprite', 114, 1, 1, 2)
-		-- this damage is somehow never dealt.
 		e:attach('floating')
 		add_anim(e, 'default', {{ num = 114 }, {num = 115}})
 		e.frames.delay = 3
 		change_anim(e, 'default')
 	elseif type == 'wall' then
-		e:attach('sprite', 169, 1, 1)
-		-- this damage is somehow never dealt.
-		e:attach('damage_on_touch')
+		e:attach('sprite', 78, 1, 1)
+		e.sprite.h = 3
+		add_anim(e, 'default', {{ num = 78 }, {num = 79}})
 		e:attach('floating')
 	else 
 		e:attach('sprite', 52)
