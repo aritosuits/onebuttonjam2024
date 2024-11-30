@@ -4,11 +4,11 @@ game = state.create('game')
 game.fade = true
 
 function game.enter()
-	hero = assemblage.player(3, 9)
-	enemy = assemblage.machine('computer', 0, 0, 1)
-	enemy2 = assemblage.machine('blah', 21, 12, 1)
-	assemblage.machine('cone', 25, 12, 1)
-	assemblage.machine('computer', 28, 11, 1)
+	hero = assemblage.player(24, 72)
+	enemy = assemblage.machine('computer', 8, 8, 1)
+	enemy2 = assemblage.machine('blah', 169, 96, 1)
+	assemblage.machine('cone', 200, 06, 1)
+	assemblage.machine('computer', 182, 88, 1)
 end
 
 function game.update(dt)

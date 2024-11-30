@@ -100,20 +100,20 @@ component.create('weapon', function(level)
 	return { level = level or 1 }
 end)
 
--- "ai"
-function add_behavior(e, name, behavior)
-	e.ai[name] = behavior
-end
+component.create('ai_shoot_dumb', function ()
+	return {ttsa = 20}	
+end)
 
-
-component.create('ai', function() 
+component.create('ai_shoot_smrt', function(max_range) 
 	return {
-		behavior = 'default',
-		projectile_sprite_num = 50, 
-		
-		default = {
-			{max_sight_length = 10, beat = 2}
-		}
+		max_range = max_range or 10,
+		ttsa = 0 --time to shoot again
 	}
 end)
 
+component.create('damage_on_touch', function (damage)
+	if not e:has('player') then return end
+	return {
+		damage = damage or 1
+	}
+end)
