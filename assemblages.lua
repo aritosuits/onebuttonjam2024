@@ -89,6 +89,7 @@ assemblage.create('machine', function(type, x, y)
 		add_anim(e, 'shooting', {{num = 54}})
 		e.frames.delay = 3
 		change_anim(e, 'idle')
+		e:attach('defensive_collider', 0, 0, e.sprite.scale * 8, e.sprite.scale * 8)
 	elseif type == 'shredder' then
 		e:attach('sprite', 55, 1, 1, 2)
 		e:attach('defensive_collider', -1, -1, 10, 10)
@@ -97,21 +98,27 @@ assemblage.create('machine', function(type, x, y)
 		e.frames.delay = 3
 		change_anim(e, 'idle')
 		e:attach('ai_shoot_dumb')
+		e:attach('defensive_collider', 0, 0, e.sprite.scale * 8, e.sprite.scale * 8)
 	elseif type == 'cone' then
 		e:attach('sprite', 114, 1, 1, 2)
 		e:attach('floating')
 		add_anim(e, 'default', {{ num = e.sprite.num }, {num = 115}})
 		e.frames.delay = 3
 		change_anim(e, 'default')
+		e.offensive_collider.ox = 4
+		e.offensive_collider.oy = 2
+		e.offensive_collider.w = e.sprite.scale * 4
+		e.offensive_collider.h = e.sprite.scale * 6
+		e:attach('defensive_collider', 5, 2, e.sprite.scale * 3, e.sprite.scale * 6)
 	elseif type == 'wall' then
 		e:attach('sprite', 78, 1, 1)
 		e.sprite.h = 3
 		add_anim(e, 'default', {{ num = e.sprite.num }, {num = 79}})
 		e:attach('floating')
+		e:attach('defensive_collider', 0, 0, e.sprite.scale * 2, e.sprite.scale * 4)
 	else 
 		e:attach('sprite', 1)
 		e:attach('floating')
-		--e:attach('ai_shoot_dumb')
 		add_anim(e, 'default', {{ num = 1 }})
 		add_anim(e, 'idle', {{ num = 1 }})
 		change_anim(e, 'idle')
