@@ -81,7 +81,7 @@ assemblage.create('machine', function(type, x, y)
 	e:attach('health', 1)
 	e:attach('scorable', 10)
 	e:attach('tossable')
-	e:attach('knockback', -3)
+	e:attach('knockback', -2)
 	if type == 'copier' then 
 		e:attach('sprite', 52)
 		e:attach('defensive_collider', -1, -1, 10, 10)
@@ -147,5 +147,18 @@ assemblage.create('button', function (x, y)
 	e:attach('frames')
 	add_anim(e, 'default', {{num = e.sprite.num}})
 	add_anim(e, 'pressed', {{num = 60}})
+	return e
+end)
+
+assemblage.create('door', function (x, y, tele_x, tele_y)
+	e = entity.create('door', x, y)
+	local tele_x = tele_x or (2 * 8)
+	local tele_y = tele_y or (9 * 8)
+	e:attach('health', 100)
+	e:attach('sprite', 101, 2, 2)
+	e.sprite.scale = 1.5
+	e:attach('teleport', tele_x, tele_y)
+	e:attach('defensive_collider', 20, 10, e.sprite.scale * 16, e.sprite.scale * 16)
+
 	return e
 end)

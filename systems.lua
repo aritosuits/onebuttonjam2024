@@ -153,6 +153,21 @@ function overlap(e, o)
 	return e.x + e.offensive_collider.ox < o.x + o.defensive_collider.ox + o.defensive_collider.w and o.x + o.defensive_collider.ox < e.x + e.offensive_collider.ox + e.offensive_collider.w and e.y + e.offensive_collider.oy < o.y + o.defensive_collider.oy + o.defensive_collider.h and o.y + o.defensive_collider.oy < e.y + e.offensive_collider.oy + e.offensive_collider.h
 end
 
+system.create('teleporter', {'teleport', 'defensive_collider'}, 
+	function(e, dt)
+			if overlap(hero, e) then		 
+				hero.x = e.teleport.x
+				--hero.y = e.teleport.y
+				hero.physics.vx = 0
+				--hero.physics.vy = 0
+				--hero:detach('smash')
+				--hero.offensive_collider.enabled = false
+				shake.screen(2, 1)
+				hero.physics.smashing = -1
+			end
+	end
+)
+
 system.create('do_harm', {'damage', 'offensive_collider'},
 	function(e, dt)
 		world.each({'defensive_collider', 'health'}, function(o)
@@ -179,6 +194,7 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 						o:detach('tutorial')
 						o:detach('defensive_collider')
 					
+
 					elseif not o:has('player') then
 						-- particle.create('smoke', e.x + 10, e.y + 21, 5)
 						if o:has('tossable') then

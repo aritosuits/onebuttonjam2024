@@ -157,3 +157,7 @@ end)
 component.create('scorable', function(amount)
 	return amount
 end)
+
+component.create('teleport', function(x, y)
+	return {x = x or 0, y = y or 0}
+end)
