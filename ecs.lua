@@ -130,7 +130,8 @@ function system.create(name, comps, update, draw)
 		end
 	end
 	function s:draw()
-		for e in all(world.entities) do
+		for i = #world.entities, 1, -1 do
+			local e = world.entities[i]
 			if e:has(self.comps) then
 				if draw then draw(e) end
 			end
