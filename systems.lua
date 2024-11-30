@@ -116,7 +116,8 @@ system.create('gravity', {'collider', 'physics'},
 
 system.create('autorun', {'physics', 'autorun'},
 	function(e, dt)
-		e.physics.vx += 0.5 * dt
+		e.physics.vx /= 1.05
+		e.physics.vx += 2.0 * dt
 		if e.physics.vx >= e.autorun.speed * dt then
 			e.physics.vx = e.autorun.speed * dt
 		end
@@ -147,7 +148,7 @@ system.create('do_harm', {'damage', 'collider'},
 
 				o.health.current -= e.damage.damage
 				if o:has('knockback') then
-					o.x -= 5
+					o.physics.vx = -2
 				end
 				o.health.iframes = time() + 0.5
 				if o.health.current <= 0 then
