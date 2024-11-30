@@ -4,14 +4,13 @@ game = state.create('game')
 game.fade = true
 
 function game.enter()
-	hero = assemblage.player(24, 72)
 	spawner.init()
 end
 
 function game.update(dt)
+	spawner.update(dt)
 	system.update(dt)
 	particle.update(dt)
-	spawner.update(dt)
 end
 
 function game.draw()
@@ -25,6 +24,7 @@ function game.draw()
 	system.draw()
 	-- ui
 	camera()
+printh('need hero')
 	for i = 1, 3 do
 		spr(hero.health.current >= i and 223 or 207, (i-1) * 9 + 2, 3) -- health
 	end
