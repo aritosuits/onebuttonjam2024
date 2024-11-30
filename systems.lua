@@ -163,6 +163,7 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 						o:attach('despawn', 1)
 					else 
 						-- player death here
+						sfx(16)
 					end
 				end
 				if e:has('bullet') then
