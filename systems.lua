@@ -213,10 +213,10 @@ system.create('movement', {'physics', 'movement'},
 )
 
 
-system.create('ai_shoot_dumb', {'ai_shoot_dumb', 'frames', 'bullet'}, function(e, dt)
+system.create('ai_shoot_dumb', {'ai_shoot_dumb', 'frames'}, function(e, dt)
 	if e.ai_shoot_dumb.ttsa <= 0 then
 		change_anim(e, 'shooting', true)
-	 	assemblage.enemy_bullet(e, e.x + 2, e.y + 1, e.bullet.sprite)
+	 	assemblage.enemy_bullet(e, e.x + 2, e.y + 1, -10)
 	 	e.ai_shoot_dumb.ttsa = 20
 	 	--printh(e.ai_shoot_dumb.ttsa)
 	else

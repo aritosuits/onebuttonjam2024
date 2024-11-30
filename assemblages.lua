@@ -40,17 +40,25 @@ assemblage.create('player_bullet', function(x, y, speed)
 	return e
 end)
 
-assemblage.create('enemy_bullet', function(parent, x, y, speed, sprite)
+assemblage.create('enemy_bullet', function(parent, x, y, speed)
 	e = entity.create('enemy_bullet', x, y )
-	local s = sprite or 1
 	e:attach('damage', 1)
-	e:attach('sprite', s)
+	e:attach('sprite', 48, 1, 1, 2)
+	e:attach('physics', (speed or -10), 0, 0)
 	e:attach('collider', 2, 2, 4, 4)
-	e:attach('physics', -1 * speed or -10, 0, 0)
 	e:attach('health', 1)
 	e:attach('despawn', 60)
-	printh("made bullet")
 	e:attach('parent', parent)
+	if parent.name == 'copier' then  
+		e.sprite.num = 51
+	elseif parent.name == 'computer' then 
+		e.sprite.num = 50
+		e.sprite.scale = 1
+	elseif parent.name == 'shredder' then 
+		e.sprite.num = rnd({57,58})
+		e.physics.vx = 0
+		e.physics.vy = -5
+	end
 	return e
 end)
 
@@ -60,6 +68,7 @@ end)
 --]]
 assemblage.create('machine', function(type, x, y)
 	e = entity.create('machine', x, y)
+	e.name = type
 	e:attach('physics')
 	e:attach('collider', 0, 0, 8, 8)
 	e:attach('frames')
