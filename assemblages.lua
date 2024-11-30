@@ -57,7 +57,7 @@ end)
 --|| A helper function that adds all general
 --|| components that an enemy machine would need.
 --]]
-assemblage.create('machine', function(type, x, y, health)
+assemblage.create('machine', function(type, x, y)
 	e = entity.create('machine', x, y)
 	e:attach('physics')
 	e:attach('collider', 0, 0, 8, 8)
