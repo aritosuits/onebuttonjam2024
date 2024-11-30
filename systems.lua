@@ -172,7 +172,14 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 				o.health.iframes = time() + 0.5
 				if o.health.current <= 0 then
 					o.health.current = 0
-					if not o:has('player') then
+					if o:has('tutorial') then 
+						change_anim(o, 'pressed')
+						sfx(22)
+						hero:attach('autorun', 30)
+						o:detach('tutorial')
+						o:detach('defensive_collider')
+					
+					elseif not o:has('player') then
 						-- particle.create('smoke', e.x + 10, e.y + 21, 5)
 						if o:has('tossable') then
 							o:detach('physics')

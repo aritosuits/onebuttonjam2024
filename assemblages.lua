@@ -7,7 +7,6 @@
 assemblage.create('player', function(x, y)
 	e = entity.create('player', x, y)
 	e:attach('controller')
-	e:attach('autorun', 30)
 	e:attach('health', 3)
 	e:attach('sprite', 0, 2, 3)
 	e:attach('physics')
@@ -74,8 +73,7 @@ end)
 --|| components that an enemy machine would need.
 --]]
 assemblage.create('machine', function(type, x, y)
-	e = entity.create('machine', x, y)
-	e.name = type
+	e = entity.create(type, x, y)
 	e:attach('physics')
 	e:attach('offensive_collider', 0, 0, 8, 8)
 	e:attach('frames')
@@ -135,5 +133,19 @@ assemblage.create('machine', function(type, x, y)
 		add_anim(e, 'idle', {{ num = 1 }})
 		change_anim(e, 'idle')
 	end
+	return e
+end)
+
+assemblage.create('button', function (x, y)
+	e = entity.create('button', x, y)
+	e:attach('tutorial')
+	e:attach('health', 1)
+	e.name = 'button'
+	e:attach('sprite', 59, 1, 1)
+	e.sprite.scale = 2
+	e:attach('defensive_collider', 0, 6, e.sprite.scale * 8, 8)
+	e:attach('frames')
+	add_anim(e, 'default', {{num = e.sprite.num}})
+	add_anim(e, 'pressed', {{num = 60}})
 	return e
 end)

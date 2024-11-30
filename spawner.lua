@@ -21,8 +21,8 @@ end
 
 spawner = {}
 
-spawner.lookup = { 'player', 'cone', 'wall', 'shredder', 'computer', 'fan', 'button', 'copier' }
-spawner.items = { 204, 205, 206, 207, 220, 221, 222, 223 }
+spawner.lookup = { 'player', 'cone', 'wall', 'shredder', 'computer', 'fan', '', 'copier', 'button' }
+spawner.items = { 204, 205, 206, 207, 220, 221, 222, 223, 59 }
 spawner.queue = {}
 
 function spawner.init()
@@ -49,6 +49,8 @@ function spawner.update(dt)
 		if s.x <= screen_right then
 			if s.type == 'player' then
 				hero = assemblage.player(s.x, s.y)
+			elseif s.type == 'button' then 
+				assemblage.button(s.x, s.y)
 			else
 				assemblage.machine(s.type, s.x, s.y)
 			end

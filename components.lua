@@ -13,6 +13,8 @@ component.create('floating')
 
 component.create('bullet')
 
+component.create('tutorial')
+
 component.create('ouch', function(ttl)
 	return { enabled = true, ttl = ttl or 20 }
 end)
@@ -154,8 +156,4 @@ end)
 
 component.create('scorable', function(amount)
 	return amount
-end)
-
-component.create('switch', function (is_on)
-	return {is_on = is_on or false}
 end)
