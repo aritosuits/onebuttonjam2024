@@ -156,7 +156,7 @@ end
 
 system.create('teleporter', {'teleport', 'defensive_collider'}, 
 	function(e, dt)
-			if overlap(hero, e) then		 
+			if overlap(hero, e) then
 				e:detach('defensive_collider')
 				hero.x = e.teleport.x
 				hero.y = e.teleport.y
@@ -166,15 +166,24 @@ system.create('teleporter', {'teleport', 'defensive_collider'},
 				--hero.offensive_collider.enabled = false
 				shake.screen(2, 1)
 				hero.physics.smashing = -1
-				sfx(23)
-				music(-1,500)
+				sfx(37)
+				music(-1)
 				if e.name == 'door1' then
 					music(10, 300)
 				elseif e.name == 'door2' then
 					music(0, 500) 
 					ground = 80 + 128
+					world.each(nil, function(e)
+						if not e:has('player') then 
+							del(world.entities, e)
+						end
+					end)
+					spawner.init()
 				elseif e.name == 'door3' then 
-					music(10, 300)
+					music(10, 1300)
+				elseif e.name == 'door4' then 
+					world.destroy()
+					state.switch('end')
 				end
 
 			end
@@ -383,7 +392,7 @@ system.create('tossing', {'toss'},
 			e.toss.rotation = lerp(e.toss.desired_rotation, e.toss.rotation, e.toss.ttl / e.toss.lifetime)
 			e.toss.zoom = lerp(e.toss.desired_zoom, e.toss.zoom, e.toss.ttl / e.toss.lifetime)
 			e.toss.ttl -= 1
-			if e.y >= 150 then
+			if e.y >= (ground + 70) then
 				del(world.entities, e)
 			end
 		elseif not e.toss.started then
@@ -393,7 +402,7 @@ system.create('tossing', {'toss'},
 			e.y += flr(e.toss.h * 8 / 2)
 			e.toss.started = true
 		elseif not e.toss.bounce then
-			if e.y >= 105 then
+			if e.y >= (ground + 25) then
 				e.toss.vx /= 2
 				e.toss.vy = -100
 				e.toss.bounce = true

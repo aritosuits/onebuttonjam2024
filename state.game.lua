@@ -31,6 +31,7 @@ function game.draw()
 	for i = 1, 4 do
 		spr(hero.weapon.level >= i and 255 or 239, (i-1) * 8 + 2, 13) -- gun
 	end
+	print(flr(hero.x) ..",".. flr(hero.y), 30,5)
 	-- change brown and purple to better colors
 	pal(4, 134, 1)
 	pal(2, 133, 1)

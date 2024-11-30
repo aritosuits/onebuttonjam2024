@@ -13,7 +13,7 @@ function world.destroy()
 end
 function world.each(comps, code)
 	for e in all(world.entities) do
-		if e:has(comps) then
+		if comps == nil or e:has(comps) then
 			code(e)
 		end
 	end

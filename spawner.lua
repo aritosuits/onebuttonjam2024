@@ -28,7 +28,7 @@ spawner.queue = {}
 function spawner.init()
 	spawner.queue = {}
 	for x = 0, 128 do
-		for y = 0, 16 do
+		for y = flr((ground - 80) / 8), flr(((ground - 80) / 8) + 16) do
 			for i in pairs(spawner.items) do
 				if in_table(mget(x, y), spawner.items) then
 					local which = table_index(mget(x, y), spawner.items)
@@ -54,9 +54,9 @@ function spawner.update(dt)
 			elseif s.type == 'door1' then 
 				assemblage.door(s.type, s.x, s.y, s.x + 128, s.y, false)
 			elseif s.type == 'door2' then 
-				assemblage.door(s.type, s.x, s.y, s.x + 128, s.y)
+				assemblage.door(s.type, s.x, s.y, 16, s.y + 128)
 			elseif s.type == 'door3' then 
-				assemblage.door(s.type, s.x, s.y, 16, s.y + 128, false)
+				assemblage.door(s.type, s.x, s.y, s.x + 128, s.y, false)
 			elseif s.type == 'door4' then 
 				assemblage.door(s.type, s.x, s.y, 16, s.y + 128, true, true)
 			else

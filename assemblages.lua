@@ -152,11 +152,9 @@ end)
 
 assemblage.create('door', function (type, x, y, tele_x, tele_y, autorun, ends_game)
 	e = entity.create(type, x, y, autorun, ends_game)
-	local tele_x = tele_x or (2 * 8)
-	local tele_y = tele_y or (9 * 8)
 	e:attach('sprite', 101, 2, 2)
 	e.sprite.scale = 1.5
-	e:attach('teleport', tele_x, tele_y)
+	e:attach('teleport', tele_x or (2 * 8), tele_y or (9 * 8))
 	e:attach('defensive_collider', 17, -8, e.sprite.scale * 19, e.sprite.scale * 16)
 
 	return e

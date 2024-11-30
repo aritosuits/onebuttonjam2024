@@ -7,8 +7,6 @@ component.create('smash')
 
 component.create('player')
 
-component.create('machine')
-
 component.create('floating')
 
 component.create('bullet')
