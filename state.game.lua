@@ -36,6 +36,8 @@ function game.draw()
 	-- change brown and purple to better colors
 	pal(4, 134, 1)
 	pal(2, 133, 1)
+	-- debug
+	--print(#particle.list, 3, 120, 7)
 end
 
 function game.press()

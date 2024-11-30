@@ -22,21 +22,21 @@ function particle.create(type, x, y, amount)
 		if type == 'smoke' then
 			p.color = rnd({5, 6, 7})
 			p.radius = 2
-			p.lifetime = 4
-			p.vx = rnd(6) - 3
-			p.vy = rnd(2) - 1
+			p.lifetime = 8
+			p.vx = rnd(3) - 1.5
+			p.vy = rnd(1) - 0.5
 		elseif type == 'smash' then
 			p.color = rnd({1, 12, 13})
 			p.radius = 4
-			p.lifetime = 6
-			p.x = x + (rnd(4) - 2)
+			p.lifetime = 12
+			p.x = x + (rnd(10) - 5)
 			p.y = y + (rnd(2) - 1)
-			p.vx = rnd(9) - 4.5
-			p.vy = rnd(1.5) - 0.75
+			p.vx = rnd(4) - 2
+			p.vy = rnd(1) - 0.5
 		elseif type == 'trail' then
 			p.color = 13
 			p.radius = 3
-			p.lifetime = 1
+			p.lifetime = 6
 			p.x = x + (rnd(9) - 4)
 			p.y = y + (rnd(24) - 12)
 			p.w = 1.5
@@ -44,8 +44,8 @@ function particle.create(type, x, y, amount)
 			p.vx = 0
 			p.vy = 0
 		else -- default
-			p.vx = rnd(3) - 1.5
-			p.vy = rnd(3) - 1.5
+			p.vx = rnd(1) - 0.5
+			p.vy = rnd(1) - 0.5
 		end
 		p.ttl = p.lifetime
 		add(particle.list, p)
@@ -55,10 +55,12 @@ end
 function particle.update(dt)
 	for p in all(particle.list) do
 		p.ttl -= 1
-		if p.ttl <= 0 then
+		if p.ttl <= 0 or p.x <= hero.x - 40 then
 			del(particle.list, p)
-			break
+			p = nil
 		end
+	end
+	for p in all(particle.list) do
 		p.vy += p.gravity
 		p.x += p.vx
 		p.y += p.vy
