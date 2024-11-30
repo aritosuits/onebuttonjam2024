@@ -134,6 +134,8 @@ system.create('physics', {'physics'},
 )
 
 function overlap(e, o)
+	if not e:has('offensive_collider') then return end
+	if not o:has('defensive_collider') then return end
 	return e.x + e.offensive_collider.ox < o.x + o.defensive_collider.ox + o.defensive_collider.w and o.x + o.defensive_collider.ox < e.x + e.offensive_collider.ox + e.offensive_collider.w and e.y + e.offensive_collider.oy < o.y + o.defensive_collider.oy + o.defensive_collider.h and o.y + o.defensive_collider.oy < e.y + e.offensive_collider.oy + e.offensive_collider.h
 end
 
@@ -142,10 +144,9 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 		world.each({'defensive_collider', 'health'}, function(o)
 			if e == o then return end
 			if e:has('parent') and e.parent == o then return end 
-			if not o:has('player') then return end 
+			if not o:has('player') then return end
 			if overlap(e, o) then
 				if time() < o.health.iframes then return end 
-
 				o.health.current -= e.damage.damage
 				if o:has('knockback') then
 					o.physics.vx = -2
