@@ -117,7 +117,3 @@ end)
 component.create('parent', function (obj) 
 	return obj
 end)
-
-component.create('bullet', function(sprite)
-	return {sprite = sprite or 1}
-end)

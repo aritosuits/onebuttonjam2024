@@ -24,7 +24,6 @@ function game.draw()
 	system.draw()
 	-- ui
 	camera()
-printh('need hero')
 	for i = 1, 3 do
 		spr(hero.health.current >= i and 223 or 207, (i-1) * 9 + 2, 3) -- health
 	end
