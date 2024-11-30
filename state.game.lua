@@ -5,6 +5,7 @@ game.fade = true
 
 function game.enter()
 	spawner.init()
+	music(0)
 end
 
 function game.update(dt)
@@ -50,5 +51,6 @@ function game.release(secs)
 end
 
 function game.leave()
+	music(-1)
 	hero = nil
 end

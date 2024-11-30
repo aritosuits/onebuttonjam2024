@@ -90,6 +90,7 @@ end)
 -- Entity colliders for physics and collisions
 component.create('offensive_collider', function(ox, oy, w, h)
 	return {
+		enabled = true,
 		ox = ox or 2,
 		oy = oy or 2,
 		w = w or 4,
@@ -98,6 +99,7 @@ component.create('offensive_collider', function(ox, oy, w, h)
 end)
 component.create('defensive_collider', function(ox, oy, w, h)
 	return {
+		enabled = true,
 		ox = ox or 2,
 		oy = oy or 2,
 		w = w or 4,
