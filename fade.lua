@@ -66,7 +66,7 @@ end
 
 function shake.update(dt)
 	if not shake.active then
-		camera(hero.x - 30, 0)
+		camera(hero.x - 30, (ground - 80))
 		return
 	end
 	shake.ttl -= 1
@@ -77,7 +77,7 @@ function shake.update(dt)
 	local s_y = rnd(shake.amount) - (shake.amount / 2)
 	local camera_x = shake.strength * s_x
 	local camera_y = shake.strength * s_y
-	camera(hero.x - 30 + camera_x, 0 + camera_y)
+	camera(hero.x - 30 + camera_x, (ground - 80) + camera_y)
 	shake.strength *= 0.9
 	if shake.strength < 0.025 then shake.strength = 0 end
 end

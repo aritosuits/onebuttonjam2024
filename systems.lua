@@ -157,6 +157,7 @@ end
 system.create('teleporter', {'teleport', 'defensive_collider'}, 
 	function(e, dt)
 			if overlap(hero, e) then		 
+				e:detach('defensive_collider')
 				hero.x = e.teleport.x
 				hero.y = e.teleport.y
 				hero.physics.vx = 0
@@ -166,8 +167,14 @@ system.create('teleporter', {'teleport', 'defensive_collider'},
 				shake.screen(2, 1)
 				hero.physics.smashing = -1
 				sfx(23)
-				if e.type == 'door2' then 
+				music(-1,500)
+				if e.name == 'door1' then
+					music(10, 300)
+				elseif e.name == 'door2' then
+					music(0, 500) 
 					ground = 80 + 128
+				elseif e.name == 'door3' then 
+					music(10, 300)
 				end
 
 			end
@@ -221,7 +228,7 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 						end
 					else
 						-- player death here
-						sfx(30)
+						--sfx(30)
 					end
 				end
 				if e:has('bullet') then
