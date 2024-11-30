@@ -13,6 +13,7 @@ assemblage.create('player', function(x, y)
 	e:attach('physics')
 	e:attach('collider', 4, 2, 9, 20)
 	e:attach('weapon', 0)
+	e:attach('knockback')
 	e:attach('frames')
 	add_anim(e, 'default', {{ num = 0 }})
 	add_anim(e, 'jump', {{ num = 64 }})
@@ -80,15 +81,14 @@ assemblage.create('machine', function(type, x, y)
 	elseif type == 'computer' then 
 		e:attach('sprite', 52, 1, 1, 2)
 		e:attach('ai_shoot_smrt')
-		add_anim(e, 'default', {{ num = 52 }})
-		add_anim(e, 'idle', {{ num = 52 }, { num = 53 }})
+		add_anim(e, 'default', {{ num = e.sprite.num }})
+		add_anim(e, 'idle', {{ num = e.sprite.num }, { num = 53 }})
 		add_anim(e, 'shooting', {{num = 54}})
 		e.frames.delay = 3
 		change_anim(e, 'idle')
 	elseif type == 'shredder' then
 		e:attach('sprite', 55, 1, 1, 2)
-		add_anim(e, 'default', {{ num = 55 }})
-		add_anim(e, 'idle', {{ num = 55 }, {num = 56}})
+		add_anim(e, 'idle', {{ num = e.sprite.num }, {num = 56}})
 		add_anim(e, 'shooting', {{num = 56}})
 		e.frames.delay = 3
 		change_anim(e, 'idle')
@@ -96,13 +96,13 @@ assemblage.create('machine', function(type, x, y)
 	elseif type == 'cone' then
 		e:attach('sprite', 114, 1, 1, 2)
 		e:attach('floating')
-		add_anim(e, 'default', {{ num = 114 }, {num = 115}})
+		add_anim(e, 'default', {{ num = e.sprite.num }, {num = 115}})
 		e.frames.delay = 3
 		change_anim(e, 'default')
 	elseif type == 'wall' then
 		e:attach('sprite', 78, 1, 1)
 		e.sprite.h = 3
-		add_anim(e, 'default', {{ num = 78 }, {num = 79}})
+		add_anim(e, 'default', {{ num = e.sprite.num }, {num = 79}})
 		e:attach('floating')
 	else 
 		e:attach('sprite', 1)

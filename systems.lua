@@ -116,7 +116,8 @@ system.create('gravity', {'collider', 'physics'},
 
 system.create('autorun', {'physics', 'autorun'},
 	function(e, dt)
-		e.physics.vx += 0.5 * dt
+		e.physics.vx /= 1.05
+		e.physics.vx += 2.0 * dt
 		if e.physics.vx >= e.autorun.speed * dt then
 			e.physics.vx = e.autorun.speed * dt
 		end
@@ -143,12 +144,13 @@ system.create('do_harm', {'damage', 'collider'},
 			if e:has('parent') and e.parent == o then return end 
 			if not o:has('player') then return end 
 			if overlap(e, o) then
-				printh("check do_harm firing " ..e.name.. "->" .. o.name)
 				if time() < o.health.iframes then return end 
 
 				o.health.current -= e.damage.damage
-				o.health.iframes = time()+.5
-				printh("dealt damage: " ..tostr(o.health.current))
+				if o:has('knockback') then
+					o.physics.vx = -2
+				end
+				o.health.iframes = time() + 0.5
 				if o.health.current <= 0 then
 					o.health.current = 0
 					if not o:has('player') then
@@ -246,8 +248,8 @@ system.create('bounding_box_debug', {'collider'},
 	nil,
 	function(e)
 		rect(e.x + e.collider.ox, 
-			e.y + e.collider.oy, e.x + e.collider.ox + e.collider.w, 
-			e.y + e.collider.oy + e.collider.h,
+			e.y + e.collider.oy, e.x + e.collider.ox + e.collider.w - 1, 
+			e.y + e.collider.oy + e.collider.h - 1,
 			14
 		)
 	end

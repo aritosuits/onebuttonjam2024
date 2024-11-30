@@ -11,13 +11,17 @@ component.create('machine')
 
 component.create('floating')
 
+component.create('knockback', function(amount)
+	return { amount = amount or 10 }
+end)
+
 component.create('attack_region', function(x, y, w, h)
 	return { x = x, y = y, w = w, h = h }
 end)
 
 -- Items related to the display of an entity
 component.create('sprite', function(num, w, h, scale)
-	return { num = num, w = w or 1, h = h or 1, scale = scale or 1}
+	return { num = num or 254, w = w or 1, h = h or 1, scale = scale or 1}
 end)
 
 -- It's what you see when an enemy shoots code
@@ -34,21 +38,20 @@ function change_anim(e, name, one_shot)
 	e.frames.anim = name
 	e.frames.one_shot = one_shot or false
 	e.frames.frame = 1
-  end
-
-  component.create('frames', function()
+end
+component.create('frames', function(e)
 	return {
-	  animating = true,
-	  anim = 'default',
-	  tick = 0,
-	  delay = 4,
-	  frame = 1,
-	  one_shot = false,
-	  default = {
-		{ num = 0, delay = 4 }
-	  }
+		animating = true,
+		anim = 'default',
+		tick = 0,
+		delay = 4,
+		frame = 1,
+		one_shot = false,
+		default = {
+			{ num = 254 }
+		}
 	}
-  end)
+end)
 
 component.create('autorun', function(speed)
 	return { speed = speed or 1 }
@@ -116,4 +119,8 @@ end)
 
 component.create('parent', function (obj) 
 	return obj
+end)
+
+component.create('bullet', function(sprite)
+	return {sprite = sprite or 1}
 end)
