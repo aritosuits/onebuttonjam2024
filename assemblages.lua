@@ -53,7 +53,7 @@ assemblage.create('enemy_bullet', function(parent, x, y, speed)
 	e:attach('physics', (speed or -10), 0, 0)
 	e:attach('offensive_collider', 2, 2, 4, 4)
 	e:attach('health', 1)
-	e:attach('knockback', -5)
+	e:attach('knockback', -2)
 	e:attach('despawn', 60)
 	e:attach('parent', parent)
 	if parent.name == 'copier' then  
@@ -83,7 +83,7 @@ assemblage.create('machine', function(type, x, y)
 	e:attach('health', 1)
 	e:attach('scorable', 10)
 	e:attach('tossable')
-	e:attach('knockback', -10)
+	e:attach('knockback', -3)
 	if type == 'copier' then 
 		e:attach('sprite', 52)
 		e:attach('defensive_collider', -1, -1, 10, 10)
@@ -124,8 +124,10 @@ assemblage.create('machine', function(type, x, y)
 		e:attach('sprite', 76, 2, 1)
 		e.sprite.scale = 2
 		add_anim(e, 'default', {{ num = e.sprite.num }, {num = 106 }, {num = 108}})
+		e.frames.delay = 1
 		e:attach('offensive_collider', 10, 10, 14, 4)
 		e:attach('floating')
+		e:attach('knockback', -3, 7)
 	else 
 		e:attach('sprite', 1)
 		e:attach('floating')
