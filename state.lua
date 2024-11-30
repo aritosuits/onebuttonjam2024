@@ -65,15 +65,16 @@ function state.update()
 	local dt = 1/30
 	if state._frozen then return end
 	local secs = time() - state._button_held_at
-	if btnp(4) then -- just pressed
+	local b = btn(4)
+	if b and not state._button_held then -- just pressed
 		state._button_held = true
 		state._button_held_at = time()
 		state.active.press()
-	elseif state._button_held and not btn(4) then -- just released
+	elseif state._button_held and not b then -- just released
 		state._button_held = false
 		state._button_held_at = 0
 		state.active.release(secs)
-	elseif btn(4) then -- held
+	elseif b then -- held
 		state.active.hold(secs)
 	end
 	state.active.update(dt)
