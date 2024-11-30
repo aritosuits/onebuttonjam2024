@@ -164,8 +164,9 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 				if time() < o.health.iframes then return end
 				sfx(17) 
 				o.health.current -= e.damage
-				if o:has('knockback') then
-					o.physics.vx = -2
+				if o:has('knockable') and e:has('knockback') then
+					o.physics.vx = e.knockback.vx
+					o.physics.vy = e.knockback.vy
 				end
 				o:attach('ouch')
 				o.health.iframes = time() + 0.5
