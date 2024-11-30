@@ -15,10 +15,6 @@ component.create('knockback', function(amount)
 	return { amount = amount or 10 }
 end)
 
-component.create('attack_region', function(x, y, w, h)
-	return { x = x, y = y, w = w, h = h }
-end)
-
 -- Items related to the display of an entity
 component.create('sprite', function(num, w, h, scale)
 	return { num = num or 254, w = w or 1, h = h or 1, scale = scale or 1}
@@ -92,12 +88,20 @@ component.create('health', function(num)
 end)
 
 -- Entity colliders for physics and collisions
-component.create('collider', function(ox, oy, w, h)
+component.create('offensive_collider', function(ox, oy, w, h)
 	return {
-		ox = ox or 0,
-		oy = oy or 0,
-		w = w or 8,
-		h = h or 8
+		ox = ox or 2,
+		oy = oy or 2,
+		w = w or 4,
+		h = h or 4
+	}
+end)
+component.create('defensive_collider', function(ox, oy, w, h)
+	return {
+		ox = ox or 2,
+		oy = oy or 2,
+		w = w or 4,
+		h = h or 4
 	}
 end)
 

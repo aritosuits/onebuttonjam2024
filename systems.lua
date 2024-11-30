@@ -79,7 +79,7 @@ system.create('machine', {'omg', 'controller', 'physics'},
 )
 
 gravity = 8
-system.create('gravity', {'collider', 'physics'},
+system.create('gravity', {'defensive_collider', 'physics'},
 	function(e, dt)
 		if e:has('floating') then return end 
 		if e.physics.mass <= 0 then return end
@@ -134,12 +134,12 @@ system.create('physics', {'physics'},
 )
 
 function overlap(e, o)
-	return e.x + e.collider.ox < o.x + o.collider.ox + o.collider.w and o.x + o.collider.ox < e.x + e.collider.ox + e.collider.w and e.y + e.collider.oy < o.y + o.collider.oy + o.collider.h and o.y + o.collider.oy < e.y + e.collider.oy + e.collider.h
+	return e.x + e.offensive_collider.ox < o.x + o.defensive_collider.ox + o.defensive_collider.w and o.x + o.defensive_collider.ox < e.x + e.offensive_collider.ox + e.offensive_collider.w and e.y + e.offensive_collider.oy < o.y + o.defensive_collider.oy + o.defensive_collider.h and o.y + o.defensive_collider.oy < e.y + e.offensive_collider.oy + e.offensive_collider.h
 end
 
-system.create('do_harm', {'damage', 'collider'},
+system.create('do_harm', {'damage', 'offensive_collider'},
 	function(e, dt)
-		world.each({'collider', 'health'}, function(o)
+		world.each({'defensive_collider', 'health'}, function(o)
 			if e == o then return end
 			if e:has('parent') and e.parent == o then return end 
 			if not o:has('player') then return end 
@@ -244,13 +244,23 @@ system.create('ai_shoot_smrt', {'ai_shoot_smrt', 'frames'}, function(e, dt)
    end, nil
 ) 
 
-system.create('bounding_box_debug', {'collider'},
+system.create('bounding_box_debug', {'offensive_collider'},
 	nil,
 	function(e)
-		rect(e.x + e.collider.ox, 
-			e.y + e.collider.oy, e.x + e.collider.ox + e.collider.w - 1, 
-			e.y + e.collider.oy + e.collider.h - 1,
+		rect(e.x + e.offensive_collider.ox, 
+			e.y + e.offensive_collider.oy, e.x + e.offensive_collider.ox + e.offensive_collider.w - 1, 
+			e.y + e.offensive_collider.oy + e.offensive_collider.h - 1,
 			14
+		)
+	end
+)
+system.create('defensive_bounding_box_debug', {'defensive_collider'},
+	nil,
+	function(e)
+		rect(e.x + e.defensive_collider.ox, 
+			e.y + e.defensive_collider.oy, e.x + e.defensive_collider.ox + e.defensive_collider.w - 1, 
+			e.y + e.defensive_collider.oy + e.defensive_collider.h - 1,
+			12
 		)
 	end
 )
