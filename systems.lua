@@ -51,7 +51,7 @@ system.create('controller', {'controller', 'physics'},
 			if e.physics.grounded then
 				e.physics.vy = -6.5
 				particle.create('smoke', e.x + 10, e.y + 21, 5)
-				sfx(18)
+				sfx(32)
 			else
 				e.physics.vy = 6
 				change_anim(e, 'kick')
@@ -117,8 +117,8 @@ system.create('gravity', {'defensive_collider', 'physics'},
 					particle.create('smash', e.x + 10, e.y + 21, 10)
 					e:detach('smash')
 					e.offensive_collider.enabled = false
-					sfx(19)
-					sfx(20)
+					sfx(33)
+					sfx(34)
 					shake.screen(4, 3)
 					e.physics.smashing = -1
 				else
@@ -162,7 +162,7 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 			if e:has('parent') and e.parent == o then return end -- not the source
 			if overlap(e, o) then
 				if time() < o.health.iframes then return end
-				sfx(17) 
+				sfx(31) 
 				o.health.current -= e.damage
 				if o:has('knockable') and e:has('knockback') then
 					o.physics.vx = e.knockback.vx
@@ -174,7 +174,7 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 					o.health.current = 0
 					if o:has('tutorial') then 
 						change_anim(o, 'pressed')
-						sfx(22)
+						sfx(36)
 						hero:attach('autorun', 30)
 						o:detach('tutorial')
 						o:detach('defensive_collider')
@@ -199,7 +199,7 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 						end
 					else
 						-- player death here
-						sfx(16)
+						sfx(30)
 					end
 				end
 				if e:has('bullet') then
@@ -384,7 +384,7 @@ system.create('tossing', {'toss'},
 system.create('bounding_box_debug', {'offensive_collider'},
 	nil,
 	function(e)
-		-- if true then return end
+		if true then return end
 		if not e.offensive_collider.enabled then return end
 		rect(e.x + e.offensive_collider.ox, 
 			e.y + e.offensive_collider.oy, e.x + e.offensive_collider.ox + e.offensive_collider.w - 1, 
@@ -396,7 +396,7 @@ system.create('bounding_box_debug', {'offensive_collider'},
 system.create('defensive_bounding_box_debug', {'defensive_collider'},
 	nil,
 	function(e)
-		-- if true then return end
+		if true then return end
 		if not e.defensive_collider.enabled then return end
 		rect(e.x + e.defensive_collider.ox, 
 			e.y + e.defensive_collider.oy, e.x + e.defensive_collider.ox + e.defensive_collider.w - 1, 
