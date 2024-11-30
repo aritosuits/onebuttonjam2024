@@ -73,7 +73,6 @@ assemblage.create('machine', function(type, x, y)
 	e.name = type
 	e:attach('physics')
 	e:attach('offensive_collider', 0, 0, 8, 8)
-	e:attach('defensive_collider', 2, 2, 4, 4)
 	e:attach('frames')
 	e:attach('damage',1)
 	e:attach('health', 1)
@@ -88,10 +87,7 @@ assemblage.create('machine', function(type, x, y)
 		add_anim(e, 'shooting', {{num = 54}})
 		e.frames.delay = 3
 		change_anim(e, 'idle')
-		e.collider.ox = 0
-		e.collider.oy = 0
-		e.collider.w = e.sprite.scale * 8
-		e.collider.h = e.sprite.scale * 8
+		e:attach('defensive_collider', 0, 0, e.sprite.scale * 8, e.sprite.scale * 8)
 	elseif type == 'shredder' then
 		e:attach('sprite', 55, 1, 1, 2)
 		add_anim(e, 'idle', {{ num = e.sprite.num }, {num = 56}})
@@ -99,29 +95,24 @@ assemblage.create('machine', function(type, x, y)
 		e.frames.delay = 3
 		change_anim(e, 'idle')
 		e:attach('ai_shoot_dumb')
-		e.collider.ox = 0
-		e.collider.oy = 0
-		e.collider.w = e.sprite.scale * 8
-		e.collider.h = e.sprite.scale * 8
+		e:attach('defensive_collider', 0, 0, e.sprite.scale * 8, e.sprite.scale * 8)
 	elseif type == 'cone' then
 		e:attach('sprite', 114, 1, 1, 2)
 		e:attach('floating')
 		add_anim(e, 'default', {{ num = e.sprite.num }, {num = 115}})
 		e.frames.delay = 3
 		change_anim(e, 'default')
-		e.collider.ox = 5
-		e.collider.oy = 2
-		e.collider.w = e.sprite.scale * 3
-		e.collider.h = e.sprite.scale * 6
+		e.offensive_collider.ox = 4
+		e.offensive_collider.oy = 2
+		e.offensive_collider.w = e.sprite.scale * 4
+		e.offensive_collider.h = e.sprite.scale * 6
+		e:attach('defensive_collider', 5, 2, e.sprite.scale * 3, e.sprite.scale * 6)
 	elseif type == 'wall' then
 		e:attach('sprite', 78, 1, 1)
 		e.sprite.h = 3
 		add_anim(e, 'default', {{ num = e.sprite.num }, {num = 79}})
 		e:attach('floating')
-		e.collider.ox = 0
-		e.collider.oy = 0
-		e.collider.w = e.sprite.scale * 2
-		e.collider.h = e.sprite.scale * 4
+		e:attach('defensive_collider', 0, 0, e.sprite.scale * 2, e.sprite.scale * 4)
 	else 
 		e:attach('sprite', 1)
 		e:attach('floating')
