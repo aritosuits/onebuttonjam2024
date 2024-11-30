@@ -5,7 +5,7 @@
 --|| components that a player needs.
 --]]
 assemblage.create('player', function(x, y)
-	e = entity.create('player', x*8, y*8)
+	e = entity.create('player', x, y)
 	e:attach('controller')
 	e:attach('autorun', 30)
 	e:attach('health', 3, true)
@@ -28,7 +28,7 @@ end)
 --|| A helper function to make a player bullet.
 --]]
 assemblage.create('player_bullet', function(x, y, speed)
-	e = entity.create('player_bullet', x*8, y*8)
+	e = entity.create('player_bullet', x, y)
 	e:attach('damage', 1)
 	e:attach('recttext', 6, 'A')
 	e:attach('despawn', 60) -- 2 seconds
@@ -40,24 +40,23 @@ assemblage.create('player_bullet', function(x, y, speed)
 end)
 
 assemblage.create('enemy_bullet', function(x, y, speed)
-	e = entity.create('enemy_bullet', x*8, y*8)
+	e = entity.create('enemy_bullet', x, y )
 	e:attach('damage', 1)
 	e:attach('sprite', 1)
 	e:attach('collider', 2, 2, 4, 4)
 	e:attach('physics', -1 * speed or -10, 0, 0)
 	e:attach('health', 1)
 	e:attach('despawn', 60)
+	printh("made bullet")
 	return e
 end)
-
-function create_multipart_sprite(x, y ) end
 
 --[[
 --|| A helper function that adds all general
 --|| components that an enemy machine would need.
 --]]
 assemblage.create('machine', function(type, x, y, health)
-	e = entity.create('machine', x*8, y*8)
+	e = entity.create('machine', x, y)
 	e:attach('physics')
 	e:attach('collider', 0, 0, 8, 8)
 	e:attach('frames')
@@ -69,12 +68,9 @@ assemblage.create('machine', function(type, x, y, health)
 	elseif type == 'computer' then 
 		e:attach('sprite', 52, 1, 1, 2)
 		e.health = 10
-		e:attach('ai')
-		e:attach('ai_brain')
-		e:attach('bullet',1)
+		e:attach('ai_shoot_smrt')
 		add_anim(e, 'default', {{ num = 52 }})
 		add_anim(e, 'idle', {{ num = 52 }, { num = 53 }})
-		add_behavior(e, 'shooter', {{54, 2}})
 		e.frames.delay = 3
 		change_anim(e, 'idle')
 		--add_anim(e, 'shoot', {{num = 220}})
@@ -100,10 +96,7 @@ assemblage.create('machine', function(type, x, y, health)
 		e:attach('sprite', 52)
 		e:attach('health', 3)
 		e:attach('floating')
-		e:attach('ai')
-		e:attach('ai_brain')
-		e:attach('bullet',1)
-		e:attach('movement', 20, 15, 0, true)
+		e:attach('ai_shoot_dumb')
 		add_anim(e, 'default', {{ num = 52 }})
 		add_anim(e, 'idle', {{ num = 52 }, { num = 53 }})
 		change_anim(e, 'idle')

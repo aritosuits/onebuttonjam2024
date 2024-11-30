@@ -153,7 +153,7 @@ system.create('bullet', {'damage', 'collider'},
 	end,
 	nil
 )
-system.create('damage_on_touch', {'damage', 'collider'},
+system.create('damage_on_touch', {'damage_on_touch', 'collider'},
 	function(e, dt)
 		world.each({'collider', 'health'}, function(o)
 			if e == o then return end
@@ -212,8 +212,30 @@ system.create('movement', {'physics', 'movement'},
 	nil
 )
 
-system.create('ai_brain', {'ai', 'movement', 'frames'}, 
-	function (e, dt)
-		
+
+system.create('ai_shoot_dumb', {'ai_shoot_dumb'}, function(e, dt)
+	if e.ai_shoot_dumb.ttsa <= 0 then
+		printh(e.ai_shoot_dumb.ttsa)
+	 assemblage.enemy_bullet(e.x + 2, e.y + 1, 6)
+	 e.ai_shoot_dumb.ttsa = 20
+	 printh(e.ai_shoot_dumb.ttsa)
+	else
+	 e.ai_shoot_dumb.ttsa -= 1
 	end
-)
+   end, nil)
+
+system.create('ai_shoot_smrt', {'ai_shoot_smrt'}, function(e, dt)
+	if e.ai_shoot_smrt.ttsa <= 0 then
+		e.ai_shoot_smrt.ttsa = 20
+		if e.y == hero.y then
+			if hero.x <= (e.x + e.ai_shoot_smrt.max_range) then
+				printh(e.ai_shoot_smrt.ttsa)
+	 			assemblage.enemy_bullet(e.x + 2, e.y + 1, 6)
+			else 
+				printh(e.ai_shoot_smrt.ttsa .. "range: " .. e.ai_shoot_smrt.max_range .. "hero dist: " .. (e.ai_shoot_smrt.max_range - hero.x))
+			end
+		end
+	else
+	 e.ai_shoot_smrt.ttsa -= 1
+	end
+   end, nil)
