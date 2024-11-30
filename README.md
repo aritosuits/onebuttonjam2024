@@ -2,4 +2,4 @@
 https://itch.io/jam/1-button-jam-2024
 
 # DOME Enterprises
-Rhythm based run and gun game.
+Simple platformer with ground smash ability.

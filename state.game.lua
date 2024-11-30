@@ -40,6 +40,7 @@ function game.draw()
 		printh(hero) -- DUMP ENTITY INFO
 		dump(hero.defensive_collider) -- DUMP ANY OBJECT OR VARIABLE
 	--]]
+	score.draw()
 end
 
 function game.press()

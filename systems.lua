@@ -18,11 +18,19 @@ system.create('display', {'sprite'},
 		if e:has('frames') and e.frames[e.frames.anim] then
 			s = e.frames[e.frames.anim][e.frames.frame].num
 		end
+		local ouch = false
+		if e:has('ouch') and e.ouch.enabled then
+			ouch = true
+			for n = 1, 16 do
+				pal(n, 7)
+			end
+		end
 		if e.sprite.scale > 1 then 
 			zspr(s, e.sprite.w, e.sprite.h, e.x, e.y, e.sprite.scale)
 		else
 			spr(s, e.x, e.y, e.sprite.w, e.sprite.h)
 		end
+		if ouch then pal() end
 	end
 )
 
@@ -37,6 +45,7 @@ system.create('recttext_display', {'recttext'},
 
 system.create('controller', {'controller', 'physics'},
 	function(e, dt)
+		if e.physics.smashing >= 0 then e.physics.smashing += 1 end
 		if e.controller.press then
 			e.controller.press = false
 			if e.physics.grounded then
@@ -46,7 +55,9 @@ system.create('controller', {'controller', 'physics'},
 			else
 				e.physics.vy = 6
 				change_anim(e, 'kick')
+				e.physics.smashing = 0
 				e:attach('smash')
+				e.offensive_collider.enabled = true
 				particle.create('trail', e.x + 8, e.y + 12, 8)
 			end
 		elseif e.controller.release then
@@ -105,9 +116,11 @@ system.create('gravity', {'defensive_collider', 'physics'},
 				if e:has({'player', 'smash'}) then
 					particle.create('smash', e.x + 10, e.y + 21, 10)
 					e:detach('smash')
+					e.offensive_collider.enabled = false
 					sfx(19)
 					sfx(20)
 					shake.screen(4, 3)
+					e.physics.smashing = -1
 				else
 					particle.create('smoke', e.x + 10, e.y + 21, 10)
 				end
@@ -137,31 +150,45 @@ system.create('physics', {'physics'},
 )
 
 function overlap(e, o)
-	if not e.offensive_collider.enabled then return end
-	if not o.defensive_collider.enabled then return end
 	return e.x + e.offensive_collider.ox < o.x + o.defensive_collider.ox + o.defensive_collider.w and o.x + o.defensive_collider.ox < e.x + e.offensive_collider.ox + e.offensive_collider.w and e.y + e.offensive_collider.oy < o.y + o.defensive_collider.oy + o.defensive_collider.h and o.y + o.defensive_collider.oy < e.y + e.offensive_collider.oy + e.offensive_collider.h
 end
 
 system.create('do_harm', {'damage', 'offensive_collider'},
 	function(e, dt)
 		world.each({'defensive_collider', 'health'}, function(o)
-			if e == o then return end
-			if e:has('parent') and e.parent == o then return end 
-			if not o:has('player') then return end
+			if e == o then return end -- not itself
+			if not e.offensive_collider.enabled then return end -- not turned off
+			if not o.defensive_collider.enabled then return end -- not turned off
+			if e:has('parent') and e.parent == o then return end -- not the source
 			if overlap(e, o) then
 				if time() < o.health.iframes then return end
 				sfx(17) 
-				o.health.current -= e.damage.damage
+				o.health.current -= e.damage
 				if o:has('knockback') then
 					o.physics.vx = -2
 				end
+				o:attach('ouch')
 				o.health.iframes = time() + 0.5
 				if o.health.current <= 0 then
 					o.health.current = 0
 					if not o:has('player') then
-						particle.create('smoke', e.x + 10, e.y + 21, 5)
-						o:attach('despawn', 1)
-						if o:has('scorable') then score.add(e.scorable) end
+						-- particle.create('smoke', e.x + 10, e.y + 21, 5)
+						if o:has('tossable') then
+							o:detach('physics')
+							o:detach('offensive_collider')
+							o:detach('defensive_collider')
+							o:attach('toss', o.sprite)
+							o:detach('sprite')
+							o:detach('ai_shoot_smrt')
+							o:detach('ai_shoot_dumb')
+						else
+							o:attach('despawn', 1)
+						end
+						if e:has('player') and o:has('scorable') then
+							local s = score.calculate(o.scorable, e.physics.smashing, hero.health.current)
+							printh('base score: ' .. o.scorable .. ' smash frames: ' .. e.physics.smashing .. ' health: ' .. hero.health.current .. ' total: ' .. s)
+							score.add(s)
+						end
 					else
 						-- player death here
 						sfx(16)
@@ -251,9 +278,106 @@ system.create('ai_shoot_smrt', {'ai_shoot_smrt', 'frames'}, function(e, dt)
    end, nil
 ) 
 
+system.create('ouch', {'ouch'},
+	function(e, dt)
+		e.ouch.enabled = not e.ouch.enabled
+		e.ouch.ttl -= 1
+		if e.ouch.ttl <= 0 then
+			e:detach('ouch')
+		end
+	end,
+	nil
+)
+
+-- From https://www.lexaloffle.com/bbs/?tid=3936
+--[[
+    // quick and dirty way of rotating a sprite
+    sx = spritecheet x-coord
+    sy = spritecheet y-coord
+    sw = pixel width of source sprite
+    sh = pixel height of source sprite
+    px = x-coord of where to draw rotated sprite on screen
+    py = x-coord of where to draw rotated sprite on screen
+    r = amount to rotate (radians)
+    s = 1.0 for normal scale, 0.5 for half, etc
+]]
+function spr_r(spr,sw,sh,px,py,r,s)
+	-- loop through all the pixels
+	sw *= 8
+	sh *= 8
+	local sr = flr(spr / 16)
+	local sc = (spr % 16)
+	local sx = sc * 8
+	local sy = sr * 8
+	for y=sy,sy+sh,1 do for x=sx,sx+sw,1 do
+		-- get source pixel color
+		col = sget(x,y)
+		-- skip transparent pixel (zero in this case)
+		if (col != 0) then
+			-- rotate pixel around center
+			local xx = (x-sx)-sw/2
+			local yy = (y-sy)-sh/2
+			local x2 = (xx*cos(r) - yy*sin(r))*s
+			local y2 = (yy*cos(r) + xx*sin(r))*s
+			-- translate rotated pixel to where we want to draw it on screen
+			local x3 = flr(x2+px)
+			local y3 = flr(y2+py)
+			-- use rectfill if scale is > 1, otherwise just pixel it
+			if (s >= 1) then
+				local w = flr(x2+px+s)
+				local h = flr(y2+py+s)
+				rectfill(x3,y3,w,h,col)
+			else
+				pset(x3,y3,col)
+			end
+		end
+	end	end
+end
+
+toss_gravity = 4.0
+system.create('tossing', {'toss'},
+	function(e, dt)
+		if e.toss.started then
+			e.x += e.toss.vx * dt
+			e.toss.vy += toss_gravity
+			e.y += e.toss.vy * dt
+		end
+		if e.toss.bounce then
+			e.toss.rotation = lerp(e.toss.desired_rotation, e.toss.rotation, e.toss.ttl / e.toss.lifetime)
+			e.toss.zoom = lerp(e.toss.desired_zoom, e.toss.zoom, e.toss.ttl / e.toss.lifetime)
+			e.toss.ttl -= 1
+			if e.y >= 150 then
+				del(world.entities, e)
+			end
+		elseif not e.toss.started then
+			e.toss.vx = (e.x - hero.x) * 8
+			e.toss.vy = 200
+			e.x += flr(e.toss.w * 8 / 2)
+			e.y += flr(e.toss.h * 8 / 2)
+			e.toss.started = true
+		elseif not e.toss.bounce then
+			if e.y >= 105 then
+				e.toss.vx /= 2
+				e.toss.vy = -100
+				e.toss.bounce = true
+				e.toss.rotation = 0
+				e.toss.desired_rotation = rnd(360)
+				e.toss.desired_zoom = e.toss.zoom + rnd(1.5)
+				e.toss.lifetime = 60
+				e.toss.ttl = e.toss.lifetime
+			end
+		end
+	end,
+	function(e)
+		spr_r(e.toss.sprite, e.toss.w, e.toss.h, e.x, e.y, e.toss.rotation, e.toss.zoom)
+	end
+)
+
 system.create('bounding_box_debug', {'offensive_collider'},
 	nil,
 	function(e)
+		if true then return end
+		if not e.offensive_collider.enabled then return end
 		rect(e.x + e.offensive_collider.ox, 
 			e.y + e.offensive_collider.oy, e.x + e.offensive_collider.ox + e.offensive_collider.w - 1, 
 			e.y + e.offensive_collider.oy + e.offensive_collider.h - 1,
@@ -264,6 +388,8 @@ system.create('bounding_box_debug', {'offensive_collider'},
 system.create('defensive_bounding_box_debug', {'defensive_collider'},
 	nil,
 	function(e)
+		if true then return end
+		if not e.defensive_collider.enabled then return end
 		rect(e.x + e.defensive_collider.ox, 
 			e.y + e.defensive_collider.oy, e.x + e.defensive_collider.ox + e.defensive_collider.w - 1, 
 			e.y + e.defensive_collider.oy + e.defensive_collider.h - 1,

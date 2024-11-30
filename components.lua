@@ -11,8 +11,30 @@ component.create('machine')
 
 component.create('floating')
 
+component.create('ouch', function(ttl)
+	return { enabled = true, ttl = ttl or 20 }
+end)
+
 component.create('knockback', function(amount)
 	return { amount = amount or 10 }
+end)
+
+component.create('tossable')
+component.create('toss', function(sprite_comp)
+	return {
+		vx = 0,
+		vy = 0,
+		ttl = 0,
+		sprite = sprite_comp.num,
+		w = sprite_comp.w,
+		h = sprite_comp.h,
+		started = false,
+		bounce = false,
+		rotation = 0,
+		desired_rotation = 0,
+		zoom = sprite_comp.scale,
+		desired_zoom = 0
+	}
 end)
 
 -- Items related to the display of an entity
@@ -64,7 +86,7 @@ end)
 
 -- Items related to physics
 component.create('physics', function(vx, vy, mass)
-	return { grounded = false, vx = vx or 0, vy = vy or 0, mass = mass or 1 }
+	return { grounded = false, vx = vx or 0, vy = vy or 0, mass = mass or 1, smashing = -1 }
 end)
 
 component.create('movement', function(speed, max_x, max_y)
@@ -79,7 +101,7 @@ end)
 
 -- Stuff related to damaging stuff
 component.create('damage', function(damage)
-	return { damage = damage or 1 }
+	return damage or 1
 end)
 
 -- Entity health

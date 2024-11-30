@@ -13,9 +13,11 @@ assemblage.create('player', function(x, y)
 	e:attach('physics')
 	e:attach('offensive_collider', 2, 18, 12, 6)
 	e:attach('defensive_collider', 4, 2, 9, 20)
+	e.offensive_collider.enabled = false
 	e:attach('weapon', 0)
 	e:attach('knockback')
 	e:attach('frames')
+	e:attach('damage', 1)
 	add_anim(e, 'default', {{ num = 0 }})
 	add_anim(e, 'jump', {{ num = 64 }})
 	add_anim(e, 'kick', {{ num = 66 }})
@@ -76,6 +78,8 @@ assemblage.create('machine', function(type, x, y)
 	e:attach('frames')
 	e:attach('damage',1)
 	e:attach('health', 1)
+	e:attach('scorable', 10)
+	e:attach('tossable')
 	if type == 'copier' then 
 		e:attach('sprite', 52)
 		e:attach('defensive_collider', -1, -1, 10, 10)
@@ -105,17 +109,13 @@ assemblage.create('machine', function(type, x, y)
 		add_anim(e, 'default', {{ num = e.sprite.num }, {num = 115}})
 		e.frames.delay = 3
 		change_anim(e, 'default')
-		e.offensive_collider.ox = 4
-		e.offensive_collider.oy = 2
-		e.offensive_collider.w = e.sprite.scale * 4
-		e.offensive_collider.h = e.sprite.scale * 6
-		e:attach('defensive_collider', 5, 2, e.sprite.scale * 3, e.sprite.scale * 6)
+		e:attach('offensive_collider', 6, 2, 4, 14)
 	elseif type == 'wall' then
 		e:attach('sprite', 78, 1, 1)
 		e.sprite.h = 3
 		add_anim(e, 'default', {{ num = e.sprite.num }, {num = 79}})
+		e:attach('offensive_collider', 2, 1, 4, 23)
 		e:attach('floating')
-		e:attach('defensive_collider', 0, 0, e.sprite.scale * 2, e.sprite.scale * 4)
 	else 
 		e:attach('sprite', 1)
 		e:attach('floating')
@@ -123,7 +123,5 @@ assemblage.create('machine', function(type, x, y)
 		add_anim(e, 'idle', {{ num = 1 }})
 		change_anim(e, 'idle')
 	end
-	-- ...
-
 	return e
 end)
