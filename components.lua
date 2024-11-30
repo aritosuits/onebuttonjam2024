@@ -11,6 +11,10 @@ component.create('machine')
 
 component.create('floating')
 
+component.create('attack_region', function(x, y, w, h)
+	return { x = x, y = y, w = w, h = h }
+end)
+
 -- Items related to the display of an entity
 component.create('sprite', function(num, w, h, scale)
 	return { num = num, w = w or 1, h = h or 1, scale = scale or 1}
@@ -24,7 +28,6 @@ end)
 function add_anim(e, name, anim)
 	e.frames[name] = anim
 end
-
 function change_anim(e, name, one_shot)
 	if e.frames.anim == name then return end
 	if type(e.frames[name]) != 'table' then return end

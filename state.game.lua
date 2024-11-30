@@ -14,6 +14,7 @@ end
 function game.update(dt)
 	system.update(dt)
 	particle.update(dt)
+	spawner.update(dt)
 end
 
 function game.draw()
