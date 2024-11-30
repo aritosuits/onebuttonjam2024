@@ -175,7 +175,10 @@ system.create('animation', {'frames'},
 		if e.frames.animating then
 			local delay = (e.frames[e.frames.anim] and e.frames[e.frames.anim][e.frames.frame] and e.frames[e.frames.anim][e.frames.frame].delay) and e.frames[e.frames.anim][e.frames.frame].delay or e.frames.delay
 			e.frames.tick = (e.frames.tick + 1) % delay
-			if (e.frames.tick == 0) then
+			if e.frames.frame == #e.frames[e.frames.anim] and e.frames.one_shot then
+				e.frames.frame = 1
+				e.frames.anim = 'default'
+			elseif (e.frames.tick == 0) then
 				e.frames.frame = e.frames.frame % #e.frames[e.frames.anim] + 1
 			end
 		end

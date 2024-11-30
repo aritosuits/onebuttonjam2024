@@ -9,11 +9,13 @@ function game.enter()
 	enemy2 = assemblage.machine('blah', 21, 12, 1)
 	assemblage.machine('cone', 25, 12, 1)
 	assemblage.machine('computer', 28, 11, 1)
+	spawner.init()
 end
 
 function game.update(dt)
 	system.update(dt)
 	particle.update(dt)
+	spawner.update(dt)
 end
 
 function game.draw()
