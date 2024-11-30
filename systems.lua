@@ -91,13 +91,14 @@ system.create('machine', {'omg', 'controller', 'physics'},
 )
 
 gravity = 8
+ground = 80
 system.create('gravity', {'defensive_collider', 'physics'},
 	function(e, dt)
 		if e:has('floating') then return end 
 		if e.physics.mass <= 0 then return end
 		-- the hardcoded 80 should be removed
 		-- and a ground collider added if we want pits
-		if e.y < 80 then
+		if e.y < ground then
 			e.physics.vy += gravity * dt
 			if e.physics.grounded then
 				e.physics.grounded = false
@@ -107,7 +108,7 @@ system.create('gravity', {'defensive_collider', 'physics'},
 			end
 		else
 			e.physics.vy /= 1.5
-			e.y = 80
+			e.y = ground
 		 	if not e.physics.grounded then
 				e.physics.grounded = true
 				if e:has('frames') then
@@ -157,13 +158,18 @@ system.create('teleporter', {'teleport', 'defensive_collider'},
 	function(e, dt)
 			if overlap(hero, e) then		 
 				hero.x = e.teleport.x
-				--hero.y = e.teleport.y
+				hero.y = e.teleport.y
 				hero.physics.vx = 0
-				--hero.physics.vy = 0
+				hero.physics.vy = 0
 				--hero:detach('smash')
 				--hero.offensive_collider.enabled = false
 				shake.screen(2, 1)
 				hero.physics.smashing = -1
+				sfx(23)
+				if e.type == 'door2' then 
+					ground = 80 + 128
+				end
+
 			end
 	end
 )
@@ -216,6 +222,7 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 					else
 						-- player death here
 						sfx(16)
+						
 					end
 				end
 				if e:has('bullet') then
