@@ -154,3 +154,7 @@ end)
 component.create('scorable', function(amount)
 	return amount
 end)
+
+component.create('switch', function (is_on)
+	return {is_on = is_on or false}
+end)

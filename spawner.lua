@@ -21,7 +21,7 @@ end
 
 spawner = {}
 
-spawner.lookup = { 'player', 'cone', 'wall', 'shredder', 'computer', 'fan', '', 'copier' }
+spawner.lookup = { 'player', 'cone', 'wall', 'shredder', 'computer', 'fan', 'button', 'copier' }
 spawner.items = { 204, 205, 206, 207, 220, 221, 222, 223 }
 spawner.queue = {}
 
