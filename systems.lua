@@ -143,12 +143,13 @@ system.create('do_harm', {'damage', 'collider'},
 			if e:has('parent') and e.parent == o then return end 
 			if not o:has('player') then return end 
 			if overlap(e, o) then
-				printh("check do_harm firing " ..e.name.. "->" .. o.name)
 				if time() < o.health.iframes then return end 
 
 				o.health.current -= e.damage.damage
-				o.health.iframes = time()+.5
-				printh("dealt damage: " ..tostr(o.health.current))
+				if o:has('knockback') then
+					o.x -= 5
+				end
+				o.health.iframes = time() + 0.5
 				if o.health.current <= 0 then
 					o.health.current = 0
 					if not o:has('player') then
@@ -230,8 +231,8 @@ system.create('ai_shoot_smrt', {'ai_shoot_smrt', 'frames'}, function(e, dt)
 		if e.y == hero.y then
 			if hero.x <= (e.x + e.ai_shoot_smrt.max_range) then
 				change_anim(e, 'shooting', true)
-	 			assemblage.enemy_bullet(e, e.x + 2, e.y + 1, 6, e.bullet.sprite)
-			else 
+	 			assemblage.enemy_bullet(e, e.x + 2, e.y + 1, 6)
+			else
 				--printh(e.ai_shoot_smrt.ttsa .. "range: " .. e.ai_shoot_smrt.max_range .. "hero dist: " .. (e.ai_shoot_smrt.max_range - hero.x))
 				change_anim(e, 'idle')
 			end
@@ -246,8 +247,8 @@ system.create('bounding_box_debug', {'collider'},
 	nil,
 	function(e)
 		rect(e.x + e.collider.ox, 
-			e.y + e.collider.oy, e.x + e.collider.ox + e.collider.w, 
-			e.y + e.collider.oy + e.collider.h,
+			e.y + e.collider.oy, e.x + e.collider.ox + e.collider.w - 1, 
+			e.y + e.collider.oy + e.collider.h - 1,
 			14
 		)
 	end

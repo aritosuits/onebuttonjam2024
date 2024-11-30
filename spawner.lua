@@ -47,7 +47,6 @@ function spawner.update(dt)
 	local screen_right = flr((hero_x - 30)) + 128 + 32
 	for s in all(spawner.queue) do
 		if s.x <= screen_right then
-		printh('adding ' .. s.type)
 			if s.type == 'player' then
 				hero = assemblage.player(s.x, s.y)
 			else
