@@ -36,7 +36,7 @@ function entity.create(name, x, y)
 	obj.name = name
 	obj.x = x or 0 -- all entities have x
 	obj.y = y or 0 -- all entities have y
-	setmetatable(obj, {__index = entity})
+	setmetatable(obj, {__index = entity, __tostring = function(self) return examine(self) end })
 	add(world.entities, obj)
 	return obj
 end
@@ -149,4 +149,22 @@ function system.draw()
 	for s in all(system.list) do
 		s:draw()
 	end
+end
+
+function examine(o)
+	if type(o) == 'table' then
+		local s = '{ '
+		local sep = ''
+		for k, v in pairs(o) do
+			s = s .. sep .. k .. ': ' .. examine(v)
+			sep = ', '
+		end
+		s = s .. ' }'
+		return s
+	else
+		return tostring(o)
+	end
+end
+function dump(o)
+	printh(examine(o))
 end

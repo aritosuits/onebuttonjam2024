@@ -36,6 +36,10 @@ function game.draw()
 	pal(2, 133, 1)
 	-- debug
 	--print(#particle.list, 3, 120, 7)
+	--[[
+		printh(hero) -- DUMP ENTITY INFO
+		dump(hero.defensive_collider) -- DUMP ANY OBJECT OR VARIABLE
+	--]]
 end
 
 function game.press()

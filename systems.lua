@@ -134,8 +134,8 @@ system.create('physics', {'physics'},
 )
 
 function overlap(e, o)
-	if not e:has('offensive_collider') then return end
-	if not o:has('defensive_collider') then return end
+	if not e.offensive_collider.enabled then return end
+	if not o.defensive_collider.enabled then return end
 	return e.x + e.offensive_collider.ox < o.x + o.defensive_collider.ox + o.defensive_collider.w and o.x + o.defensive_collider.ox < e.x + e.offensive_collider.ox + e.offensive_collider.w and e.y + e.offensive_collider.oy < o.y + o.defensive_collider.oy + o.defensive_collider.h and o.y + o.defensive_collider.oy < e.y + e.offensive_collider.oy + e.offensive_collider.h
 end
 
@@ -157,7 +157,7 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 					if not o:has('player') then
 						particle.create('smoke', e.x + 10, e.y + 21, 5)
 						o:attach('despawn', 1)
-					else 
+					else
 						-- player death here
 					end
 				end

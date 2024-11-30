@@ -73,16 +73,17 @@ assemblage.create('machine', function(type, x, y)
 	e.name = type
 	e:attach('physics')
 	e:attach('offensive_collider', 0, 0, 8, 8)
-	e:attach('defensive_collider', 2, 2, 4, 4)
 	e:attach('frames')
 	e:attach('damage',1)
 	e:attach('health', 1)
 	if type == 'copier' then 
 		e:attach('sprite', 52)
+		e:attach('defensive_collider', -1, -1, 10, 10)
 		e:attach('ai')
 	elseif type == 'computer' then 
 		e:attach('sprite', 52, 1, 1, 2)
 		e:attach('ai_shoot_smrt')
+		e:attach('defensive_collider', -1, -1, 10, 10)
 		add_anim(e, 'default', {{ num = e.sprite.num }})
 		add_anim(e, 'idle', {{ num = e.sprite.num }, { num = 53 }})
 		add_anim(e, 'shooting', {{num = 54}})
@@ -90,6 +91,7 @@ assemblage.create('machine', function(type, x, y)
 		change_anim(e, 'idle')
 	elseif type == 'shredder' then
 		e:attach('sprite', 55, 1, 1, 2)
+		e:attach('defensive_collider', -1, -1, 10, 10)
 		add_anim(e, 'idle', {{ num = e.sprite.num }, {num = 56}})
 		add_anim(e, 'shooting', {{num = 56}})
 		e.frames.delay = 3
