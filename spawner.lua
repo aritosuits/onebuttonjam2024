@@ -24,6 +24,7 @@ spawner.items = { 204, 205, 206, 207, 220, 221, 222, 223 }
 spawner.queue = {}
 
 function spawner.init()
+	spawner.queue = {}
 	for x = 0, 16 do
 		for y = 0, 16 do
 			for i in pairs(spawner.items) do

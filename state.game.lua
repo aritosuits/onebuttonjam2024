@@ -9,6 +9,7 @@ function game.enter()
 	enemy2 = assemblage.machine('blah', 169, 96, 1)
 	assemblage.machine('cone', 100, 88, 1)
 	assemblage.machine('computer', 182, 88, 1)
+	spawner.init()
 end
 
 function game.update(dt)
