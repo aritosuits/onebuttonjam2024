@@ -161,6 +161,7 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 					if not o:has('player') then
 						particle.create('smoke', e.x + 10, e.y + 21, 5)
 						o:attach('despawn', 1)
+						if o:has('scorable') then score.add(e.scorable) end
 					else 
 						-- player death here
 						sfx(16)
