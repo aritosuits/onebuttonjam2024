@@ -42,6 +42,7 @@ system.create('controller', {'controller', 'physics'},
 			if e.physics.grounded then
 				e.physics.vy = -6.5
 				particle.create('smoke', e.x + 10, e.y + 21, 5)
+				sfx(18)
 			else
 				e.physics.vy = 6
 				change_anim(e, 'kick')
@@ -104,6 +105,8 @@ system.create('gravity', {'defensive_collider', 'physics'},
 				if e:has({'player', 'smash'}) then
 					particle.create('smash', e.x + 10, e.y + 21, 10)
 					e:detach('smash')
+					sfx(19)
+					sfx(20)
 					shake.screen(4, 3)
 				else
 					particle.create('smoke', e.x + 10, e.y + 21, 10)
@@ -146,7 +149,8 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 			if e:has('parent') and e.parent == o then return end 
 			if not o:has('player') then return end
 			if overlap(e, o) then
-				if time() < o.health.iframes then return end 
+				if time() < o.health.iframes then return end
+				sfx(17) 
 				o.health.current -= e.damage.damage
 				if o:has('knockback') then
 					o.physics.vx = -2
