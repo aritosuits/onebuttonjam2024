@@ -24,24 +24,28 @@ end)
 function add_anim(e, name, anim)
 	e.frames[name] = anim
 end
-function change_anim(e, name)
+
+function change_anim(e, name, one_shot)
 	if e.frames.anim == name then return end
 	if type(e.frames[name]) != 'table' then return end
 	e.frames.anim = name
+	e.frames.one_shot = one_shot or false
 	e.frames.frame = 1
-end
-component.create('frames', function()
+  end
+
+  component.create('frames', function()
 	return {
-		animating = true,
-		anim = 'default',
-		tick = 0,
-		delay = 4,
-		frame = 1,
-		default = {
-			{ num = 0, delay = 4 }
-		}
+	  animating = true,
+	  anim = 'default',
+	  tick = 0,
+	  delay = 4,
+	  frame = 1,
+	  one_shot = false,
+	  default = {
+		{ num = 0, delay = 4 }
+	  }
 	}
-end)
+  end)
 
 component.create('autorun', function(speed)
 	return { speed = speed or 1 }
@@ -73,16 +77,12 @@ end)
 
 -- Stuff related to damaging stuff
 component.create('damage', function(damage)
-	if not e:has('player') then return end
 	return { damage = damage or 1 }
 end)
 
 -- Entity health
-component.create('health', function(num, isPlayer)
-	healthMax = 5
-	isPlayer = isPlayer or false;
-	if (num > healthMax) and isPlayer then return healthMax end
-	return num or 3
+component.create('health', function(num)
+	return {current = num or 3, max = num or 3, iframes = 0}
 end)
 
 -- Entity colliders for physics and collisions
@@ -111,9 +111,6 @@ component.create('ai_shoot_smrt', function(max_range)
 	}
 end)
 
-component.create('damage_on_touch', function (damage)
-	if not e:has('player') then return end
-	return {
-		damage = damage or 1
-	}
+component.create('parent', function (obj) 
+	return obj
 end)

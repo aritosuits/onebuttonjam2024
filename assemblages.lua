@@ -8,10 +8,10 @@ assemblage.create('player', function(x, y)
 	e = entity.create('player', x, y)
 	e:attach('controller')
 	e:attach('autorun', 30)
-	e:attach('health', 3, true)
+	e:attach('health', 3)
 	e:attach('sprite', 0, 2, 3)
 	e:attach('physics')
-	e:attach('collider', 0, 0, 8, 8)
+	e:attach('collider', 2, 2, 12, 20)
 	e:attach('weapon', 0)
 	e:attach('frames')
 	add_anim(e, 'default', {{ num = 0 }})
@@ -36,10 +36,11 @@ assemblage.create('player_bullet', function(x, y, speed)
 	e:attach('physics', speed or 10, 0, 0)
 	e:attach('health', 1)
 	e:attach('despawn', 60)
+	e:attach('parent', hero)
 	return e
 end)
 
-assemblage.create('enemy_bullet', function(x, y, speed)
+assemblage.create('enemy_bullet', function(parent, x, y, speed)
 	e = entity.create('enemy_bullet', x, y )
 	e:attach('damage', 1)
 	e:attach('sprite', 1)
@@ -48,6 +49,7 @@ assemblage.create('enemy_bullet', function(x, y, speed)
 	e:attach('health', 1)
 	e:attach('despawn', 60)
 	printh("made bullet")
+	e:attach('parent', parent)
 	return e
 end)
 
@@ -60,43 +62,35 @@ assemblage.create('machine', function(type, x, y, health)
 	e:attach('physics')
 	e:attach('collider', 0, 0, 8, 8)
 	e:attach('frames')
+	e:attach('damage',1)
+	e:attach('health', 1)
 	if type == 'copier' then 
 		e:attach('sprite', 52)
-		e.health = 2
 		e:attach('ai')
-		e:attach('damage',1)
 	elseif type == 'computer' then 
 		e:attach('sprite', 52, 1, 1, 2)
-		e.health = 10
 		e:attach('ai_shoot_smrt')
 		add_anim(e, 'default', {{ num = 52 }})
 		add_anim(e, 'idle', {{ num = 52 }, { num = 53 }})
+		add_anim(e, 'shooting', {{num = 54}})
 		e.frames.delay = 3
 		change_anim(e, 'idle')
-		--add_anim(e, 'shoot', {{num = 220}})
 	elseif type == 'cone' then
 		e:attach('sprite', 114, 1, 1, 2)
-		e.health = 20
 		-- this damage is somehow never dealt.
-		e:attach('damage', 1)
-		e:attach('damage_on_touch')
 		e:attach('floating')
 		add_anim(e, 'default', {{ num = 114 }, {num = 115}})
 		e.frames.delay = 3
 		change_anim(e, 'default')
 	elseif type == 'wall' then
 		e:attach('sprite', 169, 1, 1)
-		e.health = 20
 		-- this damage is somehow never dealt.
-		e:attach('damage', 1)
 		e:attach('damage_on_touch')
 		e:attach('floating')
-		
 	else 
 		e:attach('sprite', 52)
-		e:attach('health', 3)
 		e:attach('floating')
-		e:attach('ai_shoot_dumb')
+		--e:attach('ai_shoot_dumb')
 		add_anim(e, 'default', {{ num = 52 }})
 		add_anim(e, 'idle', {{ num = 52 }, { num = 53 }})
 		change_anim(e, 'idle')

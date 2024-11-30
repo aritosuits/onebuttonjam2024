@@ -7,7 +7,7 @@ function game.enter()
 	hero = assemblage.player(24, 72)
 	enemy = assemblage.machine('computer', 8, 8, 1)
 	enemy2 = assemblage.machine('blah', 169, 96, 1)
-	assemblage.machine('cone', 200, 06, 1)
+	assemblage.machine('cone', 100, 88, 1)
 	assemblage.machine('computer', 182, 88, 1)
 end
 
@@ -28,7 +28,7 @@ function game.draw()
 	-- ui
 	camera()
 	for i = 1, 3 do
-		spr(hero.health >= i and 223 or 207, (i-1) * 9 + 2, 3) -- health
+		spr(hero.health.current >= i and 223 or 207, (i-1) * 9 + 2, 3) -- health
 	end
 	for i = 1, 4 do
 		spr(hero.weapon.level >= i and 255 or 239, (i-1) * 8 + 2, 13) -- gun

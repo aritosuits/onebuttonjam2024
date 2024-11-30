@@ -64,7 +64,7 @@ system.create('machine', {'omg', 'controller', 'physics'},
 			if e:has('player') then
 				assemblage.player_bullet(e.x + 2, e.y + 1, 6)
 			else 
-				assemblage.enemy_bullet(e.x + 2, e.y + 1, 6)
+				assemblage.enemy_bullet(e, e.x + 2, e.y + 1, 6)
 			end
 		elseif e.controller.release then
 			e.controller.release = false
@@ -135,35 +135,32 @@ system.create('physics', {'physics'},
 function overlap(e, o)
 	return e.x + e.collider.ox < o.x + o.collider.ox + o.collider.w and o.x + o.collider.ox < e.x + e.collider.ox + e.collider.w and e.y + e.collider.oy < o.y + o.collider.oy + o.collider.h and o.y + o.collider.oy < e.y + e.collider.oy + e.collider.h
 end
-system.create('bullet', {'damage', 'collider'},
+
+system.create('do_harm', {'damage', 'collider'},
 	function(e, dt)
 		world.each({'collider', 'health'}, function(o)
 			if e == o then return end
+			if e:has('parent') and e.parent == o then return end 
+			if not o:has('player') then return end 
 			if overlap(e, o) then
-				o.health -= e.damage.damage
-				
-				printh("dealt damage: " ..tostr(o.health))
-				if o.health <= 0 then
-					o.health = 0
-					o:attach('despawn', 1)
+				printh("check do_harm firing " ..e.name.. "->" .. o.name)
+				if time() < o.health.iframes then return end 
+
+				o.health.current -= e.damage.damage
+				o.health.iframes = time()+.5
+				printh("dealt damage: " ..tostr(o.health.current))
+				if o.health.current <= 0 then
+					o.health.current = 0
+					if not o:has('player') then
+						particle.create('smoke', e.x + 10, e.y + 21, 5)
+						o:attach('despawn', 1)
+					else 
+						-- player death here
+					end
 				end
-				del(world.entities, e) -- remove bullet
-			end
-		end)
-	end,
-	nil
-)
-system.create('damage_on_touch', {'damage_on_touch', 'collider'},
-	function(e, dt)
-		world.each({'collider', 'health'}, function(o)
-			if e == o then return end
-			if overlap(e, o) then
-				o.health -= e.damage.damage
-				printh("dealt damage: " ..tostr(o.health))
-				if o.health <= 0 then
-					o.health = 0
-					o:attach('despawn', 1)
-				end
+				if e:has('bullet') then
+					del(world.entities, e) -- remove bullet
+				end 
 			end
 		end)
 	end,
@@ -171,16 +168,21 @@ system.create('damage_on_touch', {'damage_on_touch', 'collider'},
 )
 
 system.create('animation', {'frames'},
-	function(e, dt)
-		if e.frames.animating then
-			local delay = (e.frames[e.frames.anim] and e.frames[e.frames.anim][e.frames.frame] and e.frames[e.frames.anim][e.frames.frame].delay) and e.frames[e.frames.anim][e.frames.frame].delay or e.frames.delay
-			e.frames.tick = (e.frames.tick + 1) % delay
-			if (e.frames.tick == 0) then
-				e.frames.frame = e.frames.frame % #e.frames[e.frames.anim] + 1
-			end
+  function(e, dt)
+    if e.frames.animating then
+      local delay = (e.frames[e.frames.anim] and e.frames[e.frames.anim][e.frames.frame] and e.frames[e.frames.anim][e.frames.frame].delay) and e.frames[e.frames.anim][e.frames.frame].delay or e.frames.delay
+      e.frames.tick = (e.frames.tick + 1) % delay
+      if (e.frames.tick == 0) then
+		if e.frames.frame == #e.frames[e.frames.anim] and e.frames.one_shot then
+			e.frames.frame = 1
+			e.frames.anim = 'default'
+		else
+        	e.frames.frame = e.frames.frame % #e.frames[e.frames.anim] + 1
 		end
-	end,
-	nil
+      end
+    end
+  end,
+  nil
 )
 
 system.create('despawner', {'health', 'despawn'},
@@ -210,29 +212,43 @@ system.create('movement', {'physics', 'movement'},
 )
 
 
-system.create('ai_shoot_dumb', {'ai_shoot_dumb'}, function(e, dt)
+system.create('ai_shoot_dumb', {'ai_shoot_dumb', 'frames'}, function(e, dt)
 	if e.ai_shoot_dumb.ttsa <= 0 then
-		printh(e.ai_shoot_dumb.ttsa)
-	 assemblage.enemy_bullet(e.x + 2, e.y + 1, 6)
-	 e.ai_shoot_dumb.ttsa = 20
-	 printh(e.ai_shoot_dumb.ttsa)
+		change_anim(e, 'shooting', true)
+	 	assemblage.enemy_bullet(e, e.x + 2, e.y + 1, 6)
+	 	e.ai_shoot_dumb.ttsa = 20
+	 	--printh(e.ai_shoot_dumb.ttsa)
 	else
-	 e.ai_shoot_dumb.ttsa -= 1
+		 e.ai_shoot_dumb.ttsa -= 1
 	end
-   end, nil)
+   end, nil
+)
 
-system.create('ai_shoot_smrt', {'ai_shoot_smrt'}, function(e, dt)
+system.create('ai_shoot_smrt', {'ai_shoot_smrt', 'frames'}, function(e, dt)
 	if e.ai_shoot_smrt.ttsa <= 0 then
 		e.ai_shoot_smrt.ttsa = 20
 		if e.y == hero.y then
 			if hero.x <= (e.x + e.ai_shoot_smrt.max_range) then
-				printh(e.ai_shoot_smrt.ttsa)
-	 			assemblage.enemy_bullet(e.x + 2, e.y + 1, 6)
+				change_anim(e, 'shooting', true)
+	 			assemblage.enemy_bullet(e, e.x + 2, e.y + 1, 6)
 			else 
-				printh(e.ai_shoot_smrt.ttsa .. "range: " .. e.ai_shoot_smrt.max_range .. "hero dist: " .. (e.ai_shoot_smrt.max_range - hero.x))
+				--printh(e.ai_shoot_smrt.ttsa .. "range: " .. e.ai_shoot_smrt.max_range .. "hero dist: " .. (e.ai_shoot_smrt.max_range - hero.x))
+				change_anim(e, 'idle')
 			end
 		end
 	else
 	 e.ai_shoot_smrt.ttsa -= 1
 	end
-   end, nil)
+   end, nil
+) 
+
+system.create('bounding_box_debug', {'collider'},
+	nil,
+	function(e)
+		rect(e.x + e.collider.ox, 
+			e.y + e.collider.oy, e.x + e.collider.ox + e.collider.w, 
+			e.y + e.collider.oy + e.collider.h,
+			14
+		)
+	end
+)
