@@ -157,3 +157,7 @@ end)
 component.create('scorable', function(amount)
 	return amount
 end)
+
+component.create('teleport', function(x, y, autorun, ends_game)
+	return {x = x or 0, y = y or 0, autorun = autorun or true, ends_game = ends_game or false}
+end)
