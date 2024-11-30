@@ -156,37 +156,36 @@ end
 
 system.create('teleporter', {'teleport', 'defensive_collider'}, 
 	function(e, dt)
-			if overlap(hero, e) then
-				e:detach('defensive_collider')
-				hero.x = e.teleport.x
-				hero.y = e.teleport.y
-				hero.physics.vx = 0
-				hero.physics.vy = 0
-				--hero:detach('smash')
-				--hero.offensive_collider.enabled = false
-				shake.screen(2, 1)
-				hero.physics.smashing = -1
-				sfx(37)
-				music(-1)
-				if e.name == 'door1' then
-					music(10, 300)
-				elseif e.name == 'door2' then
-					music(0, 500) 
-					ground = 80 + 128
-					world.each(nil, function(e)
-						if not e:has('player') then 
-							del(world.entities, e)
-						end
-					end)
-					spawner.init()
-				elseif e.name == 'door3' then 
-					music(10, 1300)
-				elseif e.name == 'door4' then 
-					world.destroy()
-					state.switch('end')
-				end
-
+		if overlap(hero, e) then
+			e:detach('defensive_collider')
+			hero.x = e.teleport.x
+			hero.y = e.teleport.y
+			hero.physics.vx = 0
+			hero.physics.vy = 0
+			--hero:detach('smash')
+			--hero.offensive_collider.enabled = false
+			shake.screen(2, 1)
+			hero.physics.smashing = -1
+			sfx(37)
+			music(-1)
+			if e.name == 'door1' then
+				music(10, 300)
+			elseif e.name == 'door2' then
+				music(0, 500) 
+				ground = 80 + 128
+				world.each(nil, function(e)
+					if not e:has('player') then 
+						del(world.entities, e)
+					end
+				end)
+				spawner.init()
+			elseif e.name == 'door3' then 
+				music(10, 1300)
+			elseif e.name == 'door4' then 
+				world.destroy()
+				state.switch('end')
 			end
+		end
 	end
 )
 
