@@ -66,6 +66,7 @@ end
 
 function shake.update(dt)
 	if not shake.active then
+		if hero.x == nil then return end
 		camera(hero.x - 30, (ground - 104))
 		return
 	end

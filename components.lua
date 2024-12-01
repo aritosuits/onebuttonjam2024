@@ -17,6 +17,10 @@ component.create('enemy_team')
 
 component.create('crushable')
 
+component.create('timer', function(start_time)
+	return {start_time = start_time or time()}
+end)
+
 component.create('repeat_every', function(delay, code)
 	return { delay = delay or 30, reset = delay or 30, code = code or function(e) end }
 end)
@@ -100,6 +104,10 @@ component.create('autorun', function(speed)
 	return { speed = speed or 1 }
 end)
 
+component.create('boss_autorun', function(speed)
+	return { speed = speed or 1 }
+end)
+
 component.create('controller', function()
 	return {
 		press = false,
@@ -170,11 +178,16 @@ component.create('ai_shoot_smrt', function(max_range)
 	}
 end)
 
-component.create('ai_boss', function(max_range_shoot, max_range_lunge)
+component.create('ai_boss', function(max_range_shoot, max_range_lunge, can_shoot, is_lunging, is_returning, times_struck)
 	return {
-		max_range_shoot = max_range_shoot or 120,
-		max_range_lunge = max_range_lunge or 80,
-		ttsa = 30
+		times_struck = times_struck or 0,
+		max_range_shoot = max_range_shoot or 30,
+		max_range_lunge = max_range_lunge or 30,
+		ttsa = 0,
+		ttla = 0,
+		can_shoot = can_shoot or true,
+		is_lunging = is_lunging or false,
+		is_returning = is_returning or false
 	}
 end)
 
