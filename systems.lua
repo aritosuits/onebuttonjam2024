@@ -240,69 +240,80 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 			if e == o then return end -- not itself
 			if not e.offensive_collider.enabled then return end -- not turned off
 			if not o.defensive_collider.enabled then return end -- not turned off
-			if e:has('parent') and e.parent == o then return end -- not the source
-			if e:has('bullet') and o:has('machine') then return end 
-			if e:has('machine') and o:has('bullet') then return end 
-			if overlap(e, o) then
-				if time() < o.health.iframes then return end
-				-- sfx(31)
-				if not o:has('player') then o.health.current -= e.damage end
-				if o:has('knockable') and e:has('knockback') then
-					o.physics.vx = e.knockback.vx
-					o.physics.vy = e.knockback.vy
-				end
-				o:attach('ouch')
-				o.health.iframes = time() + 0.5
-				if not o:has('player') and o.health.current <= 0 then
+			if (e:has('parent') and e.parent == o) or (o:has('parent') and e == o.parent) then return end -- not the source
+			if e:has('enemy_team') and o:has('enemy_team') then return end -- no friendly fire
+			if not overlap(e, o) then return end
+			if time() < o.health.iframes then return end
+			o.health.iframes = time() + 0.5
+			o:attach('ouch')
+			if o:has('knockable') and e:has('knockback') then
+				o.physics.vx = e.knockback.vx
+				o.physics.vy = e.knockback.vy
+			end
+			if not o:has('player') then -- not towards player
+				sfx(31) -- might need new sound?
+				o.health.current -= e.damage
+				if o.health.current <= 0 then
 					o.health.current = 0
-					if o:has('tutorial') then 
-						change_anim(o, 'pressed')
-						sfx(36)
-						hero:attach('autorun', 30)
-						o:detach('tutorial')
-						o:detach('defensive_collider')
-					elseif not o:has('player') then
-						-- particle.create('smoke', e.x + 10, e.y + 21, 5)
-						if o:has('tossable') then
-							o:detach('physics')
-							o:detach('offensive_collider')
-							o:detach('defensive_collider')
-							o:attach('toss', o.sprite)
-							o:detach('sprite')
-							o:detach('ai_shoot_smrt')
-							o:detach('ai_shoot_dumb')
-						else
-							o:attach('despawn', 1)
+				end
+				if o:has('tutorial') then -- tutorial button
+					change_anim(o, 'pressed')
+					sfx(36)
+					hero:attach('autorun', 30)
+					o:detach('tutorial')
+					o:detach('defensive_collider')
+				else -- not tutorial button
+					-- particle.create('smoke', e.x + 10, e.y + 21, 5)
+					if o:has('bounce') then
+						if e:has('physics') then
+							e.physics.vx += o.bounce.vx
+							e.physics.vy = o.bounce.vy
 						end
-						if e:has('player') and o:has('scorable') then
-							local s = score.calculate(o.scorable, e.physics.smashing, hero.health.current)
-							printh('base score: ' .. o.scorable .. ' smash frames: ' .. e.physics.smashing .. ' health: ' .. hero.health.current .. ' total: ' .. s)
-							score.add(s)
-						end
-					else
-						-- player death here
-						--sfx(30)
+						-- smash again
+						particle.create('smash', e.x + 10, e.y + 21, 10)
+						e:detach('smash')
+						e.offensive_collider.enabled = false
+						sfx(33)
+						sfx(34)
+						shake.screen(hero.health.current * 0.75 + 0.25, lerp(3, 5, hero.health.current / 16))
+						e.physics.smashing = -1
 					end
-				elseif o:has('player') then
-					if hero.health.current <= 0 then
-						sfx(30)
-						-- PLAYER DEAD
+					if o:has('tossable') then
+						o:detach('physics')
+						o:detach('offensive_collider')
+						o:detach('defensive_collider')
+						o:attach('toss', o.sprite)
+						o:detach('sprite')
+						o:detach('ai_shoot_smrt')
+						o:detach('ai_shoot_dumb')
 					else
-						sfx(31)
-						local m = min(16, #hero.health.letters)
-						local r = rnd(1)
-						for i = 1, m do
-							local vx = sin(i / m + r) * 2
-							local vy = cos(i / m + r) * 2
-							assemblage.collectable('code', hero.x, hero.y, sub(hero.health.letters, i, i), vx, vy)
-						end
-						hero.health.current = 0
-						hero.health.letters = ''
-						sfx(41)
+						o:attach('despawn', 1)
+					end
+					if e:has('player') and o:has('scorable') then -- caused by player
+						local s = score.calculate(o.scorable, e.physics.smashing, hero.health.current)
+						printh('base score: ' .. o.scorable .. ' smash frames: ' .. e.physics.smashing .. ' health: ' .. hero.health.current .. ' total: ' .. s)
+						score.add(s)
 					end
 				end
 				if e:has('bullet') then
 					del(world.entities, e) -- remove bullet
+				end
+			else -- towards player
+				if hero.health.current <= 0 then
+					sfx(30)
+					-- PLAYER DEAD
+				else
+					sfx(31)
+					local m = min(16, #hero.health.letters)
+					local r = rnd(1)
+					for i = 1, m do
+						local vx = sin(i / m + r) * 2
+						local vy = cos(i / m + r) * 2
+						assemblage.collectable('code', hero.x, hero.y, sub(hero.health.letters, i, i), vx, vy)
+					end
+					hero.health.current = 0
+					hero.health.letters = ''
+					sfx(41)
 				end
 			end
 		end)

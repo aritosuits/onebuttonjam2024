@@ -13,6 +13,8 @@ component.create('bullet')
 
 component.create('tutorial')
 
+component.create('enemy_team')
+
 component.create('collectable_delay', function(delay)
 	return delay or 30
 end)
@@ -22,6 +24,10 @@ end)
 
 component.create('ouch', function(ttl)
 	return { enabled = true, ttl = ttl or 20 }
+end)
+
+component.create('bounce', function(vx, vy)
+	return { vx = vx or 0, vy = vy or -4 }
 end)
 
 component.create('knockable')
