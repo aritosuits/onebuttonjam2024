@@ -21,14 +21,14 @@ end
 
 spawner = {}
 
-spawner.lookup = { 'player', 'cone', 'wall', 'shredder', 'computer', 'fan', '', 'copier', 'button', 'door1', 'door2', 'door3', 'door4' }
-spawner.items = { 204, 205, 206, 207, 220, 221, 222, 223, 59, 236, 237, 238, 239 }
+spawner.lookup = { 'player', 'cone', 'wall', 'shredder', 'computer', 'fan', '', 'copier', 'button', 'door1', 'door2', 'door3', 'door4', 'code' }
+spawner.items = { 204, 205, 206, 207, 220, 221, 222, 223, 59, 236, 237, 238, 239, 254 }
 spawner.queue = {}
 
 function spawner.init()
 	spawner.queue = {}
 	for x = 0, 128 do
-		for y = flr((ground - 80) / 8), flr(((ground - 80) / 8) + 16) do
+		for y = flr((ground - 104) / 8), flr(((ground - 104) / 8) + 16) do
 			for i in pairs(spawner.items) do
 				if in_table(mget(x, y), spawner.items) then
 					local which = table_index(mget(x, y), spawner.items)
@@ -59,6 +59,8 @@ function spawner.update(dt)
 				assemblage.door(s.type, s.x, s.y, s.x + 128, s.y, false)
 			elseif s.type == 'door4' then 
 				assemblage.door(s.type, s.x, s.y, 16, s.y + 128, true, true)
+			elseif s.type == 'code' then
+				assemblage.collectable('code', s.x, s.y)
 			else
 				assemblage.machine(s.type, s.x, s.y)
 			end

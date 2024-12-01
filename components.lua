@@ -13,6 +13,13 @@ component.create('bullet')
 
 component.create('tutorial')
 
+component.create('collectable_delay', function(delay)
+	return delay or 30
+end)
+component.create('collectable', function(type)
+	return { type = type }
+end)
+
 component.create('ouch', function(ttl)
 	return { enabled = true, ttl = ttl or 20 }
 end)
@@ -42,12 +49,12 @@ end)
 
 -- Items related to the display of an entity
 component.create('sprite', function(num, w, h, scale)
-	return { num = num or 254, w = w or 1, h = h or 1, scale = scale or 1}
+	return { num = num or 255, w = w or 1, h = h or 1, scale = scale or 1}
 end)
 
 -- It's what you see when an enemy shoots code
 component.create('recttext', function(color, char, w, h)
-	return { color = color, char = char, w = w or 4, h = h or 4 }
+	return { color = color, char = char, w = w or 6, h = h or 6, frame = 0, delay = 4, accumulator = 0 }
 end)
 
 function add_anim(e, name, anim)
@@ -69,7 +76,7 @@ component.create('frames', function(e)
 		frame = 1,
 		one_shot = false,
 		default = {
-			{ num = 254 }
+			{ num = 255 }
 		}
 	}
 end)
@@ -109,7 +116,7 @@ end)
 
 -- Entity health
 component.create('health', function(num)
-	return {current = num or 3, max = num or 3, iframes = 0}
+	return { current = num or 3, limit = limit or 16, letters = '', iframes = 0 }
 end)
 
 -- Entity colliders for physics and collisions

@@ -150,13 +150,28 @@ assemblage.create('button', function (x, y)
 	return e
 end)
 
-assemblage.create('door', function (type, x, y, tele_x, tele_y, autorun, ends_game)
-	e = entity.create(type, x, y, autorun, ends_game)
+assemblage.create('door', function(type, x, y, tele_x, tele_y, autorun, ends_game)
+	e = entity.create(type, x, y)
 	e:attach('sprite', 101, 2, 2)
 	e.sprite.scale = 1.5
-	e:attach('teleport', tele_x or (2 * 8), tele_y or (9 * 8))
+	e:attach('teleport', tele_x or (2 * 8), tele_y or (9 * 8), autorun, ends_game)
 	e:attach('defensive_collider', 17, -8, e.sprite.scale * 19, e.sprite.scale * 16)
-
 	return e
 end)
 
+assemblage.create('collectable', function(type, x, y, letter, vx, vy)
+	vx = vx or 0
+	vy = vy or 0
+	e = entity.create(type, x, y)
+	e:attach('collectable', type)
+	e:attach('gravity')
+	e:attach('friction')
+	if vx != 0 or vy != 0 then
+		e:attach('physics', vx, vy)
+		e:attach('collectable_delay')
+	else
+		e:attach('defensive_collider')
+	end
+	e:attach('recttext', 12, letter or rnd({'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f'}))
+	return e
+end)

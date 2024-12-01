@@ -44,12 +44,24 @@ system.create('display', {'sprite'},
 	end
 )
 
+function recttext(frame, letter, x, y)
+	if e.hidden then return end
+	spr(124 + frame, x, y)
+	if frame == 0 then
+		print(letter, x + 2, y + 1, 7)
+	elseif frame == 1 or frame == 3 then
+		print('|', x + 2, y + 1, 7)
+	end
+end
 system.create('recttext_display', {'recttext'},
-	nil,
+	function(e, dt)
+		e.recttext.accumulator = (e.recttext.accumulator % e.recttext.delay) + 1
+		if e.recttext.accumulator == e.recttext.delay - 1 then
+			e.recttext.frame = (e.recttext.frame + 1) % 4
+		end
+	end,
 	function(e)
-		if e.hidden then return end
-		rectfill(e.x, e.y, e.x + e.recttext.w, e.y + e.recttext.h, 8)
-		print(e.recttext.char, e.x + 1, e.y + 1, 7)
+		recttext(e.recttext.frame, e.recttext.char, e.x, e.y)
 	end
 )
 
@@ -101,14 +113,20 @@ system.create('machine', {'omg', 'controller', 'physics'},
 )
 
 gravity = 8
-ground = 80
+ground = 104
 system.create('gravity', {'defensive_collider', 'physics'},
 	function(e, dt)
 		if e:has('floating') then return end 
 		if e.physics.mass <= 0 then return end
 		-- the hardcoded 80 should be removed
 		-- and a ground collider added if we want pits
-		if e.y < ground then
+		local scale = 1
+		local height = 8
+		if e:has('sprite') then
+			scale = e.sprite.scale
+			height = e.sprite.h * 8
+		end
+		if e.y + height * scale < ground then
 			e.physics.vy += gravity * dt
 			if e.physics.grounded then
 				e.physics.grounded = false
@@ -118,7 +136,7 @@ system.create('gravity', {'defensive_collider', 'physics'},
 			end
 		else
 			e.physics.vy /= 1.5
-			e.y = ground
+			e.y = ground - height * scale
 		 	if not e.physics.grounded then
 				e.physics.grounded = true
 				if e:has('frames') then
@@ -130,12 +148,27 @@ system.create('gravity', {'defensive_collider', 'physics'},
 					e.offensive_collider.enabled = false
 					sfx(33)
 					sfx(34)
-					shake.screen(4, 3)
+					shake.screen(hero.health.current * 0.75 + 0.25, lerp(3, 5, hero.health.current / 16))
 					e.physics.smashing = -1
 				else
 					particle.create('smoke', e.x + 10, e.y + 21, 10)
 				end
 			end
+		end
+	end,
+	nil
+)
+
+system.create('friction', {'friction', 'defensive_collider', 'physics'},
+	function(e, dt)
+		local scale = 1
+		local height = 8
+		if e:has('sprite') then
+			scale = e.sprite.scale
+			height = e.sprite.h * 8
+		end
+		if e.y + height * scale >= ground then
+			e.physics.vx *= 0.95
 		end
 	end,
 	nil
@@ -160,13 +193,15 @@ system.create('physics', {'physics'},
 	nil
 )
 
-function overlap(e, o)
-	return e.x + e.offensive_collider.ox < o.x + o.defensive_collider.ox + o.defensive_collider.w and o.x + o.defensive_collider.ox < e.x + e.offensive_collider.ox + e.offensive_collider.w and e.y + e.offensive_collider.oy < o.y + o.defensive_collider.oy + o.defensive_collider.h and o.y + o.defensive_collider.oy < e.y + e.offensive_collider.oy + e.offensive_collider.h
+function overlap(e, o, e_collider, o_collider)
+	e_collider = e_collider or 'offensive_collider'
+	o_collider = o_collider or 'defensive_collider'
+	return e.x + e[e_collider].ox < o.x + o[o_collider].ox + o[o_collider].w and o.x + o[o_collider].ox < e.x + e[e_collider].ox + e[e_collider].w and e.y + e[e_collider].oy < o.y + o[o_collider].oy + o[o_collider].h and o.y + o[o_collider].oy < e.y + e[e_collider].oy + e[e_collider].h
 end
 
 system.create('teleporter', {'teleport', 'defensive_collider'}, 
 	function(e, dt)
-		if overlap(hero, e) then
+		if overlap(hero, e, 'defensive_collider', 'defensive_collider') then
 			e:detach('defensive_collider')
 			hero.x = e.teleport.x
 			hero.y = e.teleport.y
@@ -182,7 +217,7 @@ system.create('teleporter', {'teleport', 'defensive_collider'},
 				music(10, 300)
 			elseif e.name == 'door2' then
 				music(0, 500) 
-				ground = 80 + 128
+				ground = 104 + 128
 				world.each(nil, function(e)
 					if not e:has('player') then 
 						del(world.entities, e)
@@ -209,15 +244,15 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 			if e:has('machine') or o:has('machine') then return end 
 			if overlap(e, o) then
 				if time() < o.health.iframes then return end
-				sfx(31) 
-				o.health.current -= e.damage
+				-- sfx(31)
+				if not o:has('player') then o.health.current -= e.damage end
 				if o:has('knockable') and e:has('knockback') then
 					o.physics.vx = e.knockback.vx
 					o.physics.vy = e.knockback.vy
 				end
 				o:attach('ouch')
 				o.health.iframes = time() + 0.5
-				if o.health.current <= 0 then
+				if not o:has('player') and o.health.current <= 0 then
 					o.health.current = 0
 					if o:has('tutorial') then 
 						change_anim(o, 'pressed')
@@ -225,8 +260,6 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 						hero:attach('autorun', 30)
 						o:detach('tutorial')
 						o:detach('defensive_collider')
-					
-
 					elseif not o:has('player') then
 						-- particle.create('smoke', e.x + 10, e.y + 21, 5)
 						if o:has('tossable') then
@@ -249,10 +282,27 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 						-- player death here
 						--sfx(30)
 					end
+				elseif o:has('player') then
+					if hero.health.current <= 0 then
+						sfx(30)
+						-- PLAYER DEAD
+					else
+						sfx(31)
+						local m = min(16, #hero.health.letters)
+						local r = rnd(1)
+						for i = 1, m do
+							local vx = sin(i / m + r) * 2
+							local vy = cos(i / m + r) * 2
+							assemblage.collectable('code', hero.x, hero.y, sub(hero.health.letters, i, i), vx, vy)
+						end
+						hero.health.current = 0
+						hero.health.letters = ''
+						sfx(41)
+					end
 				end
 				if e:has('bullet') then
 					del(world.entities, e) -- remove bullet
-				end 
+				end
 			end
 		end)
 	end,
@@ -426,6 +476,33 @@ system.create('tossing', {'toss'},
 	function(e)
 		spr_r(e.toss.sprite, e.toss.w, e.toss.h, e.x, e.y, e.toss.rotation, e.toss.zoom)
 	end
+)
+
+system.create('collectable_delay', {'collectable_delay'},
+	function(e, dt)
+		e.collectable_delay -= 1
+		if e.collectable_delay <= 0 then
+			e:attach('defensive_collider')
+			e:detach('collectable_delay')
+		end
+	end,
+	nil
+)
+
+system.create('collector', {'collectable', 'defensive_collider'},
+	function(e, dt)
+		if overlap(hero, e, 'defensive_collider', 'defensive_collider') then
+			if hero.health.current >= hero.health.limit then return end
+			e:detach('defensive_collider')
+			if e.collectable.type == 'code' then
+				hero.health.current += 1
+				hero.health.letters = hero.health.letters .. e.recttext.char
+			end
+			sfx(40)
+			del(world.entities, e)
+		end
+	end,
+	nil
 )
 
 system.create('bounding_box_debug', {'offensive_collider'},
