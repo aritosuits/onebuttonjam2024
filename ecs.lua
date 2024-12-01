@@ -29,7 +29,7 @@ function world.cull(comps, code)
 	for e in all(world.entities) do
 		if comps == nil or e:has(comps) then
 			local r = code(e)
-			if r then del(world.entities(e)) end
+			if r then del(world.entities, e) end
 		end
 	end
 end
@@ -37,7 +37,7 @@ function world.cull_not(comps, code)
 	for e in all(world.entities) do
 		if comps == nil or not e:has(comps) then
 			local r = code(e)
-			if r then del(world.entities(e)) end
+			if r then del(world.entities, e) end
 		end
 	end
 end
