@@ -230,6 +230,8 @@ system.create('teleporter', {'teleport', 'defensive_collider'},
 			music(-1)
 			if e.name == 'door1' then
 				music(10, 300)
+				hero:attach('timer')
+				hero.timer.start_time = time()
 				-- hero.attach('autorun')
 				hero.autorun.speed = 0
 			elseif e.name == 'door2' then
@@ -339,6 +341,7 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 						o:attach('despawn', 150)
 					elseif o:has('ai_boss') then 
 						hero:attach('autorun', 30)
+						hero:detach('timer')
 						o:attach('toss', o.sprite)
 						o:attach('despawn', 1)
 					else
@@ -455,14 +458,17 @@ system.create('ai_shoot_smrt', {'ai_shoot_smrt', 'frames'}, function(e, dt)
 ) 
 
 system.create('ai_boss', {'ai_boss', 'frames', 'health'}, function(e, dt)
+	if not hero:has('timer') then return end --I hate this
 	if e.ai_boss.ttsa <= 0 and not e.ai_boss.is_lunging then
 		printh(e.health.current)
-		if(e.health.current < 2 or e.ai_boss.times_struck > 2) then 
+		--this never triggers =.=
+		--if(e.health.current < 2) then 
+		if (t() - hero.timer.start_time > 10) then 
 			printh('boss mega-shooting player')
 			change_anim(e, 'shooting', true)
-			assemblage.enemy_bullet(e, e.x + 2, e.y, -2, 0)
-			assemblage.enemy_bullet(e, e.x + 2, e.y + 4, -3, 0)
-			assemblage.enemy_bullet(e, e.x + 2, e.y + 8, -2, 0)
+			assemblage.enemy_bullet(e, e.x + 2, e.y, -3, 0)
+			assemblage.enemy_bullet(e, e.x + 4, e.y + 4, -3, 0)
+			assemblage.enemy_bullet(e, e.x + 6, e.y + 8, -3, 0)
 			change_anim(e, 'idle', false)
 		else
 			printh('boss shooting player')
@@ -472,7 +478,11 @@ system.create('ai_boss', {'ai_boss', 'frames', 'health'}, function(e, dt)
 		end
 		e.ai_boss.ttsa = 65
 	elseif (e.ai_boss.ttla <= 0) and not e.ai_boss.is_lunging then 
-		e:attach('boss_autorun', rnd({-40, -45, -60, -70}))
+		if (t() - hero.timer.start_time < 20) then
+			e:attach('boss_autorun', rnd({-40, -45, -60, -70}))
+		else
+			e:attach('boss_autorun', rnd({-60, -70, -80, -90}))
+		end
 		e.ai_boss.is_lunging = true
 
 	elseif e.ai_boss.is_lunging then
@@ -480,7 +490,11 @@ system.create('ai_boss', {'ai_boss', 'frames', 'health'}, function(e, dt)
 			printh('returning, under 9')
 			--e:detach('offensive_collider')
 			e.ai_boss.is_returning = true
-			e:attach('boss_autorun', rnd({130, 240}))
+			if (t() - hero.timer.start_time > 15) then
+				e:attach('boss_autorun', rnd({130, 240}))
+			else
+				e:attach('boss_autorun', rnd({160, 280}))
+			end
 		elseif abs(e.x - hero.x) >= 64 then
 			printh('detaching autorun') 
 			e:detach('boss_autorun')
@@ -622,7 +636,7 @@ system.create('collector', {'collectable', 'defensive_collider'},
 system.create('bounding_box_debug', {'offensive_collider'},
 	nil,
 	function(e)
-		if true then return end
+		--if true then return end
 		if not e.offensive_collider.enabled then return end
 		rect(e.x + e.offensive_collider.ox, 
 			e.y + e.offensive_collider.oy, e.x + e.offensive_collider.ox + e.offensive_collider.w - 1, 

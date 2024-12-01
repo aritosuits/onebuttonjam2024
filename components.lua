@@ -17,6 +17,10 @@ component.create('enemy_team')
 
 component.create('crushable')
 
+component.create('timer', function(start_time)
+	return {start_time = start_time or time()}
+end)
+
 component.create('repeat_every', function(delay, code)
 	return { delay = delay or 30, reset = delay or 30, code = code or function(e) end }
 end)
@@ -177,8 +181,8 @@ end)
 component.create('ai_boss', function(max_range_shoot, max_range_lunge, can_shoot, is_lunging, is_returning, times_struck)
 	return {
 		times_struck = times_struck or 0,
-		max_range_shoot = max_range_shoot or 50,
-		max_range_lunge = max_range_lunge or 50,
+		max_range_shoot = max_range_shoot or 30,
+		max_range_lunge = max_range_lunge or 30,
 		ttsa = 0,
 		ttla = 0,
 		can_shoot = can_shoot or true,
