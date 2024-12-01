@@ -99,6 +99,7 @@ assemblage.create('machine', function(type, x, y)
 	elseif type == 'shredder' then
 		e:attach('sprite', 55, 1, 1, 2)
 		e:attach('defensive_collider', -1, -1, 10, 10)
+		add_anim(e, 'default', {{ num = e.sprite.num }})
 		add_anim(e, 'idle', {{ num = e.sprite.num }, {num = 56}})
 		add_anim(e, 'shooting', {{num = 56}})
 		e.frames.delay = 3

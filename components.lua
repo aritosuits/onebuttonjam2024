@@ -150,7 +150,7 @@ end)
 
 component.create('ai_shoot_smrt', function(max_range) 
 	return {
-		max_range = max_range or 5,
+		max_range = max_range or 130,
 		ttsa = 40 --time to shoot again
 	}
 end)

@@ -241,7 +241,8 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 			if not e.offensive_collider.enabled then return end -- not turned off
 			if not o.defensive_collider.enabled then return end -- not turned off
 			if e:has('parent') and e.parent == o then return end -- not the source
-			if e:has('machine') or o:has('machine') then return end 
+			if e:has('bullet') and o:has('machine') then return end 
+			if e:has('machine') and o:has('bullet') then return end 
 			if overlap(e, o) then
 				if time() < o.health.iframes then return end
 				-- sfx(31)
@@ -368,17 +369,28 @@ system.create('ai_shoot_dumb', {'ai_shoot_dumb', 'frames'}, function(e, dt)
 
 system.create('ai_shoot_smrt', {'ai_shoot_smrt', 'frames'}, function(e, dt)
 	if e.ai_shoot_smrt.ttsa <= 0 then
-		if abs(e.y - hero.y) < 5 then
-			if hero.x <= (e.x + e.ai_shoot_smrt.max_range) then
+		printh("cooled down, moving on")
+		if abs(e.y - hero.y) < 20 then
+			printh("player is on same y within 5 units")
+			if e.x - hero.x <= e.ai_shoot_smrt.max_range then
+				printh("shooting player")
 				change_anim(e, 'shooting', true)
 				assemblage.enemy_bullet(e, e.x + 2, e.y + 1, -2)
+				printh("shot bullet, return to idle")
+				change_anim(e, 'idle', false)
 			else 
-				change_anim(e, 'idle')
+				printh("dist: "..e.x - hero.x)
+				printh("max range: "..e.ai_shoot_smrt.max_range)
+				change_anim(e, 'idle', false)
 			end
+			printh("refreshing ttsa to 40")
 			e.ai_shoot_smrt.ttsa = 40
-		end
+		else
+			printh("y distance: "..abs(e.y - hero.y))
+	end
 	else
 	 e.ai_shoot_smrt.ttsa -= 1
+	 printh("cooling down: ".. e.ai_shoot_smrt.ttsa)
 	end
    end, nil
 ) 
