@@ -17,7 +17,8 @@ end
 
 function score.draw()
 	local p = tostring(score.points)
-	local x = 127 - (#p * 4)
-	local y = 4
+	local x = 2
+	-- local x = 127 - (#p * 4)
+	local y = 120
 	print(p, x, y, 7)
 end
