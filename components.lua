@@ -15,6 +15,10 @@ component.create('tutorial')
 
 component.create('enemy_team')
 
+component.create('do_after', function(delay, code)
+	return { delay = delay or 30, code = code or function(e) end }
+end)
+
 component.create('collectable_delay', function(delay)
 	return delay or 30
 end)
