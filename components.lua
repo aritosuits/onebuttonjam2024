@@ -15,6 +15,8 @@ component.create('tutorial')
 
 component.create('enemy_team')
 
+component.create('crushable')
+
 component.create('repeat_every', function(delay, code)
 	return { delay = delay or 30, reset = delay or 30, code = code or function(e) end }
 end)
@@ -163,8 +165,16 @@ end)
 
 component.create('ai_shoot_smrt', function(max_range) 
 	return {
-		max_range = max_range or 5,
+		max_range = max_range or 130,
 		ttsa = 40 --time to shoot again
+	}
+end)
+
+component.create('ai_boss', function(max_range_shoot, max_range_lunge)
+	return {
+		max_range_shoot = max_range_shoot or 120,
+		max_range_lunge = max_range_lunge or 80,
+		ttsa = 30
 	}
 end)
 

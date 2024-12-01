@@ -308,6 +308,14 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 						o:detach('sprite')
 						o:detach('ai_shoot_smrt')
 						o:detach('ai_shoot_dumb')
+					elseif o:has('crushable') then 
+						change_anim(o, 'crushed', false)
+						o:detach('health')
+						o:detach('physics')
+						o:detach('offensive_collider')
+						o:detach('defensive_collider')
+						o:detach('crushable')
+						o:attach('despawn', 150)
 					else
 						o:attach('despawn', 1)
 					end
@@ -402,17 +410,28 @@ system.create('ai_shoot_dumb', {'ai_shoot_dumb', 'frames'}, function(e, dt)
 
 system.create('ai_shoot_smrt', {'ai_shoot_smrt', 'frames'}, function(e, dt)
 	if e.ai_shoot_smrt.ttsa <= 0 then
-		if abs(e.y - hero.y) < 5 then
-			if hero.x <= (e.x + e.ai_shoot_smrt.max_range) then
+		printh("cooled down, moving on")
+		if abs(e.y - hero.y) < 20 then
+			printh("player is on same y within 5 units")
+			if e.x - hero.x <= e.ai_shoot_smrt.max_range then
+				printh("shooting player")
 				change_anim(e, 'shooting', true)
 				assemblage.enemy_bullet(e, e.x + 2, e.y + 1, -2)
+				printh("shot bullet, return to idle")
+				change_anim(e, 'idle', false)
 			else 
-				change_anim(e, 'idle')
+				printh("dist: "..e.x - hero.x)
+				printh("max range: "..e.ai_shoot_smrt.max_range)
+				change_anim(e, 'idle', false)
 			end
+			printh("refreshing ttsa to 40")
 			e.ai_shoot_smrt.ttsa = 40
-		end
+		else
+			printh("y distance: "..abs(e.y - hero.y))
+	end
 	else
 	 e.ai_shoot_smrt.ttsa -= 1
+	 printh("cooling down: ".. e.ai_shoot_smrt.ttsa)
 	end
    end, nil
 ) 

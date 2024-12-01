@@ -21,8 +21,8 @@ end
 
 spawner = {}
 
-spawner.lookup = { 'player', 'cone', 'wall', 'shredder', 'computer', 'fan', '', 'copier', 'button', 'door1', 'door2', 'door3', 'door4', 'code' }
-spawner.items = { 204, 205, 206, 207, 220, 221, 222, 223, 59, 236, 237, 238, 239, 254 }
+spawner.lookup = { 'player', 'cone', 'wall', 'shredder', 'computer', 'fan', '', 'copier', 'button', 'door1', 'door2', 'door3', 'door4', 'code', 'box' }
+spawner.items = { 204, 205, 206, 207, 220, 221, 222, 223, 59, 236, 237, 238, 239, 254, 62 }
 spawner.queue = {}
 
 function spawner.init()
@@ -52,7 +52,7 @@ function spawner.update(dt)
 			elseif s.type == 'button' then 
 				assemblage.button(s.x, s.y)
 			elseif s.type == 'door1' then 
-				assemblage.door(s.type, s.x, s.y, s.x + 128, s.y, false)
+				assemblage.door(s.type, s.x, s.y, s.x + 32, s.y, false)
 			elseif s.type == 'door2' then 
 				assemblage.door(s.type, s.x, s.y, 16, s.y + 128)
 			elseif s.type == 'door3' then 
