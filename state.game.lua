@@ -12,6 +12,11 @@ function game.update(dt)
 	spawner.update(dt)
 	system.update(dt)
 	particle.update(dt)
+	if flr(rnd(10)) == 0 then
+		world.cull_not('player', function(e)
+			return e.x <= hero.x - 50
+		end)
+	end
 end
 
 function game.draw()
