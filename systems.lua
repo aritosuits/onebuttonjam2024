@@ -307,6 +307,14 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 						o:detach('sprite')
 						o:detach('ai_shoot_smrt')
 						o:detach('ai_shoot_dumb')
+					elseif o:has('crushable') then 
+						change_anim(o, 'crushed', false)
+						o:detach('health')
+						o:detach('physics')
+						o:detach('offensive_collider')
+						o:detach('defensive_collider')
+						o:detach('crushable')
+						o:attach('despawn', 150)
 					else
 						o:attach('despawn', 1)
 					end

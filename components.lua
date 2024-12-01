@@ -15,6 +15,8 @@ component.create('tutorial')
 
 component.create('enemy_team')
 
+component.create('crushable')
+
 component.create('repeat_every', function(delay, code)
 	return { delay = delay or 30, reset = delay or 30, code = code or function(e) end }
 end)
