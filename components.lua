@@ -24,6 +24,10 @@ component.create('ouch', function(ttl)
 	return { enabled = true, ttl = ttl or 20 }
 end)
 
+component.create('bounce', function(vx, vy)
+	return { vx = vx or 0, vy = vy or -4 }
+end)
+
 component.create('knockable')
 component.create('knockback', function(vx, vy)
 	return { vx = vx or -10, vy = vy or 0 }

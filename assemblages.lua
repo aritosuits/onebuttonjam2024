@@ -51,16 +51,19 @@ assemblage.create('enemy_bullet', function(parent, x, y, speed)
 	e:attach('sprite', 48, 1, 1, 2)
 	e:attach('physics', (speed or -10), 0, 0)
 	e:attach('offensive_collider', 2, 2, 4, 4)
+	e:attach('defensive_collider', 2, 2, 4, 4)
 	e:attach('health', 1)
+	e:attach('tossable')
+	e:attach('bounce')
 	e:attach('knockback', -2)
 	e:attach('despawn', 60)
 	e:attach('parent', parent)
-	if parent.name == 'copier' then  
+	if parent.name == 'copier' then
 		e.sprite.num = 51
-	elseif parent.name == 'computer' then 
+	elseif parent.name == 'computer' then
 		e.sprite.num = 50
 		e.sprite.scale = 1
-	elseif parent.name == 'shredder' then 
+	elseif parent.name == 'shredder' then
 		e.sprite.num = rnd({57,58})
 		e.physics.vx = 0
 		e.physics.vy = -5
@@ -86,6 +89,7 @@ assemblage.create('machine', function(type, x, y)
 		e:attach('sprite', 52)
 		e:attach('defensive_collider', -1, -1, 10, 10)
 		e:attach('ai')
+		e:attach('bounce')
 	elseif type == 'computer' then 
 		e:attach('sprite', 52, 1, 1, 2)
 		e:attach('ai_shoot_smrt')
@@ -96,6 +100,7 @@ assemblage.create('machine', function(type, x, y)
 		e.frames.delay = 3
 		change_anim(e, 'idle')
 		e:attach('defensive_collider', 0, 0, e.sprite.scale * 8, e.sprite.scale * 8)
+		e:attach('bounce')
 	elseif type == 'shredder' then
 		e:attach('sprite', 55, 1, 1, 2)
 		e:attach('defensive_collider', -1, -1, 10, 10)
@@ -105,6 +110,7 @@ assemblage.create('machine', function(type, x, y)
 		change_anim(e, 'idle')
 		e:attach('ai_shoot_dumb')
 		e:attach('defensive_collider', 0, 0, e.sprite.scale * 8, e.sprite.scale * 8)
+		e:attach('bounce')
 	elseif type == 'cone' then
 		e:attach('sprite', 114, 1, 1, 2)
 		e:attach('floating')
