@@ -1,5 +1,8 @@
 -- systems
 
+gravity = 8
+ground = 104
+
 --[[
 from: https://pico-8.fandom.com/wiki/Draw_zoomed_sprite_(zspr)
 Arguments:
@@ -112,8 +115,6 @@ system.create('machine', {'omg', 'controller', 'physics'},
 	nil
 )
 
-gravity = 8
-ground = 104
 system.create('gravity', {'defensive_collider', 'physics'},
 	function(e, dt)
 		if e:has('floating') then return end 
@@ -494,12 +495,12 @@ system.create('tossing', {'toss'},
 			e.y += flr(e.toss.h * 8 / 2)
 			e.toss.started = true
 		elseif not e.toss.bounce then
-			if e.y >= (ground + 25) then
+			if e.y >= (ground + 0) then
 				e.toss.vx /= 2
-				e.toss.vy = -100
+				e.toss.vy = -80 + rnd(40)
 				e.toss.bounce = true
 				e.toss.rotation = 0
-				e.toss.desired_rotation = rnd(360)
+				e.toss.desired_rotation = rnd(720) - 360
 				e.toss.desired_zoom = e.toss.zoom + rnd(1.5)
 				e.toss.lifetime = 60
 				e.toss.ttl = e.toss.lifetime
