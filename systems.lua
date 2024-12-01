@@ -234,6 +234,16 @@ system.create('teleporter', {'teleport', 'defensive_collider'},
 	end
 )
 
+system.create('repeat_every', {'repeat_every'},
+	function(e, dt)
+		e.repeat_every.delay -= 1
+		if e.repeat_every.delay <= 0 then
+			e.repeat_every.code(e)
+			e.repeat_every.delay = e.repeat_every.reset
+		end
+	end,
+	nil
+)
 system.create('do_after', {'do_after'},
 	function(e, dt)
 		e.do_after.delay -= 1
