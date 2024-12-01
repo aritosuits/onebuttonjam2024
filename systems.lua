@@ -234,6 +234,17 @@ system.create('teleporter', {'teleport', 'defensive_collider'},
 	end
 )
 
+system.create('do_after', {'do_after'},
+	function(e, dt)
+		e.do_after.delay -= 1
+		if e.do_after.delay <= 0 then
+			e.do_after.code(e)
+			e:detach('do_after')
+		end
+	end,
+	nil
+)
+
 system.create('do_harm', {'damage', 'offensive_collider'},
 	function(e, dt)
 		world.each({'defensive_collider', 'health'}, function(o)
