@@ -1,5 +1,9 @@
 -- systems
 
+-- probably not the best place for this global
+killed_by = ""
+
+
 --[[
 from: https://pico-8.fandom.com/wiki/Draw_zoomed_sprite_(zspr)
 Arguments:
@@ -185,6 +189,17 @@ system.create('autorun', {'physics', 'autorun'},
 	nil
 )
 
+system.create('boss_autorun', {'physics', 'boss_autorun'},
+	function(e, dt)
+		e.physics.vx /= 1.05
+		e.physics.vx += 222.0 * dt
+		if e.physics.vx >= e.boss_autorun.speed * dt then
+			e.physics.vx = e.boss_autorun.speed * dt
+		end
+	end,
+	nil
+)
+
 system.create('physics', {'physics'},
 	function(e, dt)
 		e.x += e.physics.vx
@@ -215,6 +230,8 @@ system.create('teleporter', {'teleport', 'defensive_collider'},
 			music(-1)
 			if e.name == 'door1' then
 				music(10, 300)
+				-- hero.attach('autorun')
+				hero.autorun.speed = 0
 			elseif e.name == 'door2' then
 				music(0, 500) 
 				ground = 104 + 128
@@ -274,8 +291,13 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 			if not o:has('player') then -- not towards player
 				sfx(31) -- might need new sound?
 				o.health.current -= e.damage
+				printh("curr health: " ..o.health.current.." e damage: " ..e.damage)
 				if o.health.current <= 0 then
 					o.health.current = 0
+				elseif o.health.current == 1 and o:has('ai_boss') then 
+					e:attach('tossable')
+				else 
+					return
 				end
 				if o:has('tutorial') then -- tutorial button
 					change_anim(o, 'pressed')
@@ -315,6 +337,10 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 						o:detach('defensive_collider')
 						o:detach('crushable')
 						o:attach('despawn', 150)
+					elseif o:has('ai_boss') then 
+						hero:attach('autorun', 30)
+						o:attach('toss', o.sprite)
+						o:attach('despawn', 1)
 					else
 						o:attach('despawn', 1)
 					end
@@ -330,6 +356,8 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 			else -- towards player
 				if hero.health.current <= 0 then
 					sfx(30)
+					killed_by = e.name
+					printh("killed by: " ..killed_by)
 					-- PLAYER DEAD
 				else
 					sfx(31)
@@ -409,31 +437,55 @@ system.create('ai_shoot_dumb', {'ai_shoot_dumb', 'frames'}, function(e, dt)
 
 system.create('ai_shoot_smrt', {'ai_shoot_smrt', 'frames'}, function(e, dt)
 	if e.ai_shoot_smrt.ttsa <= 0 then
-		printh("cooled down, moving on")
 		if abs(e.y - hero.y) < 20 then
-			printh("player is on same y within 5 units")
 			if e.x - hero.x <= e.ai_shoot_smrt.max_range then
-				printh("shooting player")
 				change_anim(e, 'shooting', true)
 				assemblage.enemy_bullet(e, e.x + 2, e.y + 1, -2)
-				printh("shot bullet, return to idle")
 				change_anim(e, 'idle', false)
 			else 
-				printh("dist: "..e.x - hero.x)
-				printh("max range: "..e.ai_shoot_smrt.max_range)
 				change_anim(e, 'idle', false)
 			end
-			printh("refreshing ttsa to 40")
 			e.ai_shoot_smrt.ttsa = 40
 		else
-			printh("y distance: "..abs(e.y - hero.y))
 	end
 	else
 	 e.ai_shoot_smrt.ttsa -= 1
-	 printh("cooling down: ".. e.ai_shoot_smrt.ttsa)
 	end
    end, nil
 ) 
+
+system.create('ai_boss', {'ai_boss', 'frames'}, function(e, dt)
+	if e.ai_boss.ttsa <= 0 and not e.ai_boss.is_lunging then
+		printh('boss shooting player')
+		change_anim(e, 'shooting', true)
+		assemblage.enemy_bullet(e, e.x + 2, e.y + 1, -2, 0)
+		change_anim(e, 'idle', false)
+		e.ai_boss.ttsa = 80
+	elseif (e.ai_boss.ttla <= 0) and not e.ai_boss.is_lunging then 
+		e:attach('boss_autorun', rnd({-40, -45, -60, -70}))
+		e.ai_boss.is_lunging = true
+
+	elseif e.ai_boss.is_lunging then
+		if (abs(e.x - hero.x) <= 9) and not e.ai_boss.is_returning then
+			printh('returning, under 9')
+			--e:detach('offensive_collider')
+			e.ai_boss.is_returning = true
+			e:attach('boss_autorun', rnd({130, 240}))
+		elseif abs(e.x - hero.x) >= 64 then
+			printh('detaching autorun') 
+			e:detach('boss_autorun')
+			--e:attach('offensive_collider', 4, 0, 7, 7)
+			e.ai_boss.is_lunging = false
+			e.ai_boss.is_returning = false
+			e.ai_boss.ttla = 40
+		end
+	else
+		e.ai_boss.ttsa -= 1
+		e.ai_boss.ttla -= 1
+	end
+end, 
+nil
+)
 
 system.create('ouch', {'ouch'},
 	function(e, dt)

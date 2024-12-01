@@ -44,7 +44,7 @@ assemblage.create('player_bullet', function(x, y, speed)
 	return e
 end)
 
-assemblage.create('enemy_bullet', function(parent, x, y, speed)
+assemblage.create('enemy_bullet', function(parent, x, y, speed, knockback_vx)
 	e = entity.create('enemy_bullet', x, y )
 	e:attach('bullet')
 	e:attach('damage', 1)
@@ -56,11 +56,13 @@ assemblage.create('enemy_bullet', function(parent, x, y, speed)
 	e:attach('enemy_team')
 	e:attach('tossable')
 	e:attach('bounce')
-	e:attach('knockback', -2)
+	e:attach('knockback', knockback_vx or -2)
 	e:attach('despawn', 60)
 	e:attach('parent', parent)
 	if parent.name == 'copier' then
 		e.sprite.num = 51
+		e.sprite.scale = 1.33
+		e:detach('knockback')
 	elseif parent.name == 'computer' then
 		e.sprite.num = 50
 		e.sprite.scale = 1
@@ -89,7 +91,8 @@ assemblage.create('machine', function(type, x, y)
 	e:attach('knockback', -2)
 	if type == 'copier' then 
 		e:attach('sprite', 52, 2, 2, 1)
-		e:attach('defensive_collider', -1, -1, 10, 10)
+		e:attach('defensive_collider', 1, 1, 16, 16)
+		e:attach('offensive_collider', 3, 1, 8, 8)
 		e:attach('ai_boss')
 		add_anim(e, 'default', {{num = 68}})
 		add_anim(e, 'idle', {{num = e.sprite.num}, {num = 70}})
@@ -98,7 +101,61 @@ assemblage.create('machine', function(type, x, y)
 		e.frames.delay = 4
 		change_anim(e, 'idle')
 		e:attach('bounce')
-		e:attach('health', 10)
+		e:attach('health', 3)
+		e:attach('movement')
+		e:detach('tossable')
+		e:detach('knockback')
+
+		--  e:attach('repeat_every', 90, function(e)
+		-- 	if e.ai_boss.can_shoot then
+		-- 		if e.ai_boss.ttsa <= 0 then
+		-- 		-- printh('boss shooting player')
+		-- 	 	change_anim(e, 'shooting', true)
+		-- 	 	assemblage.enemy_bullet(e, e.x + 2, e.y + 1, -2, 0)
+		-- 	 	change_anim(e, 'idle', false)
+		-- 	 	e.ai_boss.ttsa = 30
+		-- 		else 
+		-- 			e.ai_boss.ttsa -= 1
+		-- 		end
+		-- 	end
+		--  end)
+
+		--  e:attach('do_after', 180, function(e)
+		-- 	if not e.ai_boss.is_lunging then
+		-- 		e.ai_boss.can_shoot = false
+		-- 		e.ai_boss.is_lunging = true
+		-- 		e.attach('physics', 20, 0, 0)
+		-- 	elseif (abs(e.x - hero.x) <= 5) then 
+		-- 		e.attach('physics', -20, 0, 0)
+		-- 	else
+
+		-- 	end
+		--  end)
+		--  e:attach('do_after', 420, function(e)
+		-- 	e.ai_boss.can_shoot = true
+		--  end)
+-- 
+		-- e:attach('repeat_every', 30, function(e)
+			-- if (abs(e.x - hero.x) <= e.ai_boss.max_range_lunge) and (abs(e.x - hero.x) > 5) then
+				-- printh('trying to lunge at player') 
+				-- change_anim(e, 'lunge', true)
+				-- is_lunging = true
+				-- printh('moving forward!')
+				-- e.physics.speed = -15
+				-- lerp(hero.x, e.x, 30)
+			-- end
+		-- end)
+		-- e:attach('repeat_every', 30, function(e)
+			-- if (abs(e.x - hero.x) <= e.ai_boss.max_range_lunge) then
+				-- printh('trying to move back') 
+				-- change_anim(e, 'lunge', true)
+				-- is_lunging = false
+				-- printh('moving forward!')
+				-- e.physics.speed = -10
+				-- e.physics.vx -=16
+			-- end
+		-- end)
+
 	elseif type == 'computer' then 
 		e:attach('sprite', 52, 1, 1, 2)
 		e:attach('ai_shoot_smrt')
@@ -122,7 +179,7 @@ assemblage.create('machine', function(type, x, y)
 		e:attach('defensive_collider', 0, 0, e.sprite.scale * 8, e.sprite.scale * 8)
 		e:attach('bounce')
 	elseif type == 'cone' then
-		e:attach('sprite', 114, 1, 1, 2)
+		e:attach('sprite', 114, 1, 1, 1.5)
 		e:attach('floating')
 		add_anim(e, 'default', {{ num = e.sprite.num }, {num = 115}})
 		e.frames.delay = 3

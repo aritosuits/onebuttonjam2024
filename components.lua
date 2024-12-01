@@ -100,6 +100,10 @@ component.create('autorun', function(speed)
 	return { speed = speed or 1 }
 end)
 
+component.create('boss_autorun', function(speed)
+	return { speed = speed or 1 }
+end)
+
 component.create('controller', function()
 	return {
 		press = false,
@@ -170,11 +174,15 @@ component.create('ai_shoot_smrt', function(max_range)
 	}
 end)
 
-component.create('ai_boss', function(max_range_shoot, max_range_lunge)
+component.create('ai_boss', function(max_range_shoot, max_range_lunge, can_shoot, is_lunging, is_returning)
 	return {
-		max_range_shoot = max_range_shoot or 120,
-		max_range_lunge = max_range_lunge or 80,
-		ttsa = 30
+		max_range_shoot = max_range_shoot or 50,
+		max_range_lunge = max_range_lunge or 50,
+		ttsa = 0,
+		ttla = 0,
+		can_shoot = can_shoot or true,
+		is_lunging = is_lunging or false,
+		is_returning = is_returning or false
 	}
 end)
 
