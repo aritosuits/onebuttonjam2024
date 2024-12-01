@@ -174,8 +174,9 @@ component.create('ai_shoot_smrt', function(max_range)
 	}
 end)
 
-component.create('ai_boss', function(max_range_shoot, max_range_lunge, can_shoot, is_lunging, is_returning)
+component.create('ai_boss', function(max_range_shoot, max_range_lunge, can_shoot, is_lunging, is_returning, times_struck)
 	return {
+		times_struck = times_struck or 0,
 		max_range_shoot = max_range_shoot or 50,
 		max_range_lunge = max_range_lunge or 50,
 		ttsa = 0,

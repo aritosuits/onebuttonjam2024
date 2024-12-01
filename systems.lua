@@ -445,7 +445,7 @@ system.create('ai_shoot_smrt', {'ai_shoot_smrt', 'frames'}, function(e, dt)
 			else 
 				change_anim(e, 'idle', false)
 			end
-			e.ai_shoot_smrt.ttsa = 40
+			e.ai_shoot_smrt.ttsa = rnd({40, 50, 60, 80})
 		else
 	end
 	else
@@ -454,13 +454,23 @@ system.create('ai_shoot_smrt', {'ai_shoot_smrt', 'frames'}, function(e, dt)
    end, nil
 ) 
 
-system.create('ai_boss', {'ai_boss', 'frames'}, function(e, dt)
+system.create('ai_boss', {'ai_boss', 'frames', 'health'}, function(e, dt)
 	if e.ai_boss.ttsa <= 0 and not e.ai_boss.is_lunging then
-		printh('boss shooting player')
-		change_anim(e, 'shooting', true)
-		assemblage.enemy_bullet(e, e.x + 2, e.y + 1, -2, 0)
-		change_anim(e, 'idle', false)
-		e.ai_boss.ttsa = 80
+		printh(e.health.current)
+		if(e.health.current < 2 or e.ai_boss.times_struck > 2) then 
+			printh('boss mega-shooting player')
+			change_anim(e, 'shooting', true)
+			assemblage.enemy_bullet(e, e.x + 2, e.y, -2, 0)
+			assemblage.enemy_bullet(e, e.x + 2, e.y + 4, -3, 0)
+			assemblage.enemy_bullet(e, e.x + 2, e.y + 8, -2, 0)
+			change_anim(e, 'idle', false)
+		else
+			printh('boss shooting player')
+			change_anim(e, 'shooting', true)
+			assemblage.enemy_bullet(e, e.x + 2, e.y + 1, -2, 0)
+			change_anim(e, 'idle', false)
+		end
+		e.ai_boss.ttsa = 65
 	elseif (e.ai_boss.ttla <= 0) and not e.ai_boss.is_lunging then 
 		e:attach('boss_autorun', rnd({-40, -45, -60, -70}))
 		e.ai_boss.is_lunging = true

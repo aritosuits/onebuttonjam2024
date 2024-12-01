@@ -59,7 +59,7 @@ function title.draw()
 	print('○2024 dangerous office', x, 116, 2)
 	print(' machine enterprises', x, 122, 2)
 	if title._signature > 0 then
-		spr(200, 55, 104, title._signature + 1, 1) -- signature
+		spr(200, 55, 104, title._signature, 1) -- signature
 	end
 	spr(216, title._hand_x, title._hand_y, 4, 3) -- hand
 end
