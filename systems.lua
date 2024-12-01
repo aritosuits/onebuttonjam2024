@@ -1,5 +1,15 @@
 -- systems
 
+--[[
+from: https://pico-8.fandom.com/wiki/Draw_zoomed_sprite_(zspr)
+Arguments:
+--n: standard sprite number
+--w: number of sprite blocks wide to grab
+--h: number of sprite blocks high to grab
+--dx: destination x coordinate
+--dy: destination y coordinate
+--dz: destination scale/zoom factor
+]]
 function zspr(n,w,h,dx,dy,dz)
 	sx = 8 * (n % 16)
 	sy = 8 * flr(n / 16)
@@ -196,6 +206,7 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 			if not e.offensive_collider.enabled then return end -- not turned off
 			if not o.defensive_collider.enabled then return end -- not turned off
 			if e:has('parent') and e.parent == o then return end -- not the source
+			if e:has('machine') or o:has('machine') then return end 
 			if overlap(e, o) then
 				if time() < o.health.iframes then return end
 				sfx(31) 
@@ -307,15 +318,14 @@ system.create('ai_shoot_dumb', {'ai_shoot_dumb', 'frames'}, function(e, dt)
 
 system.create('ai_shoot_smrt', {'ai_shoot_smrt', 'frames'}, function(e, dt)
 	if e.ai_shoot_smrt.ttsa <= 0 then
-		if e.y == hero.y then
+		if abs(e.y - hero.y) < 5 then
 			if hero.x <= (e.x + e.ai_shoot_smrt.max_range) then
 				change_anim(e, 'shooting', true)
 				assemblage.enemy_bullet(e, e.x + 2, e.y + 1, -2)
 			else 
-				--printh(e.ai_shoot_smrt.ttsa .. "range: " .. e.ai_shoot_smrt.max_range .. "hero dist: " .. (e.ai_shoot_smrt.max_range - hero.x))
 				change_anim(e, 'idle')
 			end
-			e.ai_shoot_smrt.ttsa = 20
+			e.ai_shoot_smrt.ttsa = 40
 		end
 	else
 	 e.ai_shoot_smrt.ttsa -= 1
