@@ -13,6 +13,8 @@ component.create('bullet')
 
 component.create('tutorial')
 
+component.create('enemy_team')
+
 component.create('collectable_delay', function(delay)
 	return delay or 30
 end)

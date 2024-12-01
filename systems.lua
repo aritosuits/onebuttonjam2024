@@ -241,6 +241,7 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 			if not e.offensive_collider.enabled then return end -- not turned off
 			if not o.defensive_collider.enabled then return end -- not turned off
 			if (e:has('parent') and e.parent == o) or (o:has('parent') and e == o.parent) then return end -- not the source
+			if e:has('enemy_team') and o:has('enemy_team') then return end -- no friendly fire
 			if not overlap(e, o) then return end
 			if time() < o.health.iframes then return end
 			o.health.iframes = time() + 0.5
