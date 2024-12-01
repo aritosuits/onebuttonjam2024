@@ -333,6 +333,7 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 						o:detach('ai_shoot_dumb')
 					elseif o:has('crushable') then 
 						change_anim(o, 'crushed', false)
+						o:detach('ouch')
 						o:detach('health')
 						o:detach('physics')
 						o:detach('offensive_collider')
