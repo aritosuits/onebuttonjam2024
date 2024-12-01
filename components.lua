@@ -170,6 +170,14 @@ component.create('ai_shoot_smrt', function(max_range)
 	}
 end)
 
+component.create('ai_boss', function(max_range_shoot, max_range_lunge)
+	return {
+		max_range_shoot = max_range_shoot or 120,
+		max_range_lunge = max_range_lunge or 80,
+		ttsa = 30
+	}
+end)
+
 component.create('parent', function (obj) 
 	return obj
 end)
