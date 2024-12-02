@@ -69,6 +69,12 @@ component.create('recttext', function(color, char, w, h)
 end)
 
 function add_anim(e, name, anim)
+	if type(anim) == 'table' then printh('accepts only strings') end
+	local anim = split(anim, ',')
+	for k, v in pairs(anim) do
+		anim[k] = split(v, ':', true)
+	end
+	dump(anim)
 	e.frames[name] = anim
 end
 function change_anim(e, name, one_shot)
@@ -87,7 +93,7 @@ component.create('frames', function(e)
 		frame = 1,
 		one_shot = false,
 		default = {
-			{ num = 255 }
+			{ 255 }
 		}
 	}
 end)

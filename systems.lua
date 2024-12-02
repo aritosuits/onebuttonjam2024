@@ -20,7 +20,7 @@ system.create('display', {'sprite'},
 		if e.hidden then return end
 		local s = e.sprite.num
 		if e:has('frames') and e.frames[e.frames.anim] then
-			s = e.frames[e.frames.anim][e.frames.frame].num
+			s = e.frames[e.frames.anim][e.frames.frame][1]
 		end
 		local iframes = false
 		if e:has('iframes') and e.iframes.flash then
@@ -315,7 +315,7 @@ system.create('do_harm',
 system.create('animation', {'frames'},
 	function(e, dt)
 		if e.frames.animating then
-			local delay = (e.frames[e.frames.anim] and e.frames[e.frames.anim][e.frames.frame] and e.frames[e.frames.anim][e.frames.frame].delay) and e.frames[e.frames.anim][e.frames.frame].delay or e.frames.delay
+			local delay = (e.frames[e.frames.anim] and e.frames[e.frames.anim][e.frames.frame] and e.frames[e.frames.anim][e.frames.frame][2]) and e.frames[e.frames.anim][e.frames.frame][2] or e.frames.delay
 			e.frames.tick = (e.frames.tick + 1) % delay
 			if e.frames.tick == 0 then
 				if e.frames.frame == #e.frames[e.frames.anim] and e.frames.one_shot then

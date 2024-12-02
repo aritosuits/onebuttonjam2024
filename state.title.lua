@@ -13,28 +13,6 @@ function title.enter()
 end
 
 function title.update(dt)
-	if title._sign then
-		title._accumulator += 1
-		if title._accumulator >= 12 then
-			title._signature += 1
-			if title._signature >= 4 then
-				title._signature = 4
-			end
-			title._accumulator = 0
-		end
-		title._hand_x += 0.5
-		title._hand_y = 104 + sin(time() % 10) * 2 + 3
-		if title._hand_x >= 70 then
-			title._sign = false
-			title._leaving = true
-		end
-	elseif title._leaving then
-		title._hand_x += 0.25
-		title._hand_y += 0.75
-		if title._hand_y >= 128 then
-			state.switch('game')
-		end
-	end
 end
 
 function title.draw()

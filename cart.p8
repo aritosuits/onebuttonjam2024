@@ -11,9 +11,9 @@ __lua__
 
 #include fade.lua
 #include state.lua
--- #include state.title.lua
--- #include state.win.lua
--- #include state.lose.lua
+#include state.title.lua
+#include state.win.lua
+#include state.lose.lua
 #include state.game.lua
 #include ecs.lua
 #include components.lua
