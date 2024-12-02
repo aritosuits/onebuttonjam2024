@@ -13,14 +13,17 @@ assemblage.create('player', function(x, y)
 	e:attach('offensive_collider', 2, 18, 14, 6)
 	e:attach('defensive_collider', 4, 2, 9, 20)
 	e.offensive_collider.enabled = false
-	e:attach('weapon', 0)
 	e:attach('knockable')
 	e:attach('collector')
 	e:attach('stats')
 	e:attach('sound_on_despawn', 30)
 	e:attach('sound_on_damage', 31)
 	e:attach('on_damage', subsystem.throw_code)
-	e:attach('on_despawn', subsystem.throw_code)
+	if DEV_MODE then
+		e:attach('on_despawn', function() return true end)
+	else
+		e:attach('on_despawn', subsystem.throw_code)
+	end
 	e:attach('frames')
 	e:attach('scorer')
 	e:attach('damage', 1)

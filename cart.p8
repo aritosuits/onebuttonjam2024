@@ -25,12 +25,12 @@ __lua__
 #include subsystem.lua
 #include stats.lua
 
-skipTitle = true -- set to false to get to the title screen, remove before shipping
+DEV_MODE = true
 
 function _init()
 	printh('') printh('game init') -- debug print
 	state.init()
-	if skipTitle then state.switch('game')
+	if DEV_MODE then state.switch('game')
 	else state.switch('title')
 	end
 end

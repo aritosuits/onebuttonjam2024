@@ -170,11 +170,6 @@ component.create('defensive_collider', function(ox, oy, w, h)
 	}
 end)
 
--- Weapon for hero
-component.create('weapon', function(level)
-	return { level = level or 1 }
-end)
-
 component.create('ai_shoot_dumb', function ()
 	return {ttsa = 30}	
 end)
