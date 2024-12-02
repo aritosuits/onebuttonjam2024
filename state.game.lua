@@ -44,8 +44,10 @@ function game.draw()
 	-- debug
 	--print(#particle.list, 3, 120, 7)
 	if DEV_UI then
-		print('p: ' .. #particle.list, 2, 8, 7)
-		print('e: ' .. #world.entities, 2, 14, 7)
+		print('p', 2, 15, 11)
+		print('e', 2, 21, 11)
+		print(#particle.list, 7, 15, 7)
+		print(#world.entities, 7, 21, 7)
 	end
 	--[[
 		printh(hero) -- DUMP ENTITY INFO

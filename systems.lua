@@ -530,17 +530,13 @@ system.create('pickups',
 	function(e, dt)
 		world.each({'collectable', 'defensive_collider'}, function(c)
 			if overlap(e, c, 'defensive_collider', 'defensive_collider') then
-				if e:has('health') then -- health up
-					if e.health.current >= e.health.limit then return end
-					c:detach('defensive_collider')
-					if c.collectable.type == 'code' then
-						e.health.current += 1
-						local l = '0'
-						if c:has('recttext') then
-							l = c.recttext.char
-						end
-						e.collector.letters = e.collector.letters .. l
+				if e:has('health') and c.collectable.type == 'code' and e.health.current < e.health.limit then
+					local l = '0'
+					if c:has('recttext') then
+						l = c.recttext.char
 					end
+					e.health.current += 1
+					e.collector.letters = e.collector.letters .. l
 				end
 				sfx(40)
 				del(world.entities, c)
