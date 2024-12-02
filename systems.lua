@@ -266,13 +266,13 @@ system.create('do_harm',
 			if (e:has('parent') and e.parent == o) or (o:has('parent') and e == o.parent) then return end -- not the source
 			if e:has('enemy_team') and o:has('enemy_team') then return end -- no friendly fire
 			if not overlap(e, o) then return end
-			o:attach('iframes', o)
 			if o:has('knockable') and e:has('knockback') then
 				subsystem.knock(e, o)
 			end
 			o.health.current -= e.damage
 			if o:has('bounce') then subsystem.bounce(o, e) end
 			if o.health.current >= 1 then
+				o:attach('iframes', o)
 				if e:has('sound_on_despawn') then
 					sfx(e.sound_on_despawn)
 				end
