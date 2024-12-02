@@ -142,8 +142,8 @@ component.create('on_damage', function(code)
 end)
 
 -- Entity health
-component.create('health', function(num)
-	return { current = num or 3, limit = limit or 16, letters = '', iframes = 0 }
+component.create('health', function(num, limit)
+	return { current = num or 3, limit = limit or 16 }
 end)
 
 -- Entity colliders for physics and collisions
