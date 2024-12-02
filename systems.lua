@@ -282,11 +282,14 @@ system.create('do_harm',
 			o.health.current = 0
 			-- entity will be destroyed
 			-- particle.create('smoke', e.x + 10, e.y + 21, 5)
-			if o:has('tossable') then subsystem.toss(o) end
+			if o:has('tossable') then
+				subsystem.toss(o)
+			else
+				o:attach('despawn', 1)
+			end
 			if o:has('crushable') then subsystem.crush(o) end
 			if o:has('stats') then stats.killed_by = e.name end
 			if e:has('scorer') and o:has('scorable') then subsystem.score(o, e) end
-			o:attach('despawn', 1)
 		end)
 	end
 )
@@ -485,7 +488,7 @@ system.create('tossing', {'toss'},
 			e.toss.zoom = lerp(e.toss.desired_zoom, e.toss.zoom, e.toss.ttl / e.toss.lifetime)
 			e.toss.ttl -= 1
 			if e.y >= (ground + 70) then
-				del(world.entities, e)
+				e:attach('despawn', 1)
 			end
 		elseif not e.toss.started then
 			e.toss.vx = (e.x - hero.x) * 8
