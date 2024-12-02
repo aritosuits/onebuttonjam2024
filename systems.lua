@@ -525,7 +525,7 @@ system.create('collectable_delay', {'collectable_delay'},
 system.create('pickups',
 	{'collector', 'defensive_collider'},
 	function(e, dt)
-		world.each({{'collectable', 'defensive_collider'}}, function(c)
+		world.each({'collectable', 'defensive_collider'}, function(c)
 			if overlap(e, c, 'defensive_collider', 'defensive_collider') then
 				if e:has('health') then -- health up
 					if e.health.current >= e.health.limit then return end
