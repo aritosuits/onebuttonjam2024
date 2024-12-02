@@ -284,6 +284,7 @@ system.create('do_harm',
 			if (e:has('parent') and e.parent == o) or (o:has('parent') and e == o.parent) then return end -- not the source
 			if e:has('enemy_team') and o:has('enemy_team') then return end -- no friendly fire
 			if not overlap(e, o) then return end
+			if o:has('iframes') then return end
 			if o:has('knockable') and e:has('knockback') then
 				subsystem.knock(e, o)
 			end
@@ -291,14 +292,14 @@ system.create('do_harm',
 			if o:has('bounce') then subsystem.bounce(o, e) end
 			if o.health.current >= 1 then
 				o:attach('iframes', o)
-				if e:has('sound_on_despawn') then
-					sfx(e.sound_on_despawn)
+				if e:has('sound_on_damage') then
+					sfx(e.sound_on_damage)
 				end
 				if o:has('on_damage') then o.on_damage(o, e.damage) end
 				return
 			end
-			o.health.current = 0
 			-- entity will be destroyed
+			o.health.current = 0
 			-- particle.create('smoke', e.x + 10, e.y + 21, 5)
 			if o:has('tossable') then
 				subsystem.toss(o)

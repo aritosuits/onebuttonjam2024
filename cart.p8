@@ -9,6 +9,7 @@ __lua__
 -- esc to go to ide + console
 -- 🅾️/z is game button
 
+#include scroll.lua
 #include fade.lua
 #include state.lua
 #include state.title.lua
@@ -25,7 +26,7 @@ __lua__
 #include subsystem.lua
 #include stats.lua
 
-GOD_MODE = true
+GOD_MODE = false
 DEV_START = false
 DEV_UI = true
 DEV_COLLIDERS = false

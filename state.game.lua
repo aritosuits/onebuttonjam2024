@@ -9,6 +9,9 @@ function game.enter()
 end
 
 function game.update(dt)
+	score.points = 0
+	stats.killed_by = ''
+	stats.max_bounces = 0
 	spawner.update(dt)
 	system.update(dt)
 	particle.update(dt)
@@ -70,5 +73,6 @@ end
 
 function game.leave()
 	music(-1)
+	world.destroy()
 	hero = nil
 end

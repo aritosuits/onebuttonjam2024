@@ -22,7 +22,9 @@ assemblage.create('player', function(x, y)
 	if GOD_MODE then
 		e:attach('on_despawn', function() return true end)
 	else
-		e:attach('on_despawn', subsystem.throw_code)
+		e:attach('on_despawn', function()
+			state.switch('lose')
+		end)
 	end
 	e:attach('frames')
 	e:attach('scorer')
