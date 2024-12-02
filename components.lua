@@ -148,13 +148,8 @@ end)
 
 -- Entity colliders for physics and collisions
 component.create('iframes', function(e)
-	local r = {
-		flash = true,
-		ttl = 30,
-		defensive_collider = e.defensive_collider -- save it
-	}
-	e:detach('defensive_collider')
-	return r
+	if e:has('defensive_collider') then e.defensive_collider.enabled = false end
+	return { flash = true, ttl = 30 }
 end)
 component.create('offensive_collider', function(ox, oy, w, h)
 	return {

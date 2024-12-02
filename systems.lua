@@ -437,7 +437,7 @@ system.create('iframes', {'iframes'},
 		e.iframes.flash = not e.iframes.flash
 		e.iframes.ttl -= 1
 		if e.iframes.ttl <= 0 then
-			e.defensive_collider = e.iframes.defensive_collider
+			if e:has('defensive_collider') then e.defensive_collider.enabled = true end
 			e:detach('iframes')
 		end
 	end,

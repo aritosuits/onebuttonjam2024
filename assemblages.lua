@@ -95,7 +95,6 @@ assemblage.create('machine', function(type, x, y)
 		e:attach('bounce')
 		e:attach('health', 4)
 		e:attach('movement')
-		e:detach('tossable')
 		e:detach('knockback')
 
 		--  e:attach('repeat_every', 90, function(e)
