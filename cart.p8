@@ -25,7 +25,9 @@ __lua__
 #include subsystem.lua
 #include stats.lua
 
-DEV_MODE = true
+GOD_MODE = true
+DEV_UI = true
+DEV_COLLIDERS = false
 
 function _init()
 	printh('') printh('game init') -- debug print

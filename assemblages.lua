@@ -19,7 +19,7 @@ assemblage.create('player', function(x, y)
 	e:attach('sound_on_despawn', 30)
 	e:attach('sound_on_damage', 31)
 	e:attach('on_damage', subsystem.throw_code)
-	if DEV_MODE then
+	if GOD_MODE then
 		e:attach('on_despawn', function() return true end)
 	else
 		e:attach('on_despawn', subsystem.throw_code)

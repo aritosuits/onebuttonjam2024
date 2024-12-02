@@ -552,7 +552,7 @@ system.create('pickups',
 system.create('bounding_box_debug', {'offensive_collider'},
 	nil,
 	function(e)
-		if not DEV_MODE then return end
+		if not DEV_COLLIDERS then return end
 		if not e.offensive_collider.enabled then return end
 		rect(e.x + e.offensive_collider.ox, 
 			e.y + e.offensive_collider.oy, e.x + e.offensive_collider.ox + e.offensive_collider.w - 1, 
@@ -564,7 +564,7 @@ system.create('bounding_box_debug', {'offensive_collider'},
 system.create('defensive_bounding_box_debug', {'defensive_collider'},
 	nil,
 	function(e)
-		if not DEV_MODE then return end
+		if not DEV_COLLIDERS then return end
 		if not e.defensive_collider.enabled then return end
 		rect(e.x + e.defensive_collider.ox, 
 			e.y + e.defensive_collider.oy, e.x + e.defensive_collider.ox + e.defensive_collider.w - 1, 
