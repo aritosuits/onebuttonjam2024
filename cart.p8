@@ -24,7 +24,6 @@ __lua__
 #include spawner.lua
 #include score.lua
 #include subsystem.lua
-#include stats.lua
 
 GOD_MODE = false
 DEV_START = false

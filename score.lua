@@ -1,8 +1,12 @@
 score = {}
 score.points = 0
+score.killed_by = ''
+score.max_bounces = 0
 
 function score.reset()
 	score.points = 0
+	score.killed_by = ''
+	score.max_bounces = 0
 end
 
 function score.calculate(base_value, frames_since_stomp, code_characters)

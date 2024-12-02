@@ -228,8 +228,7 @@ system.create('teleporter', {'teleport', 'defensive_collider'},
 			elseif e.name == 'door3' then 
 				music(10, 1300)
 			elseif e.name == 'door4' then 
-				world.destroy()
-				state.switch('end')
+				state.switch('win')
 			end
 		end
 	end
@@ -268,6 +267,9 @@ system.create('do_ceiling_harm',
 				sfx(42)
 				particle.create('smoke', x * 8 + 4, my * 8 + 4, 5)
 				assemblage.ceiling(x * 8, my * 8)
+				if e:has('scorer') then
+					score.add(20)
+				end
 			end
 		end
 	end,
@@ -308,8 +310,8 @@ system.create('do_harm',
 				o:attach('despawn', 1)
 			end
 			if o:has('crushable') then subsystem.crush(o) end
-			if o:has('stats') then stats.killed_by = e.name end
-			if e:has('scorer') and o:has('scorable') then subsystem.score(o, e) stats.score = subsystem.score end
+			if o:has('stats') then score.killed_by = e.name end
+			if e:has('scorer') and o:has('scorable') then subsystem.score(o, e) end
 		end)
 	end
 )
@@ -511,21 +513,22 @@ system.create('tossing', {'toss'},
 				e:attach('despawn', 1)
 			end
 		elseif not e.toss.started then
+			e.toss.desired_rotation = rnd(e.tossable.rot)
+			e.toss.desired_zoom = e.toss.zoom + rnd(e.tossable.zoom)
 			e.toss.vx = (e.x - hero.x) * 8
-			e.toss.vy = 200
+			e.toss.vy = e.tossable.simple and 20 or 200
 			e.x += flr(e.toss.w * 8 / 2)
 			e.y += flr(e.toss.h * 8 / 2)
 			e.toss.started = true
+			e.toss.rotation = 0
+			e.toss.lifetime = 120
+			e.toss.ttl = e.toss.lifetime
+			e.toss.bounce = e.tossable.simple
 		elseif not e.toss.bounce then
 			if e.y >= (ground + 0) then
 				e.toss.vx /= 2
 				e.toss.vy = -80 + rnd(40)
 				e.toss.bounce = true
-				e.toss.rotation = 0
-				e.toss.desired_rotation = rnd(720) - 360
-				e.toss.desired_zoom = e.toss.zoom + rnd(1.5)
-				e.toss.lifetime = 60
-				e.toss.ttl = e.toss.lifetime
 			end
 		end
 	end,
@@ -558,6 +561,9 @@ system.create('pickups',
 					end
 					e.health.current += 1
 					e.collector.letters = e.collector.letters .. l
+					if e:has('scorer') then
+						score.add(5)
+					end
 				end
 				sfx(40)
 				del(world.entities, c)

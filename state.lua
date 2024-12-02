@@ -29,11 +29,13 @@ function state.switch(name)
 	if state.active then
 		if not state.active.fade then
 			state.active.leave()
+			world.destroy()
 			printh('state leave ' ..  state.active.name)
 		else
 			state._next = name
 			fade.disappear(function()
 				state.active.leave()
+				world.destroy()
 				printh('state leave ' ..  state.active.name)
 				state._finish_switch(state._next)
 			end)

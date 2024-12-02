@@ -40,7 +40,10 @@ component.create('knockback', function(vx, vy)
 	return { vx = vx or -10, vy = vy or 0 }
 end)
 
-component.create('tossable')
+component.create('tossable', function(rot, zoom, simple)
+	return { rot = rot or 700, zoom = zoom or 2, simple = simple or false }
+end)
+
 component.create('toss', function(sprite_comp)
 	return {
 		vx = 0,

@@ -15,6 +15,7 @@ assemblage.create('player', function(x, y)
 	e.offensive_collider.enabled = false
 	e:attach('knockable')
 	e:attach('collector')
+	e:attach('tossable', 1, 1.25, true)
 	e:attach('stats')
 	e:attach('sound_on_despawn', 30)
 	e:attach('sound_on_damage', 31)
