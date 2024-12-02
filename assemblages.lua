@@ -84,7 +84,7 @@ assemblage.create('machine', function(type, x, y)
 	e:attach('knockback', -2)
 	if type == 'copier' then
 		e:attach('collector')
-		e:attach('sprite', 52, 2, 2, 1)
+		e:attach('sprite', 68, 2, 2, 1)
 		e:attach('defensive_collider', 1, -1, 16, 16)
 		e:attach('offensive_collider', 3, 1, 8, 8)
 		e:attach('ai_boss')
