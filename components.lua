@@ -21,7 +21,7 @@ component.create('repeat_every', function(delay, code)
 	return { delay = delay or 30, reset = delay or 30, code = code or function(e) end }
 end)
 component.create('do_after', function(delay, code)
-	return { delay = delay or 30, code = code or function(e) end }
+	return { delay = delay or 30, reset = delay or 30, code = code or function(e) end }
 end)
 
 component.create('collectable_delay', function(delay)
