@@ -1,13 +1,8 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
-
--- dump(anything) to debug
-
--- f5 in vscode to run
--- ctrl+r in pico8 to reload run
--- esc to go to ide + console
--- 🅾️/z is game button
+-- dome enterprises / embers & ari
+-- stomp dangerous office machines
 
 #include scroll.lua
 #include fade.lua
@@ -27,7 +22,7 @@ __lua__
 
 GOD_MODE = false
 DEV_START = false
-DEV_UI = true
+DEV_UI = false
 DEV_COLLIDERS = false
 
 function _init()
