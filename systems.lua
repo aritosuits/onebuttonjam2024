@@ -288,14 +288,15 @@ system.create('do_harm',
 			if o:has('knockable') and e:has('knockback') then
 				subsystem.knock(e, o)
 			end
-			o.health.current -= e.damage
+			local dam = max(e.damage, 1) -- limit to one damage?
+			o.health.current -= dam
 			if o:has('bounce') then subsystem.bounce(o, e) end
 			if o.health.current >= 1 then
 				o:attach('iframes', o)
 				if e:has('sound_on_damage') then
 					sfx(e.sound_on_damage)
 				end
-				if o:has('on_damage') then o.on_damage(o, e.damage) end
+				if o:has('on_damage') then o.on_damage(o, dam) end
 				return
 			end
 			-- entity will be destroyed
@@ -403,18 +404,18 @@ system.create('ai_shoot_smrt', {'ai_shoot_smrt', 'frames'}, function(e, dt)
 system.create('ai_boss', {'ai_boss', 'frames', 'health'}, function(e, dt)
 	if not hero:has('timer') then return end --I hate this
 	if e.ai_boss.ttsa <= 0 and not e.ai_boss.is_lunging then
-		printh(e.health.current)
+		-- printh(e.health.current)
 		--this never triggers =.=
 		--if(e.health.current < 2) then 
 		if (t() - hero.timer.start_time > 10) then 
-			printh('boss mega-shooting player')
+			-- printh('boss mega-shooting player')
 			change_anim(e, 'shooting', true)
 			assemblage.enemy_bullet(e, e.x + 2, e.y, -3, 0)
 			assemblage.enemy_bullet(e, e.x + 4, e.y + 4, -3, 0)
 			assemblage.enemy_bullet(e, e.x + 6, e.y + 8, -3, 0)
 			change_anim(e, 'idle', false)
 		else
-			printh('boss shooting player')
+			-- printh('boss shooting player')
 			change_anim(e, 'shooting', true)
 			assemblage.enemy_bullet(e, e.x + 2, e.y + 1, -2, 0)
 			change_anim(e, 'idle', false)
@@ -430,7 +431,7 @@ system.create('ai_boss', {'ai_boss', 'frames', 'health'}, function(e, dt)
 
 	elseif e.ai_boss.is_lunging then
 		if (abs(e.x - hero.x) <= 9) and not e.ai_boss.is_returning then
-			printh('returning, under 9')
+			-- printh('returning, under 9')
 			--e:detach('offensive_collider')
 			e.ai_boss.is_returning = true
 			if (t() - hero.timer.start_time > 15) then
@@ -439,7 +440,7 @@ system.create('ai_boss', {'ai_boss', 'frames', 'health'}, function(e, dt)
 				e:attach('boss_autorun', rnd({160, 280}))
 			end
 		elseif abs(e.x - hero.x) >= 64 then
-			printh('detaching autorun') 
+			-- printh('detaching autorun') 
 			e:detach('boss_autorun')
 			--e:attach('offensive_collider', 4, 0, 7, 7)
 			e.ai_boss.is_lunging = false
@@ -550,6 +551,7 @@ system.create('pickups',
 		world.each({'collectable', 'defensive_collider'}, function(c)
 			if overlap(e, c, 'defensive_collider', 'defensive_collider') then
 				if e:has('health') and c.collectable.type == 'code' and e.health.current < e.health.limit then
+					if e:has('player') and e.health.current == 0 then e.health.current = 1 end -- player hack
 					local l = '0'
 					if c:has('recttext') then
 						l = c.recttext.char

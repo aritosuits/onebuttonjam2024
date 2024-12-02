@@ -12,7 +12,6 @@ function scroll.init(obj, color, text)
 	scroll.obj.text = split(text, '|')
 	scroll.obj.height = #scroll.obj.text * 6 + 50
 	scroll.obj.mult = flr(scroll.obj.height / 55)
-	printh(scroll.obj.mult)
 end
 
 function scroll.update(dt)

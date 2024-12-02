@@ -74,7 +74,7 @@ function add_anim(e, name, anim)
 	for k, v in pairs(anim) do
 		anim[k] = split(v, ':', true)
 	end
-	dump(anim)
+	-- dump(anim)
 	e.frames[name] = anim
 end
 function change_anim(e, name, one_shot)

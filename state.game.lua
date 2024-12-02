@@ -56,6 +56,7 @@ function game.draw()
 		printh(hero) -- DUMP ENTITY INFO
 		dump(hero.defensive_collider) -- DUMP ANY OBJECT OR VARIABLE
 	--]]
+	-- dump(hero.health)
 	score.draw()
 end
 

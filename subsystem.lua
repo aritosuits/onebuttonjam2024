@@ -68,7 +68,7 @@ function subsystem.throw_code(source)
 		local vy = cos(i / m + r) * 2
 		assemblage.collectable('code', source.x, source.y, sub(source.collector.letters, i, i), vx, vy)
 	end
-	source.health.current = 0
+	source.health.current = 1
 	source.collector.letters = ''
 	sfx(41)
 end

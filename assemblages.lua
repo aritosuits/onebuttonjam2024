@@ -7,7 +7,7 @@
 assemblage.create('player', function(x, y)
 	e = entity.create('player', x, y)
 	e:attach('controller')
-	e:attach('health', 0, 16)
+	e:attach('health', 0, 17)
 	e:attach('sprite', 0, 2, 3)
 	e:attach('physics')
 	e:attach('offensive_collider', 2, 18, 14, 6)
