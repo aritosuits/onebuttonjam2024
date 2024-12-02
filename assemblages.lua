@@ -99,57 +99,6 @@ assemblage.create('machine', function(type, x, y)
 		e:attach('health', 4, 4)
 		e:attach('movement')
 		e:detach('knockback')
-
-		--  e:attach('repeat_every', 90, function(e)
-		-- 	if e.ai_boss.can_shoot then
-		-- 		if e.ai_boss.ttsa <= 0 then
-		-- 		-- printh('boss shooting player')
-		-- 	 	change_anim(e, 'shooting', true)
-		-- 	 	assemblage.enemy_bullet(e, e.x + 2, e.y + 1, -2, 0)
-		-- 	 	change_anim(e, 'idle', false)
-		-- 	 	e.ai_boss.ttsa = 30
-		-- 		else
-		-- 			e.ai_boss.ttsa -= 1
-		-- 		end
-		-- 	end
-		--  end)
-
-		--  e:attach('do_after', 180, function(e)
-		-- 	if not e.ai_boss.is_lunging then
-		-- 		e.ai_boss.can_shoot = false
-		-- 		e.ai_boss.is_lunging = true
-		-- 		e.attach('physics', 20, 0, 0)
-		-- 	elseif (abs(e.x - hero.x) <= 5) then
-		-- 		e.attach('physics', -20, 0, 0)
-		-- 	else
-
-		-- 	end
-		--  end)
-		--  e:attach('do_after', 420, function(e)
-		-- 	e.ai_boss.can_shoot = true
-		--  end)
---
-		-- e:attach('repeat_every', 30, function(e)
-			-- if (abs(e.x - hero.x) <= e.ai_boss.max_range_lunge) and (abs(e.x - hero.x) > 5) then
-				-- printh('trying to lunge at player')
-				-- change_anim(e, 'lunge', true)
-				-- is_lunging = true
-				-- printh('moving forward!')
-				-- e.physics.speed = -15
-				-- lerp(hero.x, e.x, 30)
-			-- end
-		-- end)
-		-- e:attach('repeat_every', 30, function(e)
-			-- if (abs(e.x - hero.x) <= e.ai_boss.max_range_lunge) then
-				-- printh('trying to move back')
-				-- change_anim(e, 'lunge', true)
-				-- is_lunging = false
-				-- printh('moving forward!')
-				-- e.physics.speed = -10
-				-- e.physics.vx -=16
-			-- end
-		-- end)
-
 	elseif type == 'computer' then
 		e:attach('collector')
 		e:attach('sprite', 52, 1, 1, 2)
