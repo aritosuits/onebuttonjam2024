@@ -1,21 +1,17 @@
 -- components
 
--- Hide the entity
 component.create('hidden')
-
 component.create('smash')
-
 component.create('player')
-
 component.create('floating')
-
 component.create('bullet')
-
-component.create('tutorial')
-
+component.create('stats')
 component.create('enemy_team')
-
+component.create('collector', function()
+	return { letters = '' }
+end)
 component.create('crushable')
+component.create('scorer')
 
 component.create('timer', function(start_time)
 	return {start_time = start_time or time()}
@@ -33,10 +29,6 @@ component.create('collectable_delay', function(delay)
 end)
 component.create('collectable', function(type)
 	return { type = type }
-end)
-
-component.create('ouch', function(ttl)
-	return { enabled = true, ttl = ttl or 20 }
 end)
 
 component.create('bounce', function(vx, vy)
@@ -131,10 +123,22 @@ end)
 component.create('despawn', function(ttl)
 	return { ttl = ttl or 0 } -- in frames
 end)
+component.create('sound_on_despawn', function(sound)
+	return sound
+end)
+component.create('on_despawn', function(code)
+	return code or function(e) end
+end)
 
 -- Stuff related to damaging stuff
 component.create('damage', function(damage)
 	return damage or 1
+end)
+component.create('sound_on_damage', function(sound)
+	return sound
+end)
+component.create('on_damage', function(code)
+	return code or function(e, amount) end
 end)
 
 -- Entity health
@@ -143,6 +147,15 @@ component.create('health', function(num)
 end)
 
 -- Entity colliders for physics and collisions
+component.create('iframes', function(e)
+	local r = {
+		flash = true,
+		ttl = 30,
+		defensive_collider = e.defensive_collider -- save it
+	}
+	e:detach('defensive_collider')
+	return r
+end)
 component.create('offensive_collider', function(ox, oy, w, h)
 	return {
 		enabled = true,

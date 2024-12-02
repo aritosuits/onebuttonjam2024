@@ -11,9 +11,10 @@ __lua__
 
 #include fade.lua
 #include state.lua
-#include state.title.lua
+-- #include state.title.lua
+-- #include state.win.lua
+-- #include state.lose.lua
 #include state.game.lua
-#include state.win.lua
 #include ecs.lua
 #include components.lua
 #include systems.lua
@@ -21,6 +22,8 @@ __lua__
 #include particle.lua
 #include spawner.lua
 #include score.lua
+#include subsystem.lua
+#include stats.lua
 
 skipTitle = true -- set to false to get to the title screen, remove before shipping
 

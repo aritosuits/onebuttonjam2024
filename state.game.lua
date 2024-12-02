@@ -33,9 +33,9 @@ function game.draw()
 	-- for i = 1, 3 do
 	-- 	spr(hero.health.current >= i and 223 or 207, (i-1) * 9 + 2, 3) -- health
 	-- end
-	local m = min(16, #hero.health.letters)
+	local m = min(16, #hero.collector.letters)
 	for i = 1, m do
-		recttext(0, sub(hero.health.letters, i, i), (i-1) * 8 + 1, 3)
+		recttext(0, sub(hero.collector.letters, i, i), (i-1) * 8 + 1, 3)
 	end
 	-- print(flr(hero.x) ..",".. flr(hero.y), 30,5)
 	-- change brown and purple to better colors

@@ -15,7 +15,14 @@ assemblage.create('player', function(x, y)
 	e.offensive_collider.enabled = false
 	e:attach('weapon', 0)
 	e:attach('knockable')
+	e:attach('collector')
+	e:attach('stats')
+	e:attach('sound_on_despawn', 30)
+	e:attach('sound_on_damage', 31)
+	e:attach('on_damage', subsystem.throw_code)
+	e:attach('on_despawn', subsystem.throw_code)
 	e:attach('frames')
+	e:attach('scorer')
 	e:attach('damage', 1)
 	add_anim(e, 'default', {{ num = 0 }})
 	add_anim(e, 'jump', {{ num = 64 }})
@@ -24,23 +31,6 @@ assemblage.create('player', function(x, y)
 	e.frames.delay = 3
 	change_anim(e, 'walk')
 	e:attach('player')
-	return e
-end)
-
---[[
---|| A helper function to make a player bullet.
---]]
-assemblage.create('player_bullet', function(x, y, speed)
-	e = entity.create('player_bullet', x, y)
-	e:attach('bullet')
-	e:attach('damage', 1)
-	e:attach('recttext', 6, 'A')
-	e:attach('despawn', 60) -- 2 seconds
-	e:attach('offensive_collider', 2, 2, 4, 4)
-	e:attach('physics', speed or 10, 0, 0)
-	e:attach('health', 1)
-	e:attach('despawn', 60)
-	e:attach('parent', hero)
 	return e
 end)
 
@@ -89,11 +79,13 @@ assemblage.create('machine', function(type, x, y)
 	e:attach('scorable', 10)
 	e:attach('tossable')
 	e:attach('knockback', -2)
-	if type == 'copier' then 
+	if type == 'copier' then
+		e:attach('collector')
 		e:attach('sprite', 52, 2, 2, 1)
 		e:attach('defensive_collider', 1, -1, 16, 16)
 		e:attach('offensive_collider', 3, 1, 8, 8)
 		e:attach('ai_boss')
+		e:attach('on_despawn', subsystem.boss_complete)
 		add_anim(e, 'default', {{num = 68}})
 		add_anim(e, 'idle', {{num = e.sprite.num}, {num = 70}})
 		add_anim(e, 'shoot', {{num = 72}})
@@ -114,7 +106,7 @@ assemblage.create('machine', function(type, x, y)
 		-- 	 	assemblage.enemy_bullet(e, e.x + 2, e.y + 1, -2, 0)
 		-- 	 	change_anim(e, 'idle', false)
 		-- 	 	e.ai_boss.ttsa = 30
-		-- 		else 
+		-- 		else
 		-- 			e.ai_boss.ttsa -= 1
 		-- 		end
 		-- 	end
@@ -125,7 +117,7 @@ assemblage.create('machine', function(type, x, y)
 		-- 		e.ai_boss.can_shoot = false
 		-- 		e.ai_boss.is_lunging = true
 		-- 		e.attach('physics', 20, 0, 0)
-		-- 	elseif (abs(e.x - hero.x) <= 5) then 
+		-- 	elseif (abs(e.x - hero.x) <= 5) then
 		-- 		e.attach('physics', -20, 0, 0)
 		-- 	else
 
@@ -134,10 +126,10 @@ assemblage.create('machine', function(type, x, y)
 		--  e:attach('do_after', 420, function(e)
 		-- 	e.ai_boss.can_shoot = true
 		--  end)
--- 
+--
 		-- e:attach('repeat_every', 30, function(e)
 			-- if (abs(e.x - hero.x) <= e.ai_boss.max_range_lunge) and (abs(e.x - hero.x) > 5) then
-				-- printh('trying to lunge at player') 
+				-- printh('trying to lunge at player')
 				-- change_anim(e, 'lunge', true)
 				-- is_lunging = true
 				-- printh('moving forward!')
@@ -147,7 +139,7 @@ assemblage.create('machine', function(type, x, y)
 		-- end)
 		-- e:attach('repeat_every', 30, function(e)
 			-- if (abs(e.x - hero.x) <= e.ai_boss.max_range_lunge) then
-				-- printh('trying to move back') 
+				-- printh('trying to move back')
 				-- change_anim(e, 'lunge', true)
 				-- is_lunging = false
 				-- printh('moving forward!')
@@ -156,7 +148,8 @@ assemblage.create('machine', function(type, x, y)
 			-- end
 		-- end)
 
-	elseif type == 'computer' then 
+	elseif type == 'computer' then
+		e:attach('collector')
 		e:attach('sprite', 52, 1, 1, 2)
 		e:attach('ai_shoot_smrt')
 		e:attach('defensive_collider', -1, -1, 10, 10)
@@ -168,6 +161,7 @@ assemblage.create('machine', function(type, x, y)
 		e:attach('defensive_collider', 0, 0, e.sprite.scale * 8, e.sprite.scale * 8)
 		e:attach('bounce')
 	elseif type == 'shredder' then
+		e:attach('collector')
 		e:attach('sprite', 55, 1, 1, 2)
 		e:attach('defensive_collider', -1, -1, 10, 10)
 		add_anim(e, 'default', {{ num = e.sprite.num }})
@@ -212,8 +206,8 @@ assemblage.create('machine', function(type, x, y)
 		e:attach('damage', 0)
 		e:attach('crushable')
 		e:detach('tossable')
-	else 
-		printh("using default machine flow")
+	else
+		-- printh("using default machine flow")
 		e:attach('sprite', 1)
 		e:attach('floating')
 		add_anim(e, 'default', {{ num = 1 }})
@@ -223,14 +217,14 @@ assemblage.create('machine', function(type, x, y)
 	return e
 end)
 
-assemblage.create('button', function (x, y)
+assemblage.create('button', function(x, y)
 	e = entity.create('button', x, y)
-	e:attach('tutorial')
 	e:attach('health', 1)
 	e.name = 'button'
 	e:attach('sprite', 59, 1, 1)
 	e.sprite.scale = 2
 	e:attach('defensive_collider', 0, 6, e.sprite.scale * 8, 8)
+	e:attach('on_despawn', subsystem.push_button)
 	e:attach('frames')
 	add_anim(e, 'default', {{num = e.sprite.num}})
 	add_anim(e, 'pressed', {{num = 60}})
@@ -246,6 +240,11 @@ assemblage.create('door', function(type, x, y, tele_x, tele_y, autorun, ends_gam
 	return e
 end)
 
+function rnd_str(str)
+	local i = flr(rnd(#str)) + 1
+	return sub(str, i, i)
+end
+
 assemblage.create('collectable', function(type, x, y, letter, vx, vy)
 	vx = vx or 0
 	vy = vy or 0
@@ -259,6 +258,6 @@ assemblage.create('collectable', function(type, x, y, letter, vx, vy)
 	else
 		e:attach('defensive_collider')
 	end
-	e:attach('recttext', 12, letter or rnd({'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f'}))
+	e:attach('recttext', 12, letter or rnd_str('01234567890abcdef'))
 	return e
 end)

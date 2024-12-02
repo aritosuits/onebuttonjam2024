@@ -1,21 +1,9 @@
 -- systems
 
--- probably not the best place for this global
-killed_by = ""
-
 gravity = 8
 ground = 104
 
---[[
-from: https://pico-8.fandom.com/wiki/Draw_zoomed_sprite_(zspr)
-Arguments:
---n: standard sprite number
---w: number of sprite blocks wide to grab
---h: number of sprite blocks high to grab
---dx: destination x coordinate
---dy: destination y coordinate
---dz: destination scale/zoom factor
-]]
+-- From: https://pico-8.fandom.com/wiki/Draw_zoomed_sprite_(zspr)
 function zspr(n,w,h,dx,dy,dz)
 	sx = 8 * (n % 16)
 	sy = 8 * flr(n / 16)
@@ -34,9 +22,9 @@ system.create('display', {'sprite'},
 		if e:has('frames') and e.frames[e.frames.anim] then
 			s = e.frames[e.frames.anim][e.frames.frame].num
 		end
-		local ouch = false
-		if e:has('ouch') and e.ouch.enabled then
-			ouch = true
+		local iframes = false
+		if e:has('iframes') and e.iframes.flash then
+			iframes = true
 			for n = 1, 16 do
 				pal(n, 7)
 			end
@@ -46,7 +34,7 @@ system.create('display', {'sprite'},
 		else
 			spr(s, e.x, e.y, e.sprite.w, e.sprite.h)
 		end
-		if ouch then pal() end
+		if iframes then pal() end
 	end
 )
 
@@ -146,14 +134,8 @@ system.create('gravity', {'defensive_collider', 'physics'},
 				if e:has('frames') then
 					change_anim(e, 'walk')
 				end
-				if e:has({'player', 'smash'}) then
-					particle.create('smash', e.x + 10, e.y + 21, 10)
-					e:detach('smash')
-					e.offensive_collider.enabled = false
-					sfx(33)
-					sfx(34)
-					shake.screen(hero.health.current * 0.75 + 0.25, lerp(3, 5, hero.health.current / 16))
-					e.physics.smashing = -1
+				if e:has({'smash'}) then
+					subsystem.smash_collide(e)
 				else
 					particle.create('smoke', e.x + 10, e.y + 21, 10)
 				end
@@ -274,7 +256,8 @@ system.create('do_after', {'do_after'},
 	nil
 )
 
-system.create('do_harm', {'damage', 'offensive_collider'},
+system.create('do_harm',
+	{'damage', 'offensive_collider'},
 	function(e, dt)
 		world.each({'defensive_collider', 'health'}, function(o)
 			if e == o then return end -- not itself
@@ -283,120 +266,46 @@ system.create('do_harm', {'damage', 'offensive_collider'},
 			if (e:has('parent') and e.parent == o) or (o:has('parent') and e == o.parent) then return end -- not the source
 			if e:has('enemy_team') and o:has('enemy_team') then return end -- no friendly fire
 			if not overlap(e, o) then return end
-			if time() < o.health.iframes then return end
-			o.health.iframes = time() + 0.5
-			o:attach('ouch')
+			o:attach('iframes', o)
 			if o:has('knockable') and e:has('knockback') then
-				o.physics.vx = e.knockback.vx
-				o.physics.vy = e.knockback.vy
+				subsystem.knock(e, o)
 			end
-			if not o:has('player') then -- not towards player
-				sfx(31) -- might need new sound?
-				o.health.current -= e.damage
-				printh("curr health: " ..o.health.current.." e damage: " ..e.damage)
-				if o.health.current <= 0 then
-					o.health.current = 0
-				elseif o.health.current == 1 and o:has('ai_boss') then 
-					e:attach('tossable')
-				else 
-					return
+			o.health.current -= e.damage
+			if o:has('bounce') then subsystem.bounce(o, e) end
+			if o.health.current >= 1 then
+				if e:has('sound_on_despawn') then
+					sfx(e.sound_on_despawn)
 				end
-				if o:has('tutorial') then -- tutorial button
-					change_anim(o, 'pressed')
-					sfx(36)
-					hero:attach('autorun', 30)
-					o:detach('tutorial')
-					o:detach('defensive_collider')
-				else -- not tutorial button
-					-- particle.create('smoke', e.x + 10, e.y + 21, 5)
-					if o:has('bounce') then
-						if e:has('physics') then
-							e.physics.vx += o.bounce.vx
-							e.physics.vy = o.bounce.vy
-						end
-						-- smash again
-						particle.create('smash', e.x + 10, e.y + 21, 10)
-						e:detach('smash')
-						e.offensive_collider.enabled = false
-						sfx(33)
-						sfx(34)
-						shake.screen(hero.health.current * 0.75 + 0.25, lerp(3, 5, hero.health.current / 16))
-						e.physics.smashing = -1
-					end
-					if o:has('tossable') then
-						o:detach('physics')
-						o:detach('offensive_collider')
-						o:detach('defensive_collider')
-						o:attach('toss', o.sprite)
-						o:detach('sprite')
-						o:detach('ai_shoot_smrt')
-						o:detach('ai_shoot_dumb')
-					elseif o:has('crushable') then 
-						change_anim(o, 'crushed', false)
-						o:detach('ouch')
-						o:detach('health')
-						o:detach('physics')
-						o:detach('offensive_collider')
-						o:detach('defensive_collider')
-						o:detach('crushable')
-						o:attach('despawn', 150)
-					elseif o:has('ai_boss') then 
-						hero:attach('autorun', 30)
-						hero:detach('timer')
-						o:attach('toss', o.sprite)
-						o:attach('despawn', 1)
-					else
-						o:attach('despawn', 1)
-					end
-					if e:has('player') and o:has('scorable') then -- caused by player
-						local s = score.calculate(o.scorable, e.physics.smashing, hero.health.current)
-						printh('base score: ' .. o.scorable .. ' smash frames: ' .. e.physics.smashing .. ' health: ' .. hero.health.current .. ' total: ' .. s)
-						score.add(s)
-					end
-				end
-				if e:has('bullet') then
-					del(world.entities, e) -- remove bullet
-				end
-			else -- towards player
-				if hero.health.current <= 0 then
-					sfx(30)
-					killed_by = e.name
-					printh("killed by: " ..killed_by)
-					-- PLAYER DEAD
-				else
-					sfx(31)
-					local m = min(16, #hero.health.letters)
-					local r = rnd(1)
-					for i = 1, m do
-						local vx = sin(i / m + r) * 2
-						local vy = cos(i / m + r) * 2
-						assemblage.collectable('code', hero.x, hero.y, sub(hero.health.letters, i, i), vx, vy)
-					end
-					hero.health.current = 0
-					hero.health.letters = ''
-					sfx(41)
-				end
+				if o:has('on_damage') then o.on_damage(o, e.damage) end
+				return
 			end
+			o.health.current = 0
+			-- entity will be destroyed
+			-- particle.create('smoke', e.x + 10, e.y + 21, 5)
+			if o:has('tossable') then subsystem.toss(o) end
+			if o:has('crushable') then subsystem.crush(o) end
+			if o:has('stats') then stats.killed_by = e.name end
+			if e:has('scorer') and o:has('scorable') then subsystem.score(o, e) end
+			o:attach('despawn', 1)
 		end)
-	end,
-	nil
+	end
 )
 
 system.create('animation', {'frames'},
-  function(e, dt)
-    if e.frames.animating then
-      local delay = (e.frames[e.frames.anim] and e.frames[e.frames.anim][e.frames.frame] and e.frames[e.frames.anim][e.frames.frame].delay) and e.frames[e.frames.anim][e.frames.frame].delay or e.frames.delay
-      e.frames.tick = (e.frames.tick + 1) % delay
-      if (e.frames.tick == 0) then
-		if e.frames.frame == #e.frames[e.frames.anim] and e.frames.one_shot then
-			e.frames.frame = 1
-			e.frames.anim = 'default'
-		else
-        	e.frames.frame = e.frames.frame % #e.frames[e.frames.anim] + 1
+	function(e, dt)
+		if e.frames.animating then
+			local delay = (e.frames[e.frames.anim] and e.frames[e.frames.anim][e.frames.frame] and e.frames[e.frames.anim][e.frames.frame].delay) and e.frames[e.frames.anim][e.frames.frame].delay or e.frames.delay
+			e.frames.tick = (e.frames.tick + 1) % delay
+			if e.frames.tick == 0 then
+				if e.frames.frame == #e.frames[e.frames.anim] and e.frames.one_shot then
+					e.frames.frame = 1
+					e.frames.anim = 'default'
+				else
+					e.frames.frame = e.frames.frame % #e.frames[e.frames.anim] + 1
+				end
+			end
 		end
-      end
-    end
-  end,
+	end,
   nil
 )
 
@@ -404,7 +313,18 @@ system.create('despawner', {'health', 'despawn'},
 	function(e, dt)
 		e.despawn.ttl -= 1
 		if e.despawn.ttl <= 0 then
-			del(world.entities, e)
+			if e:has('sound_on_despawn') then
+				sfx(e.sound_on_despawn)
+			end
+			local r = false
+			if e:has('on_despawn') then
+				r = e.on_despawn(e)
+			end
+			if r then -- cancelled
+				e:detach('despawn')
+			else
+				del(world.entities, e)
+			end
 		end
 	end,
 	nil
@@ -512,31 +432,20 @@ end,
 nil
 )
 
-system.create('ouch', {'ouch'},
+system.create('iframes', {'iframes'},
 	function(e, dt)
-		e.ouch.enabled = not e.ouch.enabled
-		e.ouch.ttl -= 1
-		if e.ouch.ttl <= 0 then
-			e:detach('ouch')
+		e.iframes.flash = not e.iframes.flash
+		e.iframes.ttl -= 1
+		if e.iframes.ttl <= 0 then
+			e.defensive_collider = e.iframes.defensive_collider
+			e:detach('iframes')
 		end
 	end,
 	nil
 )
 
 -- From https://www.lexaloffle.com/bbs/?tid=3936
---[[
-    // quick and dirty way of rotating a sprite
-    sx = spritecheet x-coord
-    sy = spritecheet y-coord
-    sw = pixel width of source sprite
-    sh = pixel height of source sprite
-    px = x-coord of where to draw rotated sprite on screen
-    py = x-coord of where to draw rotated sprite on screen
-    r = amount to rotate (radians)
-    s = 1.0 for normal scale, 0.5 for half, etc
-]]
 function spr_r(spr,sw,sh,px,py,r,s)
-	-- loop through all the pixels
 	sw *= 8
 	sh *= 8
 	local sr = flr(spr / 16)
@@ -544,19 +453,14 @@ function spr_r(spr,sw,sh,px,py,r,s)
 	local sx = sc * 8
 	local sy = sr * 8
 	for y=sy,sy+sh,1 do for x=sx,sx+sw,1 do
-		-- get source pixel color
 		col = sget(x,y)
-		-- skip transparent pixel (zero in this case)
 		if (col != 0) then
-			-- rotate pixel around center
 			local xx = (x-sx)-sw/2
 			local yy = (y-sy)-sh/2
 			local x2 = (xx*cos(r) - yy*sin(r))*s
 			local y2 = (yy*cos(r) + xx*sin(r))*s
-			-- translate rotated pixel to where we want to draw it on screen
 			local x3 = flr(x2+px)
 			local y3 = flr(y2+py)
-			-- use rectfill if scale is > 1, otherwise just pixel it
 			if (s >= 1) then
 				local w = flr(x2+px+s)
 				local h = flr(y2+py+s)
@@ -618,20 +522,28 @@ system.create('collectable_delay', {'collectable_delay'},
 	nil
 )
 
-system.create('collector', {'collectable', 'defensive_collider'},
+system.create('pickups',
+	{'collector', 'defensive_collider'},
 	function(e, dt)
-		if overlap(hero, e, 'defensive_collider', 'defensive_collider') then
-			if hero.health.current >= hero.health.limit then return end
-			e:detach('defensive_collider')
-			if e.collectable.type == 'code' then
-				hero.health.current += 1
-				hero.health.letters = hero.health.letters .. e.recttext.char
+		world.each({{'collectable', 'defensive_collider'}}, function(c)
+			if overlap(e, c, 'defensive_collider', 'defensive_collider') then
+				if e:has('health') then -- health up
+					if e.health.current >= e.health.limit then return end
+					c:detach('defensive_collider')
+					if c.collectable.type == 'code' then
+						e.health.current += 1
+						local l = '0'
+						if c:has('recttext') then
+							l = c.recttext.char
+						end
+						e.collector.letters = e.collector.letters .. l
+					end
+				end
+				sfx(40)
+				del(world.entities, c)
 			end
-			sfx(40)
-			del(world.entities, e)
-		end
-	end,
-	nil
+		end)
+	end
 )
 
 system.create('bounding_box_debug', {'offensive_collider'},
