@@ -4,49 +4,88 @@ title = state.create('title')
 title.fade = true
 
 function title.enter()
-	title._sign = false
-	title._leaving = false
-	title._signature = 0
-	title._accumulator = 0
-	title._hand_x = 43
-	title._hand_y = 104
+	music(10)
+	title.line = -30
+	title.paw = false
+	title.char = 0
+	title.accumulator = 0
+	title.text = split('employment agreement|......................||thank you for applying|to dome enterprises.||your job will be to|investigate why the|printer isn\'t wo%King|correctly after|embers, ari and sun|our program#ers|insta!!ed the last|buggy upd*te. .$)&&&$|   1 btn$* j@m *! ^  :|your supervisor %&*|requests{ that you|refrain* from stomping|or jumping in your|cubicle += we have|sustained recent|damage from <undef>|employees doing so.|   i1   \' ` ~!:  .|press 🅾️ to sign this|agreement and clock in!|$*%)@!mwa#ah!@*@(@#||X..........%:.:.......||○2024 dangerous office| machine enterprises|         #::.|*  ($% ]*  (&h @% @#$', '|')
 end
 
 function title.update(dt)
+	title.accumulator = (title.accumulator + 1) % 1
+	if title.accumulator == 0 then
+		if title.line > #title.text then return end
+		local m = 0
+		if title.line > 0 then
+			m = #title.text[title.line]
+		end
+		title.char += 1
+		if title.char > m then
+			sfx(43)
+			title.line += 1
+			title.char = 1
+		end
+	end
 end
 
 function title.draw()
-	rectfill(33, 0, 128, 128, 15) -- paper
-	spr(192, 34, 2, 8, 4) -- logo
-	for x = 34, 128, 2 do pset(x, 36, 2) end -- dotted line
-	local x = 35
-	local y = 40
-	print('employment agreement', x, y, 2) y += 10
-	print('thank you for applying', x, y, 2) y += 6
-	print('to dome enterprises. we', x, y, 2) y += 6
-	print('instantly hire every', x, y, 2) y += 6
-	print('applicant, and we have', x, y, 2) y += 6
-	print('the safest facilities!', x, y, 2) y += 10
-	print('      press 🅾️ to sign', x, y, 2) y += 7
+	cls()
+	camera(0, title.line * 4)
+	rectfill(18, 0, 128 - 17, 250, 15) -- paper
+	-- spr(192, 34, 2, 8, 4) -- logo
+	spr_r(192, 8, 4, 64, 20, 1.0075, 0.999)
+
+	local xo = 21
+	local yo = 41
+	if title.line > 0 then
+		for y = 1, title.line - 1 do
+			print(title.text[y], xo, yo)
+			yo += 6
+		end
+		if title.char > 0 then for x = 1, title.char - 1 do
+			local c = sub(title.text[title.line], 1, x)
+			print(c, xo, yo, 2)
+		end end
+	end
+
+	if title.paw then
+		spr(106, 40, 202, 2, 2)
+	end
+
+--[[
+	print('x, y, 2) y += 10
+	print(', x, y, 2) y += 6
+	print(''
+	      '', x, y, 2) y += 6
+	print('', x, y, 2) y += 6
+	print('x, y, 2) y += 6
+	print(', x, y, 2) y += 6
+	print(', x, y, 2) y += 10
+	print(' x, y, 2) y += 7
 	for x = 34, 128, 2 do pset(x, y, 2) end -- dotted line
 	line(40, 105, 45, 110, 2) -- x
 	line(40, 106, 45, 111, 2) -- x
 	line(45, 105, 40, 110, 2) -- x
 	line(45, 106, 40, 111, 2) -- x
 	line(40, 113, 119, 113, 2) -- signature line
-	print('○2024 dangerous office', x, 116, 2)
-	print(' machine enterprises', x, 122, 2)
-	if title._signature > 0 then
-		spr(200, 55, 104, title._signature, 1) -- signature
+	print(', x, 116, 2)
+	print('x, 122, 2)
+	if title.signature > 0 then
+		spr(200, 55, 104, title.signature, 1) -- signature
 	end
-	spr(216, title._hand_x, title._hand_y, 4, 3) -- hand
+	spr(216, title.hand_x, title.hand_y, 4, 3) -- hand
+	]]
 end
 
 function title.press() end
 function title.hold(secs) end
 function title.release(secs)
-	title._sign = true
+	title.paw = true
+	sfx(40)
+	state.switch('game')
 end
 
 function title.leave()
+	music(-1)
 end

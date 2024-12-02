@@ -75,6 +75,7 @@ end
 
 function subsystem.push_button(source)
 	hero:attach('autorun', 30)
+	sfx(36)
 	change_anim(source, 'pressed')
 	source:detach('defensive_collider')
 	return true
