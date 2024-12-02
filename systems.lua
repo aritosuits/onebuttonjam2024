@@ -308,7 +308,7 @@ system.create('do_harm',
 			end
 			if o:has('crushable') then subsystem.crush(o) end
 			if o:has('stats') then stats.killed_by = e.name end
-			if e:has('scorer') and o:has('scorable') then subsystem.score(o, e) end
+			if e:has('scorer') and o:has('scorable') then subsystem.score(o, e) stats.score = subsystem.score end
 		end)
 	end
 )
