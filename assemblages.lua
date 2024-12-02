@@ -212,3 +212,16 @@ assemblage.create('collectable', function(type, x, y, letter, vx, vy)
 	e:attach('recttext', 12, letter or rnd_str('01234567890abcdef'))
 	return e
 end)
+
+assemblage.create('ceiling', function(x, y)
+	local vx = rnd(2) - 1
+	local vy = rnd(2) - 4
+	e = entity.create('ceiling', x, y)
+	e:attach('gravity')
+	e:attach('friction')
+	e:attach('physics', vx, vy)
+	e:attach('sprite', 174)
+	e:attach('defensive_collider')
+	e:attach('despawn', 60)
+	return e
+end)

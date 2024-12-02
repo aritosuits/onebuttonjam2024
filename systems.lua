@@ -256,6 +256,24 @@ system.create('do_after', {'do_after'},
 	nil
 )
 
+system.create('do_ceiling_harm',
+	{'damage', 'offensive_collider', 'sprite'},
+	function(e, dt)
+		local mx = flr((e.x + (e.sprite.w / 2)) / 8)
+		local my = flr((e.y + 4) / 8)
+		local t = mget(mx, my)
+		for x = mx, mx + e.sprite.w do
+			if t == 174 then
+				mset(x, my, 190)
+				sfx(42)
+				particle.create('smoke', x * 8 + 4, my * 8 + 4, 5)
+				assemblage.ceiling(x * 8, my * 8)
+			end
+		end
+	end,
+	nil
+)
+
 system.create('do_harm',
 	{'damage', 'offensive_collider'},
 	function(e, dt)
