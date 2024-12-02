@@ -26,13 +26,14 @@ __lua__
 #include stats.lua
 
 GOD_MODE = true
+DEV_START = true
 DEV_UI = true
 DEV_COLLIDERS = false
 
 function _init()
 	printh('') printh('game init') -- debug print
 	state.init()
-	if DEV_MODE then state.switch('game')
+	if DEV_START then state.switch('game')
 	else state.switch('title')
 	end
 end
