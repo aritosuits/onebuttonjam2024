@@ -90,3 +90,10 @@ function subsystem.boss_projectile_attack(e, timeComparison, numBullets)
 		if e:has('frames') then change_anim(e, 'idle', false) end
 	end
 end
+
+function subsystem.projectile_redirect(e)
+	e.physics.vx *= -1
+	e:detach('enemy_team')
+	e:detach('parent')
+	e:attach('parent', hero)
+end
