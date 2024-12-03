@@ -10,6 +10,7 @@ function subsystem.toss(target)
 	target:detach('sprite')
 	target:detach('ai_shoot_smrt')
 	target:detach('ai_shoot_dumb')
+	target:detach('ai_boss')
 end
 
 function subsystem.crush(target)
