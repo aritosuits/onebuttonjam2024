@@ -40,7 +40,7 @@ assemblage.create('player', function(x, y)
 	return e
 end)
 
-assemblage.create('enemy_bullet', function(parent, x, y, speed, knockback_vx)
+assemblage.create('enemy_bullet', function(parent, x, y, speed, knockback_vx, use_alt_bullet)
 	e = entity.create('enemy_bullet', x, y )
 	e:attach('bullet')
 	e:attach('damage', 1)
@@ -66,6 +66,17 @@ assemblage.create('enemy_bullet', function(parent, x, y, speed, knockback_vx)
 		e.sprite.num = rnd({57,58})
 		e.physics.vx = 0
 		e.physics.vy = -5
+	elseif parent.name == 'boss_computer' then 
+		e:detach('knockback')
+		local a = use_alt_bullet or false
+		if use_alt_bullet then
+			e:attach('recttext', 6, rnd_str('01abcx!@#$%^&**'))
+		else
+			e.sprite.num = 234
+			e.sprite.scale = .75
+			e.sprite.h = 2
+			e.sprite.w = 2
+		end
 	end
 	return e
 end)
@@ -121,6 +132,17 @@ assemblage.create('machine', function(type, x, y)
 			e:attach('health', 4, 4)
 			e:attach('movement')
 			e:detach('knockback')
+		elseif type == 'boss_comp' then 
+			e:attach('sprite', 200, 2, 2, 1)
+			e:attach('ai_boss_comp')
+			e:attach('on_despawn', subsystem.boss_complete)
+			add_anim(e, 'default', '200')
+			add_anim(e, 'idle', '200,202')
+			add_anim(e, 'shoot', '232')
+			e.frames.delay = 4
+			change_anim(e, 'idle')
+			e:attach('bounce')
+			e:attach('health', 4, 4)
 		elseif type == 'computer' then
 			e:attach('sprite', 52, 1, 1, 2)
 			e:attach('ai_shoot_smrt')

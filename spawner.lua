@@ -21,8 +21,8 @@ end
 
 spawner = {}
 
-spawner.lookup = { 'player', 'cone', 'wall', 'shredder', 'computer', 'fan', '', 'copier', 'button', 'door1', 'door2', 'door3', 'door4', 'code', 'box' }
-spawner.items = { 204, 205, 206, 207, 220, 221, 222, 223, 59, 236, 237, 238, 239, 254, 62 }
+spawner.lookup = { 'player', 'cone', 'wall', 'shredder', 'computer', 'fan', 'boss_comp', 'copier', 'button', 'door1', 'door2', 'door3', 'door4', 'code', 'box' }
+spawner.items = { 204, 205, 206, 207, 220, 221, 222, 223, 59, 236, 237, 238, 239, 254, 62, 200 }
 spawner.queue = {}
 
 function spawner.init()

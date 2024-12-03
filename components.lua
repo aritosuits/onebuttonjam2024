@@ -203,6 +203,15 @@ component.create('ai_boss', function(max_range_shoot, max_range_lunge, can_shoot
 	}
 end)
 
+component.create('ai_boss_comp', function(max_range_shoot, is_charging)
+	return {
+		max_range_shoot = max_range_shoot or 30,
+		is_charging = is_charging or true,
+		ttsa = 0,
+		charge_time = 120
+	}
+end)
+
 component.create('parent', function (obj) 
 	return obj
 end)

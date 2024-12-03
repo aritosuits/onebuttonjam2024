@@ -438,6 +438,29 @@ end,
 nil
 )
 
+system.create('ai_boss_comp', {'ai_boss_comp', 'frames', 'health'}, function(e, dt)
+	if not hero:has('timer') then return end --I hate this
+	if e.ai_boss_comp.ttsa <= 0 and e.ai_boss_comp.is_charging then
+		change_anim(e, 'shooting', true)
+			local max = (t() - hero.timer.start_time > 10) and 4 or 0
+			for i = 0, max do 
+				assemblage.enemy_bullet(e, e.x + (3*(i+2)), e.y + (2*(i*2)), -2, 0)
+				assemblage.enemy_bullet(e, e.x + (3*(i+2)), e.y + (3*(i*2)), -2, 0)
+				assemblage.enemy_bullet(e, e.x + (3*(i+2)), e.y + (4*(i*2)), -2, 0)
+				change_anim(e, 'idle', false)
+			end
+		e.ai_boss_comp.ttsa = 55
+	elseif not e.ai_boss_comp.is_charging then
+		assemblage.enemy_bullet(e, e.x + 2, e.y + 4, -2, 0)
+
+	else
+		e.ai_boss_comp.ttsa -= 1
+		e.ai_boss_comp.is_charging = hero.timer.start_time % 10 == 0 and true or false
+	end
+end, 
+nil
+)
+
 system.create('iframes', {'iframes'},
 	function(e, dt)
 		e.iframes.flash = not e.iframes.flash
