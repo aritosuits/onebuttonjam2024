@@ -211,7 +211,7 @@ system.create('teleporter', {'teleport', 'defensive_collider'},
 			sfx(37)
 			music(-1)
 			if e.name == 'door1' or e.name == 'door3' then
-				music(10, 300)
+				music(30, 300)
 				hero:attach('timer')
 				hero.timer.start_time = time()
 				-- hero.attach('autorun')
