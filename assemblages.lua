@@ -40,12 +40,12 @@ assemblage.create('player', function(x, y)
 	return e
 end)
 
-assemblage.create('enemy_bullet', function(parent, x, y, speed, knockback_vx, use_alt_bullet)
-	e = entity.create('enemy_bullet', x, y )
+assemblage.create('enemy_bullet', function(parent, x, y, speed, knockback_vx, use_alt_bullet, vy)
+	e = entity.create('enemy_bullet', x, y)
 	e:attach('bullet')
 	e:attach('damage', 1)
 	e:attach('sprite', 48, 1, 1, 2)
-	e:attach('physics', (speed or -10), 0, 0)
+	e:attach('physics', (speed or -10), vy or 0, 0)
 	e:attach('offensive_collider', 2, 2, 4, 4)
 	e:attach('defensive_collider', 2, 2, 4, 4)
 	e:attach('health', 1, 1)
@@ -132,7 +132,7 @@ assemblage.create('machine', function(type, x, y)
 			add_anim(e, 'lunge', '74')
 			e.frames.delay = 4
 			change_anim(e, 'idle')
-			e:attach('health', 4, 4)
+			e:attach('health', 7, 7)
 			e:attach('movement')
 			e:detach('knockback')
 		elseif type == 'computer' then
@@ -159,7 +159,7 @@ assemblage.create('machine', function(type, x, y)
 			e.frames.delay = 4
 			change_anim(e, 'idle')
 			e:attach('bounce')
-			e:attach('health', 4)
+			e:attach('health', 8, 8)
 		end
 	elseif type == 'cone' or type == 'wall' or type == 'fan' then
 		e:attach('floating')

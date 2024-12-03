@@ -82,11 +82,12 @@ function subsystem.push_button(source)
 	return true
 end
 
-function subsystem.boss_projectile_attack(e, timeComparison, numBullets)
+function subsystem.boss_projectile_attack(e, timeComparison, numBullets, variance)
+	variance = variance or 1
 	if e:has('frames') then change_anim(e, 'shooting', true) end
 	local m = (t() - hero.timer.start_time > timeComparison) and 2 or 0
-	for i = 0, m do 
-		assemblage.enemy_bullet(e, e.x + (3*(i+1)), e.y + (2*(i*2)), -3, 0)
+	for i = 1, numBullets do
+		assemblage.enemy_bullet(e, e.x, e.y, -3, 0, false, (rnd(variance) - (variance / 2)) * 5)
 		if e:has('frames') then change_anim(e, 'idle', false) end
 	end
 end
