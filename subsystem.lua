@@ -84,18 +84,10 @@ end
 
 function subsystem.boss_projectile_attack(e, timeComparison, numBullets)
 	change_anim(e, 'shooting', true)
-	if not hero:has('timer') then return end
 	local m = (t() - hero.timer.start_time > timeComparison) and 2 or 0
 	for i = 0, m do 
 		assemblage.enemy_bullet(e, e.x + (3*(i+1)), e.y + (2*(i*2)), -3, 0)
 		change_anim(e, 'idle', false)
 	end
 
-end
-
-function subsystem.projectile_redirect(e)
-	e.physics.vx *= -1
-	e:detach('enemy_team')
-	e:detach('parent')
-	e:attach('parent', hero)
 end
