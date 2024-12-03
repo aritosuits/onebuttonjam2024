@@ -4,6 +4,9 @@ subsystem = {}
 
 function subsystem.toss(target)
 	target:attach('toss', target.sprite)
+	if target:has('sound_on_despawn') then
+		sfx(target.sound_on_despawn)
+	end
 	target:detach('physics')
 	target:detach('offensive_collider')
 	target:detach('defensive_collider')

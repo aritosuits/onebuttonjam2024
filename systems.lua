@@ -343,9 +343,6 @@ system.create('despawner', {'health', 'despawn'},
 	function(e, dt)
 		e.despawn.ttl -= 1
 		if e.despawn.ttl <= 0 then
-			if e:has('sound_on_despawn') then
-				sfx(e.sound_on_despawn)
-			end
 			local r = false
 			if e:has('on_despawn') then
 				r = e.on_despawn(e)

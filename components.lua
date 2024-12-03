@@ -193,7 +193,6 @@ end)
 
 component.create('ai_boss', function(max_range_shoot, max_range_lunge, can_shoot, is_lunging, is_returning, times_struck)
 	return {
-		times_struck = times_struck or 0,
 		max_range_shoot = max_range_shoot or 30,
 		max_range_lunge = max_range_lunge or 30,
 		ttsa = 0,

@@ -135,6 +135,7 @@ assemblage.create('machine', function(type, x, y)
 			e:attach('health', 6, 6)
 			e:attach('movement')
 			e:detach('knockback')
+			e:attach('sound_on_despawn', 29)
 		elseif type == 'computer' then
 			e:attach('sprite', 52, 1, 1, 2)
 			e:attach('ai_shoot_smrt')
@@ -160,6 +161,7 @@ assemblage.create('machine', function(type, x, y)
 			change_anim(e, 'idle')
 			e:attach('bounce')
 			e:attach('health', 6, 6)
+			e:attach('sound_on_despawn', 29)
 		end
 	elseif type == 'cone' or type == 'wall' or type == 'fan' then
 		e:attach('floating')
