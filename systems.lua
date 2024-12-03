@@ -226,6 +226,7 @@ system.create('teleporter', {'teleport', 'defensive_collider'},
 				end)
 				spawner.init()
 			elseif e.name == 'door4' then 
+				printh("door: "..e,name.." won game")
 				state.switch('win')
 			end
 		end
