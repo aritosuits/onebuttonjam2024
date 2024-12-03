@@ -52,11 +52,11 @@ function spawner.update(dt)
 			elseif s.type == 'button' then 
 				assemblage.button(s.x, s.y)
 			elseif s.type == 'door1' then 
-				assemblage.door(s.type, s.x, s.y, s.x + 32, s.y, false)
+				assemblage.door(s.type, s.x, s.y, 100 * 8 + 32, s.y, false)
 			elseif s.type == 'door2' then 
 				assemblage.door(s.type, s.x, s.y, 16, s.y + 128)
 			elseif s.type == 'door3' then 
-				assemblage.door(s.type, s.x, s.y, s.x + 36, s.y, false)
+				assemblage.door(s.type, s.x, s.y, 111 * 8 + 36, s.y, false)
 			elseif s.type == 'door4' then 
 				assemblage.door(s.type, s.x, s.y, 16, s.y + 128, true, true)
 			elseif s.type == 'code' then

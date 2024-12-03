@@ -22,19 +22,23 @@ system.create('display', {'sprite'},
 		if e:has('frames') and e.frames[e.frames.anim] then
 			s = e.frames[e.frames.anim][e.frames.frame][1]
 		end
-		local iframes = false
+		local col = 0
 		if e:has('iframes') and e.iframes.flash then
-			iframes = true
-			for n = 1, 16 do
-				pal(n, 7)
-			end
+			col = 7
+		elseif e:has({'collector', 'player'}) and (time() % 1 == 0) and #e.collector.letters <= 0 then
+			col = 8
+		-- elseif e:has('health') and (e.health.current / e.health.limit <= 0.25 and e.health.max > 1) then
+		-- 	col = 8
 		end
+		if col != 0 then for n = 1, 16 do
+			pal(n, col)
+		end end
 		if e.sprite.scale > 1 then 
 			zspr(s, e.sprite.w, e.sprite.h, e.x, e.y, e.sprite.scale)
 		else
 			spr(s, e.x, e.y, e.sprite.w, e.sprite.h)
 		end
-		if iframes then pal() end
+		if col != 0 then pal() end
 	end
 )
 
@@ -414,7 +418,7 @@ system.create('ai_boss', {'ai_boss', 'frames', 'health'}, function(e, dt)
 		-- 		assemblage.enemy_bullet(e, e.x + (3*(i+1)), e.y + (2*(i*2)), -3, 0)
 		-- 		change_anim(e, 'idle', false)
 		-- 	end
-		subsystem.boss_projectile_attack(e, 10, 2)
+		subsystem.boss_projectile_attack(e, 10)
 		e.ai_boss.ttsa = 55
 	elseif (e.ai_boss.ttla <= 0) and not e.ai_boss.is_lunging then 
 		local run = (t() - hero.timer.start_time < 20) and 0 or -20
