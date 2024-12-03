@@ -118,6 +118,8 @@ assemblage.create('machine', function(type, x, y)
 		e:attach('collector')
 		e:attach('defensive_collider', 0, 0, 16, 16)
 		e:attach('offensive_collider', 2, 2, 16 - 4, 16 - 4)
+		e.frames.delay = 3
+		e:attach('bounce')
 		if type == 'copier' then
 			e:attach('sprite', 68, 2, 2, 1)
 			e:attach('ai_boss')
@@ -128,7 +130,6 @@ assemblage.create('machine', function(type, x, y)
 			add_anim(e, 'lunge', '74')
 			e.frames.delay = 4
 			change_anim(e, 'idle')
-			e:attach('bounce')
 			e:attach('health', 4, 4)
 			e:attach('movement')
 			e:detach('knockback')
@@ -138,18 +139,14 @@ assemblage.create('machine', function(type, x, y)
 			add_anim(e, 'default', '52')
 			add_anim(e, 'idle', '52,53')
 			add_anim(e, 'shooting', '54')
-			e.frames.delay = 3
 			change_anim(e, 'idle')
-			e:attach('bounce')
 		elseif type == 'shredder' then
 			e:attach('sprite', 55, 1, 1, 2)
 			add_anim(e, 'default', '55')
 			add_anim(e, 'idle', '55,56')
 			add_anim(e, 'shooting', '56')
-			e.frames.delay = 3
 			change_anim(e, 'idle')
 			e:attach('ai_shoot_dumb')
-			e:attach('bounce')
 		end
 	elseif type == 'cone' or type == 'wall' or type == 'fan' then
 		e:attach('floating')
