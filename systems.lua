@@ -293,11 +293,11 @@ system.create('do_harm',
 			local dam = max(e.damage, 1) -- limit to one damage?
 			o.health.current -= dam
 			if o:has('bounce') then subsystem.bounce(o, e) end
-			if o.health.current >= 1 then
+			if o.health.current >= 1 then --
 				o:attach('iframes', o)
-				 if o:has('redirectable') then subsystem.projectile_redirect(o) end
-				if e:has('sound_on_damage') then
-					sfx(e.sound_on_damage)
+				if o:has('redirectable') then subsystem.projectile_redirect(o) end
+				if o:has('sound_on_damage') then
+					sfx(o.sound_on_damage)
 				end
 				if o:has('on_damage') then o.on_damage(o, dam) end
 				return
