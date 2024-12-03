@@ -72,7 +72,7 @@ component.create('recttext', function(color, char, w, h)
 end)
 
 function add_anim(e, name, anim)
-	if type(anim) == 'table' then printh('accepts only strings') end
+	-- if type(anim) == 'table' then printh('accepts only strings') end
 	local anim = split(anim, ',')
 	for k, v in pairs(anim) do
 		anim[k] = split(v, ':', true)
