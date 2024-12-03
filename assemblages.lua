@@ -70,6 +70,24 @@ assemblage.create('enemy_bullet', function(parent, x, y, speed, knockback_vx)
 	return e
 end)
 
+assemblage.create('box', function(x, y)
+	e = entity.create(type, x, y)
+	e:attach('frames')
+	e:attach('enemy_team')
+	e:attach('health', 1, 1)
+	e:attach('knockback', -2)
+	e:attach('sprite', 62, 1, 1, 2)
+	e:attach('bounce', 0, -5)
+	add_anim(e, 'default', '62')
+	add_anim(e, 'crushed', '63')
+	change_anim(e, 'default')
+	e:attach('defensive_collider', 1, 2, 12, 14)
+	e:attach('floating')
+	e:attach('damage', 0)
+	e:attach('crushable')
+	return e
+end)
+
 --[[
 --|| A helper function that adds all general
 --|| components that an enemy machine would need.
@@ -85,88 +103,64 @@ assemblage.create('machine', function(type, x, y)
 	e:attach('scorable', 10)
 	e:attach('tossable')
 	e:attach('knockback', -2)
-	if type == 'copier' then
+	if type == 'copier' or type == 'computer' or type == 'shredder' then
 		e:attach('collector')
-		e:attach('sprite', 68, 2, 2, 1)
-		e:attach('defensive_collider', 1, -1, 16, 16)
-		e:attach('offensive_collider', 3, 1, 8, 8)
-		e:attach('ai_boss')
-		e:attach('on_despawn', subsystem.boss_complete)
-		add_anim(e, 'default', '68')
-		add_anim(e, 'idle', '68,70')
-		add_anim(e, 'shoot', '72')
-		add_anim(e, 'lunge', '74')
-		e.frames.delay = 4
-		change_anim(e, 'idle')
-		e:attach('bounce')
-		e:attach('health', 4, 4)
-		e:attach('movement')
-		e:detach('knockback')
-	elseif type == 'computer' then
-		e:attach('collector')
-		e:attach('sprite', 52, 1, 1, 2)
-		e:attach('ai_shoot_smrt')
 		e:attach('defensive_collider', 0, 0, 16, 16)
 		e:attach('offensive_collider', 2, 2, 16 - 4, 16 - 4)
-		add_anim(e, 'default', '52')
-		add_anim(e, 'idle', '52,53')
-		add_anim(e, 'shooting', '54')
-		e.frames.delay = 3
-		change_anim(e, 'idle')
-		e:attach('bounce')
-	elseif type == 'shredder' then
-		e:attach('collector')
-		e:attach('sprite', 55, 1, 1, 2)
-		e:attach('defensive_collider', 0, 0, 16, 16)
-		e:attach('offensive_collider', 2, 2, 16 - 4, 16 - 4)
-		add_anim(e, 'default', '55')
-		add_anim(e, 'idle', '55,56')
-		add_anim(e, 'shooting', '56')
-		e.frames.delay = 3
-		change_anim(e, 'idle')
-		e:attach('ai_shoot_dumb')
-		e:attach('bounce')
-	elseif type == 'cone' then
-		e:attach('sprite', 114, 1, 1, 1.5)
+		if type == 'copier' then
+			e:attach('sprite', 68, 2, 2, 1)
+			e:attach('ai_boss')
+			e:attach('on_despawn', subsystem.boss_complete)
+			add_anim(e, 'default', '68')
+			add_anim(e, 'idle', '68,70')
+			add_anim(e, 'shoot', '72')
+			add_anim(e, 'lunge', '74')
+			e.frames.delay = 4
+			change_anim(e, 'idle')
+			e:attach('bounce')
+			e:attach('health', 4, 4)
+			e:attach('movement')
+			e:detach('knockback')
+		elseif type == 'computer' then
+			e:attach('sprite', 52, 1, 1, 2)
+			e:attach('ai_shoot_smrt')
+			add_anim(e, 'default', '52')
+			add_anim(e, 'idle', '52,53')
+			add_anim(e, 'shooting', '54')
+			e.frames.delay = 3
+			change_anim(e, 'idle')
+			e:attach('bounce')
+		elseif type == 'shredder' then
+			e:attach('sprite', 55, 1, 1, 2)
+			add_anim(e, 'default', '55')
+			add_anim(e, 'idle', '55,56')
+			add_anim(e, 'shooting', '56')
+			e.frames.delay = 3
+			change_anim(e, 'idle')
+			e:attach('ai_shoot_dumb')
+			e:attach('bounce')
+		end
+	elseif type == 'cone' or type == 'wall' or type == 'fan' then
 		e:attach('floating')
-		add_anim(e, 'default', '114,115')
-		e.frames.delay = 3
-		change_anim(e, 'default')
-		e:attach('offensive_collider', 4, 2, 4, 12)
-	elseif type == 'wall' then
-		e:attach('sprite', 78, 1, 1)
-		e.sprite.h = 3
-		add_anim(e, 'default', '78,79')
-		e:attach('offensive_collider', 2, 1, 2, 23)
-		e:attach('floating')
-	elseif type == 'fan' then
-		e:attach('sprite', 76, 2, 1)
-		e.sprite.scale = 2
-		add_anim(e, 'default', '76,92,108')
-		e.frames.delay = 1
-		e:attach('offensive_collider', 10, 10, 14, 4)
-		e:attach('floating')
-		e:attach('knockback', -3, 7)
-	elseif type == 'box' then
-		e:attach('sprite', 62, 1, 1, 2)
-		e:attach('bounce', 0, -5)
-		add_anim(e, 'default', '62')
-		add_anim(e, 'crushed', '63')
-		change_anim(e, 'default')
-		e:attach('defensive_collider', 1, 2, 12, 14)
-		e:detach('offensive_collider')
-		e:attach('floating')
-		e:detach('damage')
-		e:attach('damage', 0)
-		e:attach('crushable')
-		e:detach('tossable')
-	else
-		-- printh("using default machine flow")
-		e:attach('sprite', 1)
-		e:attach('floating')
-		add_anim(e, 'default', '1')
-		add_anim(e, 'idle', '1')
-		change_anim(e, 'idle')
+		if type == 'cone' then
+			e:attach('sprite', 114, 1, 1, 1.5)
+			add_anim(e, 'default', '114,115')
+			e.frames.delay = 3
+			change_anim(e, 'default')
+			e:attach('offensive_collider', 4, 2, 4, 12)
+		elseif type == 'wall' then
+			e:attach('sprite', 78, 1, 1)
+			e.sprite.h = 3
+			add_anim(e, 'default', '78,79')
+			e:attach('offensive_collider', 2, 1, 2, 23)
+		elseif type == 'fan' then
+			e:attach('sprite', 76, 2, 1)
+			e.sprite.scale = 2
+			add_anim(e, 'default', '76,92,108')
+			e.frames.delay = 1
+			e:attach('offensive_collider', 10, 10, 14, 4)
+			e:attach('knockback', -3, 7)
+		end
 	end
 	return e
 end)

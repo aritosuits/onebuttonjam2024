@@ -61,6 +61,8 @@ function spawner.update(dt)
 				assemblage.door(s.type, s.x, s.y, 16, s.y + 128, true, true)
 			elseif s.type == 'code' then
 				assemblage.collectable('code', s.x, s.y)
+			elseif s.type == 'box' then
+				assemblage.box(s.x, s.y)
 			else
 				assemblage.machine(s.type, s.x, s.y)
 			end
