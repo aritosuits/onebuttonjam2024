@@ -4,6 +4,7 @@ game = state.create('game')
 game.fade = true
 
 function game.enter()
+	ground = 104
 	score.reset()
 	spawner.init()
 	music(0)

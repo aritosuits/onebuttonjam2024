@@ -1,7 +1,7 @@
 -- systems
 
 gravity = 8
-ground = 104
+ground = 0
 
 -- From: https://pico-8.fandom.com/wiki/Draw_zoomed_sprite_(zspr)
 function zspr(n,w,h,dx,dy,dz)
