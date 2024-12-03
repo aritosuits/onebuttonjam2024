@@ -210,7 +210,7 @@ system.create('teleporter', {'teleport', 'defensive_collider'},
 			hero.physics.smashing = -1
 			sfx(37)
 			music(-1)
-			if e.name == 'door1' then
+			if e.name == 'door1' or e.name == 'door3' then
 				music(10, 300)
 				hero:attach('timer')
 				hero.timer.start_time = time()
@@ -225,8 +225,6 @@ system.create('teleporter', {'teleport', 'defensive_collider'},
 					end
 				end)
 				spawner.init()
-			elseif e.name == 'door3' then 
-				music(10, 1300)
 			elseif e.name == 'door4' then 
 				state.switch('win')
 			end
@@ -414,7 +412,7 @@ system.create('ai_boss', {'ai_boss', 'frames', 'health'}, function(e, dt)
 		-- 		assemblage.enemy_bullet(e, e.x + (3*(i+1)), e.y + (2*(i*2)), -3, 0)
 		-- 		change_anim(e, 'idle', false)
 		-- 	end
-		subsystem.boss_projectile_attack(10, 2)
+		subsystem.boss_projectile_attack(e, 10, 2)
 		e.ai_boss.ttsa = 55
 	elseif (e.ai_boss.ttla <= 0) and not e.ai_boss.is_lunging then 
 		local run = (t() - hero.timer.start_time < 20) and 0 or -20
@@ -441,7 +439,8 @@ nil
 )
 
 system.create('ai_boss_comp', {'ai_boss_comp', 'frames', 'health'}, function(e, dt)
-	if e.ai_boss_comp.ttsa <= 0 and e.ai_boss_comp.is_charging then
+	if not hero:has('timer') then return end --I hate this
+	if e.ai_boss_comp.ttsa <= 0 then
 		-- change_anim(e, 'shooting', true)
 		-- 	local max = (t() - hero.timer.start_time > 10) and 4 or 0
 		-- 	for i = 0, max do 
@@ -450,14 +449,14 @@ system.create('ai_boss_comp', {'ai_boss_comp', 'frames', 'health'}, function(e, 
 		-- 		assemblage.enemy_bullet(e, e.x + (3*(i+2)), e.y + (4*(i*2)), -2, 0)
 		-- 		change_anim(e, 'idle', false)
 		-- 	end
-		subsystem.boss_projectile_attack(10, 2)
+		subsystem.boss_projectile_attack(e, 10, 2)
 		e.ai_boss_comp.ttsa = 55
-	elseif not e.ai_boss_comp.is_charging then
-		assemblage.enemy_bullet(e, e.x + 2, e.y + 4, -2, 0)
-
+	elseif e.ai_boss_comp.charge_time <= 0 then
+		assemblage.enemy_bullet(e, e.x + 2, e.y + 4, -2, 0, true)
+		e.ai_boss_comp.charge_time = 160
 	else
 		e.ai_boss_comp.ttsa -= 1
-		e.ai_boss_comp.is_charging = hero.timer.start_time % 10 == 0 and true or false
+		e.ai_boss_comp.charge_time -= 1
 	end
 end, 
 nil
