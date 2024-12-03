@@ -132,17 +132,6 @@ assemblage.create('machine', function(type, x, y)
 			e:attach('health', 4, 4)
 			e:attach('movement')
 			e:detach('knockback')
-		elseif type == 'boss_comp' then 
-			e:attach('sprite', 200, 2, 2, 1)
-			e:attach('ai_boss_comp')
-			e:attach('on_despawn', subsystem.boss_complete)
-			add_anim(e, 'default', '200')
-			add_anim(e, 'idle', '200,202')
-			add_anim(e, 'shoot', '232')
-			e.frames.delay = 4
-			change_anim(e, 'idle')
-			e:attach('bounce')
-			e:attach('health', 4, 4)
 		elseif type == 'computer' then
 			e:attach('sprite', 52, 1, 1, 2)
 			e:attach('ai_shoot_smrt')
@@ -183,7 +172,18 @@ assemblage.create('machine', function(type, x, y)
 			e:attach('offensive_collider', 10, 10, 14, 4)
 			e:attach('knockback', -3, 7)
 		end
-	end
+		elseif type == 'boss_comp' then 
+			e:attach('sprite', 200, 2, 2, 1)
+			e:attach('ai_boss_comp')
+			e:attach('on_despawn', subsystem.boss_complete)
+			add_anim(e, 'default', '200')
+			add_anim(e, 'idle', '200,202')
+			add_anim(e, 'shoot', '232')
+			--e.frames.delay = 4
+			change_anim(e, 'idle')
+			e:attach('bounce')
+			e:attach('health', 4, 4)
+		end
 	return e
 end)
 

@@ -81,3 +81,13 @@ function subsystem.push_button(source)
 	source:detach('defensive_collider')
 	return true
 end
+
+function subsystem.boss_projectile_attack(timeComparison, numBullets)
+	change_anim(e, 'shooting', true)
+	local max = (t() - hero.timer.start_time > timeComparison) and 2 or 0
+	for i = 0, max do 
+		assemblage.enemy_bullet(e, e.x + (3*(i+1)), e.y + (2*(i*2)), -3, 0)
+		change_anim(e, 'idle', false)
+	end
+
+end

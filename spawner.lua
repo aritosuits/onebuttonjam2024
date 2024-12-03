@@ -64,6 +64,7 @@ function spawner.update(dt)
 			elseif s.type == 'box' then
 				assemblage.box(s.x, s.y)
 			else
+				printh(s.type)
 				assemblage.machine(s.type, s.x, s.y)
 			end
 			del(spawner.queue, s)
