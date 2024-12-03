@@ -76,6 +76,7 @@ assemblage.create('enemy_bullet', function(parent, x, y, speed, knockback_vx, us
 			e.sprite.w = 2
 			e:attach('health', 2)
 			e:attach('redirectable')
+			e:attach('offensive_collider', 2, 2, 12, 12)
 			printh("spawned boss bullet alt")
 		end
 	end
@@ -115,7 +116,7 @@ assemblage.create('machine', function(type, x, y)
 	e:attach('scorable', 10)
 	e:attach('tossable')
 	e:attach('knockback', -2)
-	if type == 'copier' or type == 'computer' or type == 'shredder' then
+	if type == 'copier' or type == 'computer' or type == 'shredder' or type == 'boss_comp' then
 		e:attach('collector')
 		e:attach('defensive_collider', 0, 0, 16, 16)
 		e:attach('offensive_collider', 2, 2, 16 - 4, 16 - 4)
@@ -148,6 +149,17 @@ assemblage.create('machine', function(type, x, y)
 			add_anim(e, 'shooting', '56')
 			change_anim(e, 'idle')
 			e:attach('ai_shoot_dumb')
+		elseif type == 'boss_comp' then 
+			e:attach('sprite', 200, 2, 2, 1)
+			e:attach('ai_boss_comp')
+			e:attach('on_despawn', subsystem.boss_complete)
+			add_anim(e, 'default', '200')
+			add_anim(e, 'idle', '200,202')
+			add_anim(e, 'shooting', '232')
+			e.frames.delay = 4
+			change_anim(e, 'idle')
+			e:attach('bounce')
+			e:attach('health', 4)
 		end
 	elseif type == 'cone' or type == 'wall' or type == 'fan' then
 		e:attach('floating')
@@ -170,18 +182,7 @@ assemblage.create('machine', function(type, x, y)
 			e:attach('offensive_collider', 10, 10, 14, 4)
 			e:attach('knockback', -3, 7)
 		end
-		elseif type == 'boss_comp' then 
-			e:attach('sprite', 200, 2, 2, 1)
-			e:attach('ai_boss_comp')
-			e:attach('on_despawn', subsystem.boss_complete)
-			add_anim(e, 'default', '200')
-			add_anim(e, 'idle', '200,202')
-			add_anim(e, 'shooting', '232')
-			--e.frames.delay = 4
-			change_anim(e, 'idle')
-			e:attach('bounce')
-			e:attach('health', 4, 4)
-		end
+	end
 	return e
 end)
 
