@@ -295,7 +295,7 @@ system.create('do_harm',
 			if o:has('bounce') then subsystem.bounce(o, e) end
 			if o.health.current >= 1 then
 				o:attach('iframes', o)
-				if o:has('redirectable') then subsystem.boss_projectile_attack(o, e, 1) end
+				 if o:has('redirectable') then subsystem.boss_projectile_attack(o, 10, 2) end
 				if e:has('sound_on_damage') then
 					sfx(e.sound_on_damage)
 				end
