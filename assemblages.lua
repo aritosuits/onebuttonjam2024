@@ -66,16 +66,17 @@ assemblage.create('enemy_bullet', function(parent, x, y, speed, knockback_vx, us
 		e.sprite.num = rnd({57,58})
 		e.physics.vx = 0
 		e.physics.vy = -5
-	elseif parent.name == 'boss_computer' then 
+	elseif parent.name == 'boss_comp' then 
 		e:detach('knockback')
-		local a = use_alt_bullet or false
+		e:detach('tossable')
 		if use_alt_bullet then
-			e:attach('recttext', 6, rnd_str('01abcx!@#$%^&**'))
-		else
 			e.sprite.num = 234
 			e.sprite.scale = .75
 			e.sprite.h = 2
 			e.sprite.w = 2
+			e:attach('health', 2)
+			e:attach('redirectable')
+			printh("spawned boss bullet alt")
 		end
 	end
 	return e
@@ -126,7 +127,7 @@ assemblage.create('machine', function(type, x, y)
 			e:attach('on_despawn', subsystem.boss_complete)
 			add_anim(e, 'default', '68')
 			add_anim(e, 'idle', '68,70')
-			add_anim(e, 'shoot', '72')
+			add_anim(e, 'shooting', '72')
 			add_anim(e, 'lunge', '74')
 			e.frames.delay = 4
 			change_anim(e, 'idle')
@@ -175,7 +176,7 @@ assemblage.create('machine', function(type, x, y)
 			e:attach('on_despawn', subsystem.boss_complete)
 			add_anim(e, 'default', '200')
 			add_anim(e, 'idle', '200,202')
-			add_anim(e, 'shoot', '232')
+			add_anim(e, 'shooting', '232')
 			--e.frames.delay = 4
 			change_anim(e, 'idle')
 			e:attach('bounce')

@@ -7,6 +7,7 @@ component.create('floating')
 component.create('bullet')
 component.create('stats')
 component.create('enemy_team')
+component.create('redirectable')
 component.create('collector', function()
 	return { letters = '' }
 end)

@@ -294,6 +294,7 @@ system.create('do_harm',
 			if o:has('bounce') then subsystem.bounce(o, e) end
 			if o.health.current >= 1 then
 				o:attach('iframes', o)
+				if o:has('redirectable') then subsystem.projectile_redirect(o, e) end
 				if e:has('sound_on_damage') then
 					sfx(e.sound_on_damage)
 				end
@@ -452,6 +453,7 @@ system.create('ai_boss_comp', {'ai_boss_comp', 'frames', 'health'}, function(e, 
 		subsystem.boss_projectile_attack(e, 10, 2)
 		e.ai_boss_comp.ttsa = 55
 	elseif e.ai_boss_comp.charge_time <= 0 then
+		printh("spawning big bullet")
 		assemblage.enemy_bullet(e, e.x + 2, e.y + 4, -2, 0, true)
 		e.ai_boss_comp.charge_time = 160
 	else

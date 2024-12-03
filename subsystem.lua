@@ -92,3 +92,10 @@ function subsystem.boss_projectile_attack(e, timeComparison, numBullets)
 	end
 
 end
+
+function subsystem.projectile_redirect(e)
+	e.physics.vx *= -1
+	e:detach('enemy_team')
+	e:detach('parent')
+	e:attach('parent', hero)
+end
