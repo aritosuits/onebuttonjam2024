@@ -82,6 +82,13 @@ function subsystem.push_button(source)
 	return true
 end
 
+function subsystem.projectile_redirect(e)
+	e.physics.vx *= -1
+	e:detach('enemy_team')
+	e:detach('parent')
+	e:attach('parent', hero)
+end
+
 function subsystem.boss_projectile_attack(e, timeComparison, numBullets)
 	if e:has('frames') then change_anim(e, 'shooting', true) end
 	local m = (t() - hero.timer.start_time > timeComparison) and 2 or 0

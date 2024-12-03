@@ -132,7 +132,7 @@ assemblage.create('machine', function(type, x, y)
 			add_anim(e, 'lunge', '74')
 			e.frames.delay = 4
 			change_anim(e, 'idle')
-			e:attach('health', 4, 4)
+			e:attach('health', 8)
 			e:attach('movement')
 			e:detach('knockback')
 		elseif type == 'computer' then
@@ -159,7 +159,7 @@ assemblage.create('machine', function(type, x, y)
 			e.frames.delay = 4
 			change_anim(e, 'idle')
 			e:attach('bounce')
-			e:attach('health', 4)
+			e:attach('health', 8)
 		end
 	elseif type == 'cone' or type == 'wall' or type == 'fan' then
 		e:attach('floating')
