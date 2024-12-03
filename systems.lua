@@ -408,21 +408,14 @@ system.create('ai_boss', {'ai_boss', 'frames', 'health'}, function(e, dt)
 	if not hero:has('timer') then return end --I hate this
 	if e.ai_boss.ttsa <= 0 and not e.ai_boss.is_lunging then
 		-- printh(e.health.current)
-		--this never triggers =.=
 		--if(e.health.current < 2) then 
-		if (t() - hero.timer.start_time > 10) then 
 			-- printh('boss mega-shooting player')
 			change_anim(e, 'shooting', true)
-			assemblage.enemy_bullet(e, e.x + 2, e.y, -3, 0)
-			assemblage.enemy_bullet(e, e.x + 4, e.y + 4, -3, 0)
-			assemblage.enemy_bullet(e, e.x + 6, e.y + 8, -3, 0)
+				local max = (t() - hero.timer.start_time > 10) and 2 or 0
+			for i = 0, max do 
+			assemblage.enemy_bullet(e, e.x + (3*(i+1)), e.y + (2*(i*2)), -3, 0)
 			change_anim(e, 'idle', false)
-		else
-			-- printh('boss shooting player')
-			change_anim(e, 'shooting', true)
-			assemblage.enemy_bullet(e, e.x + 2, e.y + 1, -2, 0)
-			change_anim(e, 'idle', false)
-		end
+			end
 		e.ai_boss.ttsa = 65
 	elseif (e.ai_boss.ttla <= 0) and not e.ai_boss.is_lunging then 
 		if (t() - hero.timer.start_time < 20) then
@@ -434,8 +427,6 @@ system.create('ai_boss', {'ai_boss', 'frames', 'health'}, function(e, dt)
 
 	elseif e.ai_boss.is_lunging then
 		if (abs(e.x - hero.x) <= 9) and not e.ai_boss.is_returning then
-			-- printh('returning, under 9')
-			--e:detach('offensive_collider')
 			e.ai_boss.is_returning = true
 			if (t() - hero.timer.start_time > 15) then
 				e:attach('boss_autorun', rnd({130, 240}))
@@ -443,9 +434,7 @@ system.create('ai_boss', {'ai_boss', 'frames', 'health'}, function(e, dt)
 				e:attach('boss_autorun', rnd({160, 280}))
 			end
 		elseif abs(e.x - hero.x) >= 64 then
-			-- printh('detaching autorun') 
 			e:detach('boss_autorun')
-			--e:attach('offensive_collider', 4, 0, 7, 7)
 			e.ai_boss.is_lunging = false
 			e.ai_boss.is_returning = false
 			e.ai_boss.ttla = 40
