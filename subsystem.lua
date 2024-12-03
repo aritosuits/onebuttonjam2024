@@ -46,7 +46,7 @@ end
 
 function subsystem.score(source, target)
 	local s = score.calculate(source.scorable, target.physics.smashing, hero.health.current)
-	printh('base score: ' .. source.scorable .. ' smash frames: ' .. target.physics.smashing .. ' health: ' .. target.health.current .. ' total: ' .. s)
+	-- printh('base score: ' .. source.scorable .. ' smash frames: ' .. target.physics.smashing .. ' health: ' .. target.health.current .. ' total: ' .. s)
 	score.add(s)
 end
 

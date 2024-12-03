@@ -26,7 +26,7 @@ DEV_UI = false
 DEV_COLLIDERS = false
 
 function _init()
-	printh('') printh('game init') -- debug print
+	-- printh('') printh('game init') -- debug print
 	state.init()
 	if DEV_START then state.switch('game')
 	else state.switch('title')

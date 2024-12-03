@@ -1,7 +1,7 @@
 -- systems
 
 gravity = 8
-ground = 104
+ground = 0
 
 -- From: https://pico-8.fandom.com/wiki/Draw_zoomed_sprite_(zspr)
 function zspr(n,w,h,dx,dy,dz)
@@ -198,7 +198,7 @@ end
 
 system.create('teleporter', {'teleport', 'defensive_collider'}, 
 	function(e, dt)
-		if overlap(hero, e, 'defensive_collider', 'defensive_collider') then
+		if hero:has('defensive_collider') and overlap(hero, e, 'defensive_collider', 'defensive_collider') then
 			e:detach('defensive_collider')
 			hero.x = e.teleport.x
 			hero.y = e.teleport.y
@@ -261,6 +261,7 @@ system.create('do_ceiling_harm',
 		local mx = flr((e.x + (e.sprite.w / 2)) / 8)
 		local my = flr((e.y + 4) / 8)
 		local t = mget(mx, my)
+		if e.y < ground - 80 or e.y > ground then return end
 		for x = mx, mx + e.sprite.w do
 			if t == 174 then
 				mset(x, my, 190)

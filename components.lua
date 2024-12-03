@@ -72,7 +72,7 @@ component.create('recttext', function(color, char, w, h)
 end)
 
 function add_anim(e, name, anim)
-	if type(anim) == 'table' then printh('accepts only strings') end
+	-- if type(anim) == 'table' then printh('accepts only strings') end
 	local anim = split(anim, ',')
 	for k, v in pairs(anim) do
 		anim[k] = split(v, ':', true)
@@ -158,7 +158,7 @@ end)
 -- Entity colliders for physics and collisions
 component.create('iframes', function(e)
 	if e:has('defensive_collider') then e.defensive_collider.enabled = false end
-	return { flash = true, ttl = 30 }
+	return { flash = true, ttl = 45 }
 end)
 component.create('offensive_collider', function(ox, oy, w, h)
 	return {
