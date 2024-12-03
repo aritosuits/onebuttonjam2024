@@ -282,6 +282,7 @@ system.create('do_harm',
 			if e == o then return end -- not itself
 			if not e.offensive_collider.enabled then return end -- not turned off
 			if not o.defensive_collider.enabled then return end -- not turned off
+			if e:has('bullet') and o:has('bullet') then return end
 			if (e:has('parent') and e.parent == o) or (o:has('parent') and e == o.parent) then return end -- not the source
 			if e:has('enemy_team') and o:has('enemy_team') then return end -- no friendly fire
 			if not overlap(e, o) then return end
